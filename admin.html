@@ -783,7 +783,7 @@ accountCreateForm.addEventListener('submit',async event=>{
   class_id:fd.get('class_id')||null,
   student_id:fd.get('student_id')||null
  };
- const {data,error}=await supabase.functions.invoke('admin-create-user',{body:payload});
+ const {data,error}=await supabase.functions.invoke('bright-worker',{body:payload});
  accountCreateBtn.disabled=false;
  accountCreateBtn.textContent='লগইন আইডি তৈরি করুন';
  if(error){
