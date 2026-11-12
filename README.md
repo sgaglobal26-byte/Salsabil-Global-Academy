@@ -381,3 +381,21 @@ Provide:
 The final result must look like a premium international Islamic school website while remaining simple enough for teachers and administrators to operate.
 
 IMPORTANT: Use the institution's real identity and information. Do not invent accreditation, government approval, awards or teacher credentials. Make all content editable from the admin dashboard.# Salsabil-Global-Academy
+
+
+---
+
+## Production backend foundation (12 November 2026)
+
+The current deployed website and admin panel are static HTML previews. The admin panel still stores demo records in browser Local Storage; it is **not** a secure live school management system.
+
+A first Supabase/PostgreSQL schema and Row Level Security (RLS) migration has been added:
+- `supabase/migrations/202611120001_initial_school_management.sql`
+- Bengali setup and security checklist: `docs/production-setup-bn.md`
+- Environment variable names only (no credentials): `.env.example`
+
+The schema covers profiles and roles (admin/teacher/parent), the 11 learning levels from Play Group to Class Eight, students, guardians, teacher/class assignments, attendance, exams/results, fee invoices/payments, notices and admission applications. RLS policies restrict student, attendance, result and finance records to admins, assigned teachers and linked guardians. Public users can read published notices only; admission applications intentionally have no anonymous table-insert policy.
+
+**Not activated yet:** no Supabase project is connected, no migration has been applied, no Auth accounts/roles exist, and no Vercel environment variables are configured. Do not enter real student or financial information until server-side authentication, RLS tests, private file storage, backups and the production app integration are complete.
+
+See [the Bengali production setup guide](docs/production-setup-bn.md) before provisioning a Supabase project.
