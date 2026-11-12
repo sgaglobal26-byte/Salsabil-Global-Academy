@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teacher Portal | Salsabil Global Academy</title><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}body{margin:0;background:#f3f7f4;color:#203a33;font-family:'Hind Siliguri',sans-serif}.wrap{max-width:1050px;margin:35px auto;padding:18px}.card{background:#fff;border:1px solid #e0e9e2;border-radius:14px;padding:22px;margin:14px 0}.login{max-width:430px;margin:9vh auto}.brand{text-align:center;color:#075b45}.field{margin:12px 0}label{display:block;margin-bottom:5px}input{width:100%;padding:12px;border:1px solid #d5e1d8;border-radius:8px;font:inherit}.btn{border:0;border-radius:8px;padding:10px 16px;background:#075b45;color:#fff;font:inherit;cursor:pointer}.muted{color:#718078;font-size:13px}.error{color:#a32929}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tabs button{background:#e8f0e9;color:#075b45}.tabs button.active{background:#075b45;color:#fff}.panel{display:none}.panel.active{display:block}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;padding:10px;border-bottom:1px solid #e4ebe5} .scroll{overflow:auto}header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+</style></head><body><div class="wrap">
+<section class="card login" id="loginCard"><div class="brand"><h2>সালসাবিল গ্লোবাল একাডেমি</h2><b>শিক্ষক লগইন</b></div><form id="loginForm"><div class="field"><label>ইমেইল</label><input name="email" type="email" required autocomplete="username"></div><div class="field"><label>পাসওয়ার্ড</label><input name="password" type="password" required autocomplete="current-password"></div><button class="btn" id="loginBtn">লগইন করুন</button><p class="error" id="error"></p></form><p class="muted">প্রতিষ্ঠান থেকে দেওয়া অনুমোদিত অ্যাকাউন্ট ব্যবহার করুন।</p><a href="/admin.html">Admin Login</a></section>
+<section id="portal" hidden><header><div><h2>শিক্ষক ড্যাশবোর্ড</h2><p class="muted" id="who"></p></div><button class="btn" id="logout">লগআউট</button></header><div class="tabs" id="tabs"></div><div id="content"></div></section>
+</div><script type="module">
+import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
+const db=createClient('https://qzblmxcbgmdwkdmfsvuj.supabase.co','sb_publishable_H7aYU2ThzGoXQnSVZTPO2w_PL3WZWsF');
+const role="teacher";
+const login=document.getElementById('loginCard'),portal=document.getElementById('portal'),error=document.getElementById('error');
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let activeData={};
+function showError(s){error.textContent=s}
+async function start(session){
+ if(!session){login.hidden=false;portal.hidden=true;return}
+ const {data:roles,error:re}=await db.from('user_roles').select('role').eq('user_id',session.user.id);
+ if(re||!(roles||[]).some(x=>x.role===role)){await db.auth.signOut();showError('এই অ্যাকাউন্টে এই পোর্টালের অনুমতি নেই। প্রতিষ্ঠানের প্রশাসকের সঙ্গে যোগাযোগ করুন।');return}
+ login.hidden=true;portal.hidden=false;document.getElementById('who').textContent=session.user.email||'';
+ const specs=[["classes","আমার শ্রেণি","teacher_assignments","id,class_id,subject_id,academic_classes(name)"],["students","শিক্ষার্থী","students","id,student_code,full_name,class_id,section,academic_classes(name)"],["attendance","উপস্থিতি","attendance","id,student_id,class_id,attendance_date,status"],["results","পরীক্ষার ফলাফল","exam_results","id,exam_id,student_id,subject_id,marks,max_marks,grade"]];
+ const tabs=document.getElementById('tabs'),content=document.getElementById('content');tabs.innerHTML='';content.innerHTML='';
+ for(const [key,label] of specs){const b=document.createElement('button');b.className='btn';b.textContent=label;b.onclick=()=>loadTab(key,label,session.user.id);tabs.append(b);const p=document.createElement('div');p.id='p-'+key;p.className='card panel';content.append(p)}
+ tabs.firstElementChild?.click();
+}
+async function loadTab(key,label,uid){
+ document.querySelectorAll('.tabs button').forEach((b,i)=>b.classList.toggle('active',i===[...document.querySelectorAll('.tabs button')].findIndex(x=>x.textContent===label)));
+ document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));const p=document.getElementById('p-'+key);p.classList.add('active');p.innerHTML='লোড হচ্ছে...';
+ let data=[],err=null;
+ if(role==='teacher'){
+  if(key==='classes'){({data,error:err}=await db.from('teacher_assignments').select('id,class_id,subject_id,academic_classes(name),subjects(name_bn)').eq('teacher_user_id',uid));}
+  else if(key==='students'){const {data:a,error:e}=await db.from('teacher_assignments').select('class_id').eq('teacher_user_id',uid);if(e)err=e;else if(a?.length){({data,error:err}=await db.from('students').select('id,student_code,full_name,class_id,section,academic_classes(name)').in('class_id',a.map(x=>x.class_id)).order('full_name'))}}
+  else {const {data:a,error:e}=await db.from('teacher_assignments').select('class_id').eq('teacher_user_id',uid);if(e)err=e;else if(a?.length){const q=key==='attendance'?db.from('attendance').select('attendance_date,status,student_id,class_id').in('class_id',a.map(x=>x.class_id)).order('attendance_date',{ascending:false}).limit(150):db.from('exam_results').select('marks,max_marks,grade,student_id,exam_id,subject_id,exams(title),subjects(name_bn)').limit(150);({data,error:err}=await q)}}
+ }else{
+  if(key==='children'){({data,error:err}=await db.from('student_guardians').select('student_id,students(id,student_code,full_name,class_id,academic_classes(name))').eq('user_id',uid))}
+  else {const {data:links,error:e}=await db.from('student_guardians').select('student_id').eq('user_id',uid);if(e)err=e;else{const ids=(links||[]).map(x=>x.student_id);if(key==='notices'){({data,error:err}=await db.from('notices').select('title_bn,body_bn,published_at').eq('is_published',true).order('published_at',{ascending:false}).limit(50))}else if(ids.length){const q=key==='attendance'?db.from('attendance').select('attendance_date,status,student_id').in('student_id',ids).order('attendance_date',{ascending:false}).limit(100):key==='results'?db.from('exam_results').select('marks,max_marks,grade,student_id,exams(title,academic_year),subjects(name_bn)').in('student_id',ids).limit(100):db.from('fee_invoices').select('invoice_number,description,amount,due_date,status,student_id,fee_payments(amount,paid_at,receipt_number)').in('student_id',ids).order('created_at',{ascending:false});({data,error:err}=await q)}}}
+ }
+ if(err){p.innerHTML='<p class="error">তথ্য লোড হয়নি: '+esc(err.message)+'</p>';return}
+ data=data||[];if(!data.length){p.textContent='এখনো কোনো তথ্য পাওয়া যায়নি।';return}
+ const rows=key==='children'?data.map(x=>x.students||{}):data;
+ const cols=Object.keys(rows[0]||{}).filter(k=>!['id','class_id','subject_id','student_id','exam_id','students','academic_classes','subjects','exams','fee_payments'].includes(k));
+ p.innerHTML='<h3>'+esc(label)+'</h3><div class="scroll"><table><thead><tr>'+cols.map(c=>'<th>'+esc(({full_name:'নাম',student_code:'আইডি',name:'শ্রেণি',attendance_date:'তারিখ',status:'অবস্থা',marks:'প্রাপ্ত নম্বর',max_marks:'পূর্ণমান',grade:'গ্রেড',title_bn:'শিরোনাম',body_bn:'বিস্তারিত',invoice_number:'রসিদ/ইনভয়েস',description:'বিবরণ',amount:'টাকা',due_date:'শেষ তারিখ',published_at:'প্রকাশের তারিখ',name_bn:'বিষয়',exam_date:'পরীক্ষা',academic_year:'শিক্ষাবর্ষ'})[c]||c)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+cols.map(c=>'<td>'+esc(typeof r[c]==='object'?JSON.stringify(r[c]):r[c])+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+}
+document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=document.getElementById('loginBtn');b.disabled=true;const f=new FormData(e.target);const {data,error:e1}=await db.auth.signInWithPassword({email:f.get('email'),password:f.get('password')});b.disabled=false;if(e1){showError('লগইন ব্যর্থ হয়েছে। ইমেইল ও পাসওয়ার্ড যাচাই করুন।');return}await start(data.session)});
+document.getElementById('logout').onclick=async()=>{await db.auth.signOut();location.reload()};
+const {data:{session}}=await db.auth.getSession();if(session)await start(session);
+</script></body></html>
