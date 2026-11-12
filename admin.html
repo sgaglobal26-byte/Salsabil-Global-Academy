@@ -40,11 +40,25 @@
 </nav><div class="navlabel">SYSTEM</div><nav class="nav"><button data-page="settings"><span>⚙</span> সেটিংস</button><a href="/" style="display:block;text-decoration:none"><button><span>↗</span> ওয়েবসাইট দেখুন</button></a></nav><div class="sidefoot">Salsabil Global Academy<br>Mirzapur, Tangail<br><span style="color:#f0d48b">Faith · Knowledge · Character</span></div></aside>
 <main class="main"><header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="mobilemenu" id="mobilemenu">☰</button><h1 id="title">অ্যাডমিন ড্যাশবোর্ড</h1></div><div class="topright"><span class="status">নিরাপদ Admin Session</span><button class="logout-btn" id="logoutButton" type="button">লগআউট</button><div class="avatar" id="adminAvatar">A</div></div></header>
 <div class="content">
-<div class="notice"><b>ডেমো/প্রিভিউ:</b> এই প্যানেলের তথ্য শুধু এই ব্রাউজারের Local Storage-এ থাকে। এখনো নিরাপদ অ্যাডমিন লগইন, কেন্দ্রীয় ডেটাবেজ, ব্যাকআপ বা বহু-ব্যবহারকারী অ্যাক্সেস যুক্ত হয়নি। বাস্তব শিক্ষার্থীর ব্যক্তিগত তথ্য এখানে সংরক্ষণ করবেন না।</div>
+<div class="notice"><b>নিরাপদ অ্যাডমিন প্যানেল:</b> লগইন Supabase Auth দিয়ে যাচাই করা হয়। শিক্ষার্থী ব্যবস্থাপনার তথ্য Supabase ডেটাবেজে সংরক্ষিত হবে।</div>
 <section class="page active" id="dashboard"><div class="welcome"><div><h2>আসসালামু আলাইকুম 👋</h2><p>প্রতিষ্ঠানের ব্যবস্থাপনা এক জায়গা থেকে দেখুন।</p></div><button class="btn" onclick="showPage('students')">＋ শিক্ষার্থী যোগ করুন</button></div>
-<div class="stats"><div class="stat"><div class="stathead">মোট শিক্ষার্থী <span class="staticon">♙</span></div><strong id="studentCount">০</strong><small>এই ডেমোতে যোগ করা রেকর্ড</small></div><div class="stat"><div class="stathead">মোট শিক্ষক <span class="staticon">♧</span></div><strong id="teacherCount">০</strong><small>এই ডেমোতে যোগ করা রেকর্ড</small></div><div class="stat"><div class="stathead">ভর্তি আবেদন <span class="staticon">▤</span></div><strong>০</strong><small>কোনো আবেদন ডেটাবেজে নেই</small></div><div class="stat"><div class="stathead">আজকের উপস্থিতি <span class="staticon">◷</span></div><strong>—</strong><small>Attendance module pending</small></div></div>
+<div class="stats"><div class="stat"><div class="stathead">মোট শিক্ষার্থী <span class="staticon">♙</span></div><strong id="studentCount">০</strong><small>Supabase ডেটাবেজ</small></div><div class="stat"><div class="stathead">মোট শিক্ষক <span class="staticon">♧</span></div><strong id="teacherCount">০</strong><small>এখনো পরবর্তী ধাপে যুক্ত হবে</small></div><div class="stat"><div class="stathead">ভর্তি আবেদন <span class="staticon">▤</span></div><strong>০</strong><small>কোনো আবেদন ডেটাবেজে নেই</small></div><div class="stat"><div class="stathead">আজকের উপস্থিতি <span class="staticon">◷</span></div><strong>—</strong><small>Attendance module pending</small></div></div>
 <div class="grid"><div class="panel"><div class="panelhead"><h3>সাম্প্রতিক শিক্ষার্থী</h3><button class="btn secondary" onclick="showPage('students')">সব দেখুন</button></div><div id="recent" class="empty"><b>এখনো কোনো শিক্ষার্থী যোগ করা হয়নি</b>শিক্ষার্থী বিভাগ থেকে নতুন রেকর্ড যোগ করতে পারবেন।</div></div><div class="panel"><div class="panelhead"><h3>দ্রুত কাজ</h3><span class="muted">Quick actions</span></div><div class="quick"><button onclick="showPage('students')"><i>♙</i>শিক্ষার্থী যোগ</button><button onclick="showPage('teachers')"><i>♧</i>শিক্ষক যোগ</button><button onclick="showPage('admissions')"><i>▤</i>ভর্তি আবেদন</button><button onclick="showPage('notices')"><i>▧</i>নোটিশ তৈরি</button></div></div></div></section>
-<section class="page" id="students"><div class="welcome"><div><h2>শিক্ষার্থী ব্যবস্থাপনা</h2><p>ডেমো রেকর্ড যোগ করুন এবং তালিকা দেখুন।</p></div></div><div class="panel"><h3>নতুন শিক্ষার্থী</h3><form id="studentForm" class="formrow" style="margin-top:15px"><div class="field"><label>শিক্ষার্থীর নাম *</label><input name="name" required placeholder="পূর্ণ নাম"></div><div class="field"><label>শ্রেণি *</label><select name="class" required><option value="">শ্রেণি নির্বাচন</option><option>Play Group</option><option>Nursery</option><option>KG</option><option>Class One</option><option>Class Two</option><option>Class Three</option><option>Class Four</option><option>Class Five</option><option>Class Six</option><option>Class Seven</option><option>Class Eight</option></select></div><div class="field"><label>অভিভাবকের মোবাইল</label><input name="phone" placeholder="01XXXXXXXXX"></div><div class="field"><label>শিক্ষার্থী আইডি</label><input name="sid" placeholder="যেমন SGA-0001"></div><div class="field full"><button class="btn">শিক্ষার্থী সংরক্ষণ (এই ব্রাউজারে)</button></div></form></div><div class="panel" style="margin-top:16px"><div class="panelhead"><h3>শিক্ষার্থীর তালিকা</h3><span class="muted" id="studentTotal">০ জন</span></div><div class="tablewrap" id="studentTable"></div></div></section>
+<section class="page" id="students"><div class="welcome"><div><h2>শিক্ষার্থী ব্যবস্থাপনা</h2><p>শিক্ষার্থীর তথ্য Supabase-এ সংরক্ষণ, সম্পাদনা ও মুছে ফেলুন।</p></div></div><div class="panel"><h3>নতুন শিক্ষার্থী</h3><form id="studentForm" class="formrow" style="margin-top:15px">
+<input type="hidden" name="id">
+<div class="field"><label>শিক্ষার্থীর নাম *</label><input name="full_name" required placeholder="পূর্ণ নাম"></div>
+<div class="field"><label>শিক্ষার্থী আইডি *</label><input name="student_code" required placeholder="যেমন SGA-0001"></div>
+<div class="field"><label>শ্রেণি *</label><select name="class_id" id="studentClass" required><option value="">শ্রেণি লোড হচ্ছে...</option></select></div>
+<div class="field"><label>শাখা</label><input name="section" placeholder="যেমন: A"></div>
+<div class="field"><label>জন্মতারিখ</label><input name="date_of_birth" type="date"></div>
+<div class="field"><label>লিঙ্গ</label><select name="gender"><option value="">নির্বাচন করুন</option><option value="male">ছেলে</option><option value="female">মেয়ে</option><option value="other">অন্যান্য</option></select></div>
+<div class="field"><label>অভিভাবকের নাম</label><input name="guardian_name" placeholder="অভিভাবকের পূর্ণ নাম"></div>
+<div class="field"><label>অভিভাবকের মোবাইল</label><input name="guardian_phone" placeholder="01XXXXXXXXX"></div>
+<div class="field"><label>ভর্তির তারিখ</label><input name="admission_date" type="date"></div>
+<div class="field"><label>অবস্থা</label><select name="status"><option value="active">সক্রিয়</option><option value="inactive">নিষ্ক্রিয়</option><option value="graduated">উত্তীর্ণ</option><option value="transferred">স্থানান্তরিত</option></select></div>
+<div class="field full" style="display:flex;gap:9px;align-items:center"><button class="btn" id="studentSaveBtn" type="submit">ডেটাবেজে সংরক্ষণ</button><button class="btn secondary" id="studentCancelBtn" type="button" style="display:none">সম্পাদনা বাতিল</button></div>
+<p class="muted field full" id="studentFormMessage">তথ্য Supabase ডেটাবেজে সংরক্ষিত হবে।</p>
+</form></div><div class="panel" style="margin-top:16px"><div class="panelhead"><h3>শিক্ষার্থীর তালিকা</h3><span class="muted" id="studentTotal">লোড হচ্ছে...</span></div><div class="toolbar"><input id="studentSearch" type="search" placeholder="নাম, আইডি বা মোবাইল দিয়ে খুঁজুন"></div><div class="tablewrap" id="studentTable"><div class="empty">Supabase থেকে তথ্য আনা হচ্ছে...</div></div></div></section>
 <section class="page" id="teachers"><div class="welcome"><div><h2>শিক্ষক ব্যবস্থাপনা</h2><p>ডেমো হিসেবে শিক্ষক তালিকা তৈরি করুন।</p></div></div><div class="panel"><h3>নতুন শিক্ষক</h3><form id="teacherForm" class="formrow" style="margin-top:15px"><div class="field"><label>শিক্ষকের নাম *</label><input name="name" required></div><div class="field"><label>বিষয় / দায়িত্ব</label><input name="subject" placeholder="যেমন: বাংলা"></div><div class="field"><label>মোবাইল</label><input name="phone"></div><div class="field full"><button class="btn">শিক্ষক সংরক্ষণ (এই ব্রাউজারে)</button></div></form></div><div class="panel" style="margin-top:16px"><h3>শিক্ষক তালিকা</h3><div class="tablewrap" id="teacherTable"></div></div></section>
 <section class="page" id="admissions"><div class="welcome"><div><h2>ভর্তি আবেদন</h2><p>অনলাইন আবেদন ফরম ও ডেটাবেজ সংযোগ পরবর্তী ধাপে যুক্ত হবে।</p></div></div><div class="panel"><div class="empty"><b>ভর্তি আবেদন মডিউল এখনো সংযুক্ত নয়</b>অনলাইন আবেদন গ্রহণ, Application ID, কাগজপত্র আপলোড ও অনুমোদনের জন্য নিরাপদ backend প্রয়োজন।</div></div></section>
 <section class="page" id="attendance"><div class="welcome"><div><h2>উপস্থিতি ব্যবস্থাপনা</h2><p>দৈনিক ও মাসিক উপস্থিতির মডিউল।</p></div></div><div class="panel"><div class="empty"><b>উপস্থিতি মডিউল প্রস্তুত করা বাকি</b>শ্রেণিভিত্তিক উপস্থিতি, Present/Absent/Late এবং রিপোর্ট পরবর্তী ধাপে যুক্ত হবে।</div></div></section>
@@ -52,19 +66,19 @@
 <section class="page" id="fees"><div class="welcome"><div><h2>ফি ও হিসাব</h2><p>ফি, বকেয়া ও পেমেন্ট রসিদ ব্যবস্থাপনা।</p></div></div><div class="panel"><div class="empty"><b>ফাইন্যান্স মডিউল এখনো সংযুক্ত নয়</b>ফি কাঠামো, পেমেন্ট রেকর্ড, বকেয়া রিপোর্ট ও রসিদ নিরাপদ ডেটাবেজের সঙ্গে যুক্ত করতে হবে।</div></div></section>
 <section class="page" id="notices"><div class="welcome"><div><h2>নোটিশ ব্যবস্থাপনা</h2><p>এই ডেমো ব্রাউজারে নোটিশ তৈরি করে দেখতে পারবেন।</p></div></div><div class="panel"><form id="noticeForm" class="formrow"><div class="field full"><label>নোটিশের শিরোনাম *</label><input name="title" required></div><div class="field full"><label>বিস্তারিত</label><input name="body"></div><div class="field full"><button class="btn">নোটিশ যোগ করুন</button></div></form><div id="noticeList" style="margin-top:18px"></div></div></section>
 <section class="page" id="settings"><div class="welcome"><div><h2>সিস্টেম সেটিংস</h2><p>অ্যাডমিন ও ডেটাবেজ সংযোগ সংক্রান্ত তথ্য।</p></div></div><div class="panel"><h3>প্রোডাকশন সেটআপ প্রয়োজন</h3><p class="muted" style="line-height:1.9">নিরাপদ লগইনের জন্য Supabase Auth বা সমমানের সার্ভার-সাইড authentication, PostgreSQL database, role-based access control এবং private file storage যুক্ত করতে হবে। কোনো admin password এই static page-এ রাখা হয়নি।</p><button class="btn secondary" onclick="exportData()">ডেমো ডেটা JSON Export</button> <button class="btn secondary" onclick="clearDemo()">ডেমো ডেটা মুছুন</button></div></section>
-<p class="footnote">© Salsabil Global Academy · Admin UI Preview. Browser-local demo only.</p>
+<p class="footnote">© Salsabil Global Academy · Admin Console · Supabase-secured access</p>
 </div></main></div><div class="toast" id="toast"></div>
 <script>
 const titles={dashboard:'অ্যাডমিন ড্যাশবোর্ড',students:'শিক্ষার্থী ব্যবস্থাপনা',teachers:'শিক্ষক ব্যবস্থাপনা',admissions:'ভর্তি আবেদন',attendance:'উপস্থিতি ব্যবস্থাপনা',exams:'পরীক্ষা ও ফলাফল',fees:'ফি ও হিসাব',notices:'নোটিশ ব্যবস্থাপনা',settings:'সিস্টেম সেটিংস'};
 const read=k=>JSON.parse(localStorage.getItem('sga_'+k)||'[]');const write=(k,v)=>localStorage.setItem('sga_'+k,JSON.stringify(v));
 function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2300)}
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='students')renderStudents();if(id==='teachers')renderTeachers();if(id==='notices')renderNotices()}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='teachers')renderTeachers();if(id==='notices')renderNotices()}
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 document.getElementById('mobilemenu').onclick=()=>document.getElementById('side').classList.toggle('open');
-document.getElementById('studentForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target),a=read('students');a.push({name:f.get('name'),cls:f.get('class'),phone:f.get('phone'),sid:f.get('sid')||'SGA-'+String(a.length+1).padStart(4,'0')});write('students',a);e.target.reset();renderStudents();renderDashboard();toast('ডেমো শিক্ষার্থী যোগ হয়েছে')});
+
 document.getElementById('teacherForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target),a=read('teachers');a.push({name:f.get('name'),subject:f.get('subject'),phone:f.get('phone')});write('teachers',a);e.target.reset();renderTeachers();renderDashboard();toast('ডেমো শিক্ষক যোগ হয়েছে')});
 document.getElementById('noticeForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target),a=read('notices');a.unshift({title:f.get('title'),body:f.get('body'),date:new Date().toLocaleDateString('bn-BD')});write('notices',a);e.target.reset();renderNotices();toast('ডেমো নোটিশ যোগ হয়েছে')});
-function renderStudents(){const a=read('students');document.getElementById('studentTotal').textContent=a.length+' জন';document.getElementById('studentTable').innerHTML=a.length?'<table><thead><tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>মোবাইল</th></tr></thead><tbody>'+a.map(s=>'<tr><td>'+esc(s.sid)+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.cls)+'</td><td>'+esc(s.phone)+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এখনো কোনো শিক্ষার্থী নেই</div>'}
+function renderStudents(){ /* Supabase module renders the student list. */ }
 function renderTeachers(){const a=read('teachers');document.getElementById('teacherTable').innerHTML=a.length?'<table><thead><tr><th>নাম</th><th>বিষয়</th><th>মোবাইল</th></tr></thead><tbody>'+a.map(s=>'<tr><td>'+esc(s.name)+'</td><td>'+esc(s.subject)+'</td><td>'+esc(s.phone)+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এখনো কোনো শিক্ষক নেই</div>'}
 function renderNotices(){const a=read('notices');document.getElementById('noticeList').innerHTML=a.length?a.map(n=>'<div style="padding:12px;border-bottom:1px solid #e3eae5"><b>'+esc(n.title)+'</b><div class="muted">'+esc(n.date)+' · '+esc(n.body)+'</div></div>').join(''):'<div class="empty">কোনো ডেমো নোটিশ নেই</div>'}
 function renderDashboard(){document.getElementById('studentCount').textContent=read('students').length;document.getElementById('teacherCount').textContent=read('teachers').length;const a=read('students');document.getElementById('recent').innerHTML=a.length?'<div class="tablewrap"><table><thead><tr><th>নাম</th><th>শ্রেণি</th><th>আইডি</th></tr></thead><tbody>'+a.slice(-5).reverse().map(s=>'<tr><td>'+esc(s.name)+'</td><td>'+esc(s.cls)+'</td><td>'+esc(s.sid)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty"><b>এখনো কোনো শিক্ষার্থী যোগ করা হয়নি</b>শিক্ষার্থী বিভাগ থেকে নতুন রেকর্ড যোগ করতে পারবেন।</div>'}
@@ -152,4 +166,148 @@ supabase.auth.onAuthStateChange((_event, session) => {
 const { data: sessionData } = await supabase.auth.getSession();
 if (sessionData.session) await verifyAdmin(sessionData.session);
 else showLogin();
+
+// Student management: all reads and writes use the authenticated Supabase session.
+const studentForm = document.getElementById('studentForm');
+const studentClass = document.getElementById('studentClass');
+const studentTable = document.getElementById('studentTable');
+const studentTotal = document.getElementById('studentTotal');
+const studentSearch = document.getElementById('studentSearch');
+const studentSaveBtn = document.getElementById('studentSaveBtn');
+const studentCancelBtn = document.getElementById('studentCancelBtn');
+const studentFormMessage = document.getElementById('studentFormMessage');
+let classRows = [];
+let studentRows = [];
+
+function studentMessage(message, isError = false) {
+  studentFormMessage.textContent = message;
+  studentFormMessage.style.color = isError ? '#a32929' : '';
+}
+function resetStudentForm() {
+  studentForm.reset();
+  studentForm.elements.id.value = '';
+  studentSaveBtn.textContent = 'ডেটাবেজে সংরক্ষণ';
+  studentCancelBtn.style.display = 'none';
+  studentMessage('তথ্য Supabase ডেটাবেজে সংরক্ষিত হবে।');
+}
+async function loadStudentClasses() {
+  const { data, error } = await supabase.from('academic_classes')
+    .select('id,name').eq('is_active', true).order('sort_order');
+  if (error) {
+    studentClass.innerHTML = '<option value="">শ্রেণি লোড হয়নি</option>';
+    studentTable.innerHTML = '<div class="empty"><b>শ্রেণির তালিকা পাওয়া যায়নি</b>Supabase SQL Editor-এ প্রতিষ্ঠানের database migration চালানো হয়েছে কি না যাচাই করুন।</div>';
+    studentMessage('academic_classes টেবিল পাওয়া যায়নি বা অনুমতি নেই।', true);
+    console.error(error);
+    return false;
+  }
+  classRows = data || [];
+  studentClass.innerHTML = '<option value="">শ্রেণি নির্বাচন করুন</option>' +
+    classRows.map(item => '<option value="' + item.id + '">' + escapeHtml(item.name) + '</option>').join('');
+  return true;
+}
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[ch]);
+}
+async function loadStudents() {
+  studentTable.innerHTML = '<div class="empty">Supabase থেকে তথ্য আনা হচ্ছে...</div>';
+  const { data, error } = await supabase.from('students')
+    .select('id,student_code,full_name,date_of_birth,gender,class_id,section,status,admission_date,guardian_name,guardian_phone,academic_classes(name)')
+    .order('created_at', { ascending: false });
+  if (error) {
+    studentTotal.textContent = 'তথ্য পাওয়া যায়নি';
+    studentTable.innerHTML = '<div class="empty"><b>শিক্ষার্থীর তথ্য লোড করা যায়নি</b>ডেটাবেজ migration ও students টেবিলের guardian_name/guardian_phone কলাম যাচাই করুন।</div>';
+    studentMessage('ডেটাবেজে প্রয়োজনীয় টেবিল/কলাম নেই অথবা RLS অনুমতি দেয়নি।', true);
+    console.error('Student list error:', error);
+    return;
+  }
+  studentRows = data || [];
+  renderStudentTable();
+  document.getElementById('studentCount').textContent = studentRows.length;
+}
+function renderStudentTable() {
+  const q = (studentSearch.value || '').trim().toLowerCase();
+  const filtered = studentRows.filter(s =>
+    [s.full_name,s.student_code,s.guardian_phone,s.guardian_name].some(v => String(v || '').toLowerCase().includes(q))
+  );
+  studentTotal.textContent = studentRows.length + ' জন';
+  if (!filtered.length) {
+    studentTable.innerHTML = '<div class="empty">' + (q ? 'আপনার খোঁজের সঙ্গে মেলে এমন শিক্ষার্থী পাওয়া যায়নি।' : 'এখনো কোনো শিক্ষার্থী যোগ করা হয়নি।') + '</div>';
+    return;
+  }
+  studentTable.innerHTML = '<table><thead><tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>অভিভাবক</th><th>মোবাইল</th><th>অবস্থা</th><th>কাজ</th></tr></thead><tbody>' +
+    filtered.map(s => '<tr><td>' + escapeHtml(s.student_code) + '</td><td>' + escapeHtml(s.full_name) + '</td><td>' + escapeHtml(s.academic_classes?.name || '') + (s.section ? ' · ' + escapeHtml(s.section) : '') + '</td><td>' + escapeHtml(s.guardian_name || '—') + '</td><td>' + escapeHtml(s.guardian_phone || '—') + '</td><td>' + escapeHtml(({active:'সক্রিয়',inactive:'নিষ্ক্রিয়',graduated:'উত্তীর্ণ',transferred:'স্থানান্তরিত'})[s.status] || s.status) + '</td><td><button class="btn secondary" type="button" data-edit-student="' + s.id + '">সম্পাদনা</button> <button class="btn secondary" type="button" data-delete-student="' + s.id + '">মুছুন</button></td></tr>').join('') +
+    '</tbody></table>';
+}
+studentSearch.addEventListener('input', renderStudentTable);
+studentCancelBtn.addEventListener('click', resetStudentForm);
+studentForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  studentSaveBtn.disabled = true;
+  studentSaveBtn.textContent = 'সংরক্ষণ হচ্ছে...';
+  const fd = new FormData(studentForm);
+  const payload = {
+    student_code: String(fd.get('student_code')).trim(),
+    full_name: String(fd.get('full_name')).trim(),
+    class_id: fd.get('class_id'),
+    section: String(fd.get('section') || '').trim() || null,
+    date_of_birth: fd.get('date_of_birth') || null,
+    gender: fd.get('gender') || null,
+    guardian_name: String(fd.get('guardian_name') || '').trim() || null,
+    guardian_phone: String(fd.get('guardian_phone') || '').trim() || null,
+    admission_date: fd.get('admission_date') || undefined,
+    status: fd.get('status') || 'active'
+  };
+  const id = fd.get('id');
+  const result = id
+    ? await supabase.from('students').update(payload).eq('id', id)
+    : await supabase.from('students').insert(payload);
+  studentSaveBtn.disabled = false;
+  studentSaveBtn.textContent = id ? 'পরিবর্তন সংরক্ষণ' : 'ডেটাবেজে সংরক্ষণ';
+  if (result.error) {
+    studentMessage('সংরক্ষণ হয়নি: ' + result.error.message, true);
+    console.error('Student save error:', result.error);
+    return;
+  }
+  resetStudentForm();
+  await loadStudents();
+  toast(id ? 'শিক্ষার্থীর তথ্য আপডেট হয়েছে' : 'নতুন শিক্ষার্থী ডেটাবেজে যোগ হয়েছে');
+});
+studentTable.addEventListener('click', async event => {
+  const editButton = event.target.closest('[data-edit-student]');
+  const deleteButton = event.target.closest('[data-delete-student]');
+  if (editButton) {
+    const s = studentRows.find(row => row.id === editButton.dataset.editStudent);
+    if (!s) return;
+    studentForm.elements.id.value = s.id;
+    studentForm.elements.full_name.value = s.full_name || '';
+    studentForm.elements.student_code.value = s.student_code || '';
+    studentForm.elements.class_id.value = s.class_id || '';
+    studentForm.elements.section.value = s.section || '';
+    studentForm.elements.date_of_birth.value = s.date_of_birth || '';
+    studentForm.elements.gender.value = s.gender || '';
+    studentForm.elements.guardian_name.value = s.guardian_name || '';
+    studentForm.elements.guardian_phone.value = s.guardian_phone || '';
+    studentForm.elements.admission_date.value = s.admission_date || '';
+    studentForm.elements.status.value = s.status || 'active';
+    studentSaveBtn.textContent = 'পরিবর্তন সংরক্ষণ';
+    studentCancelBtn.style.display = 'inline-block';
+    studentMessage('আপনি এখন ' + s.full_name + ' এর তথ্য সম্পাদনা করছেন।');
+    studentForm.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  if (deleteButton) {
+    const s = studentRows.find(row => row.id === deleteButton.dataset.deleteStudent);
+    if (!s || !confirm('আপনি কি ' + s.full_name + ' এর রেকর্ড স্থায়ীভাবে মুছে ফেলতে চান?')) return;
+    const { error } = await supabase.from('students').delete().eq('id', s.id);
+    if (error) {
+      studentMessage('মুছে ফেলা যায়নি: ' + error.message, true);
+      console.error('Student delete error:', error);
+      return;
+    }
+    await loadStudents();
+    toast('শিক্ষার্থীর রেকর্ড মুছে ফেলা হয়েছে');
+  }
+});
+if (await loadStudentClasses()) await loadStudents();
 </script></body></html>
