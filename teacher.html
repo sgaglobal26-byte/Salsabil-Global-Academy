@@ -22,14 +22,44 @@ async function start(session){
  for(const [key,label] of specs){const b=document.createElement('button');b.className='btn';b.textContent=label;b.onclick=()=>loadTab(key,label,session.user.id);tabs.append(b);const p=document.createElement('div');p.id='p-'+key;p.className='card panel';content.append(p)}
  tabs.firstElementChild?.click();
 }
+async function renderTeacherAttendance(panel,uid){
+ const {data:assignments,error:ae}=await db.from('teacher_assignments').select('class_id,section,academic_classes(name)').eq('teacher_user_id',uid);
+ if(ae){panel.innerHTML='<p class="error">দায়িত্বের তালিকা লোড হয়নি: '+esc(ae.message)+'</p>';return}
+ const list=assignments||[];
+ if(!list.length){panel.textContent='আপনার নামে কোনো শ্রেণি/সেকশন বরাদ্দ নেই।';return}
+ const unique=[...new Map(list.map(x=>[x.class_id+'|'+(x.section||''),x])).values()];
+ panel.innerHTML='<h3>দৈনিক উপস্থিতি</h3><div class="field"><label>শ্রেণি ও সেকশন নির্বাচন</label><select id="taGroup">'+unique.map((x,i)=>'<option value="'+i+'">'+esc(x.academic_classes?.name||'শ্রেণি')+(x.section?' — '+esc(x.section):' — সকল সেকশন')+'</option>').join('')+'</select></div><div class="field"><label>তারিখ</label><input id="taDate" type="date" value="'+new Date().toISOString().slice(0,10)+'"></div><button class="btn" id="taLoad">শিক্ষার্থী দেখুন</button><p class="muted" id="taMessage"></p><div class="scroll" id="taRows"></div>';
+ const group=panel.querySelector('#taGroup'),date=panel.querySelector('#taDate'),rows=panel.querySelector('#taRows'),msg=panel.querySelector('#taMessage');
+ async function load(){
+  const a=unique[Number(group.value)];rows.textContent='লোড হচ্ছে...';
+  let q=db.from('students').select('id,student_code,full_name,section').eq('class_id',a.class_id).eq('status','active').order('full_name');
+  if(a.section)q=q.eq('section',a.section);
+  const {data:students,error:se}=await q;
+  if(se){rows.textContent='শিক্ষার্থী লোড হয়নি: '+se.message;return}
+  if(!students?.length){rows.textContent='এই শ্রেণি/সেকশনে কোনো সক্রিয় শিক্ষার্থী নেই।';return}
+  const {data:records,error:re}=await db.from('attendance').select('student_id,status,note').eq('class_id',a.class_id).eq('attendance_date',date.value);
+  if(re){rows.textContent='উপস্থিতির তথ্য লোড হয়নি: '+re.message;return}
+  const saved=new Map((records||[]).map(x=>[x.student_id,x]));
+  rows.innerHTML='<table><thead><tr><th>আইডি</th><th>শিক্ষার্থীর নাম</th><th>সেকশন</th><th>উপস্থিতি</th></tr></thead><tbody>'+students.map(st=>'<tr><td>'+esc(st.student_code||'')+'</td><td>'+esc(st.full_name)+'</td><td>'+esc(st.section||'—')+'</td><td><select data-student="'+st.id+'"><option value="">নির্বাচন</option><option value="present">উপস্থিত</option><option value="absent">অনুপস্থিত</option><option value="late">বিলম্বে</option><option value="excused">ছুটি</option></select></td></tr>').join('')+'</tbody></table><button class="btn" id="taSave">উপস্থিতি সংরক্ষণ</button>';
+  rows.querySelectorAll('[data-student]').forEach(s=>{s.value=saved.get(s.dataset.student)?.status||''});
+  rows.querySelector('#taSave').onclick=async()=>{
+   const chosen=[...rows.querySelectorAll('[data-student]')].filter(s=>s.value).map(s=>({student_id:s.dataset.student,class_id:a.class_id,attendance_date:date.value,status:s.value,marked_by:uid}));
+   if(!chosen.length){msg.textContent='অন্তত একজন শিক্ষার্থীর উপস্থিতি নির্বাচন করুন।';return}
+   const {error}=await db.from('attendance').upsert(chosen,{onConflict:'student_id,attendance_date'});
+   msg.textContent=error?'সংরক্ষণ হয়নি: '+error.message:'উপস্থিতি সফলভাবে সংরক্ষিত হয়েছে।';
+  };
+ }
+ panel.querySelector('#taLoad').onclick=load;group.onchange=load;date.onchange=load;await load();
+}
 async function loadTab(key,label,uid){
  document.querySelectorAll('.tabs button').forEach((b,i)=>b.classList.toggle('active',i===[...document.querySelectorAll('.tabs button')].findIndex(x=>x.textContent===label)));
  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));const p=document.getElementById('p-'+key);p.classList.add('active');p.innerHTML='লোড হচ্ছে...';
  let data=[],err=null;
  if(role==='teacher'){
-  if(key==='classes'){({data,error:err}=await db.from('teacher_assignments').select('id,class_id,subject_id,academic_classes(name),subjects(name_bn)').eq('teacher_user_id',uid));}
-  else if(key==='students'){const {data:a,error:e}=await db.from('teacher_assignments').select('class_id').eq('teacher_user_id',uid);if(e)err=e;else if(a?.length){({data,error:err}=await db.from('students').select('id,student_code,full_name,class_id,section,academic_classes(name)').in('class_id',a.map(x=>x.class_id)).order('full_name'))}}
-  else {const {data:a,error:e}=await db.from('teacher_assignments').select('class_id').eq('teacher_user_id',uid);if(e)err=e;else if(a?.length){const q=key==='attendance'?db.from('attendance').select('attendance_date,status,student_id,class_id').in('class_id',a.map(x=>x.class_id)).order('attendance_date',{ascending:false}).limit(150):db.from('exam_results').select('marks,max_marks,grade,student_id,exam_id,subject_id,exams(title),subjects(name_bn)').limit(150);({data,error:err}=await q)}}
+  if(key==='classes'){({data,error:err}=await db.from('teacher_assignments').select('id,class_id,subject_id,section,academic_classes(name),subjects(name_bn)').eq('teacher_user_id',uid));}
+  else if(key==='students'){const {data:a,error:e}=await db.from('teacher_assignments').select('class_id,section').eq('teacher_user_id',uid);if(e)err=e;else if(a?.length){const classIds=[...new Set(a.map(x=>x.class_id))];({data,error:err}=await db.from('students').select('id,student_code,full_name,class_id,section,academic_classes(name)').in('class_id',classIds).order('full_name'));if(!err)data=(data||[]).filter(st=>a.some(x=>x.class_id===st.class_id&&(!x.section||x.section===st.section)));}}
+  else if(key==='attendance'){await renderTeacherAttendance(p,uid);return;}
+  else {({data,error:err}=await db.from('exam_results').select('marks,max_marks,grade,student_id,exam_id,subject_id,exams(title),subjects(name_bn)').limit(150));}
  }else{
   if(key==='children'){({data,error:err}=await db.from('student_guardians').select('student_id,students(id,student_code,full_name,class_id,academic_classes(name))').eq('user_id',uid))}
   else {const {data:links,error:e}=await db.from('student_guardians').select('student_id').eq('user_id',uid);if(e)err=e;else{const ids=(links||[]).map(x=>x.student_id);if(key==='notices'){({data,error:err}=await db.from('notices').select('title_bn,body_bn,published_at').eq('is_published',true).order('published_at',{ascending:false}).limit(50))}else if(ids.length){const q=key==='attendance'?db.from('attendance').select('attendance_date,status,student_id').in('student_id',ids).order('attendance_date',{ascending:false}).limit(100):key==='results'?db.from('exam_results').select('marks,max_marks,grade,student_id,exams(title,academic_year),subjects(name_bn)').in('student_id',ids).limit(100):db.from('fee_invoices').select('invoice_number,description,amount,due_date,status,student_id,fee_payments(amount,paid_at,receipt_number)').in('student_id',ids).order('created_at',{ascending:false});({data,error:err}=await q)}}}
