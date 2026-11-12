@@ -61,7 +61,24 @@
 </form></div><div class="panel" style="margin-top:16px"><div class="panelhead"><h3>শিক্ষার্থীর তালিকা</h3><span class="muted" id="studentTotal">লোড হচ্ছে...</span></div><div class="toolbar"><input id="studentSearch" type="search" placeholder="নাম, আইডি বা মোবাইল দিয়ে খুঁজুন"></div><div class="tablewrap" id="studentTable"><div class="empty">Supabase থেকে তথ্য আনা হচ্ছে...</div></div></div></section>
 <section class="page" id="teachers"><div class="welcome"><div><h2>শিক্ষক ব্যবস্থাপনা</h2><p>ডেমো হিসেবে শিক্ষক তালিকা তৈরি করুন।</p></div></div><div class="panel"><h3>নতুন শিক্ষক</h3><form id="teacherForm" class="formrow" style="margin-top:15px"><div class="field"><label>শিক্ষকের নাম *</label><input name="name" required></div><div class="field"><label>বিষয় / দায়িত্ব</label><input name="subject" placeholder="যেমন: বাংলা"></div><div class="field"><label>মোবাইল</label><input name="phone"></div><div class="field full"><button class="btn">শিক্ষক সংরক্ষণ (এই ব্রাউজারে)</button></div></form></div><div class="panel" style="margin-top:16px"><h3>শিক্ষক তালিকা</h3><div class="tablewrap" id="teacherTable"></div></div></section>
 <section class="page" id="admissions"><div class="welcome"><div><h2>ভর্তি আবেদন</h2><p>অনলাইন আবেদন ফরম ও ডেটাবেজ সংযোগ পরবর্তী ধাপে যুক্ত হবে।</p></div></div><div class="panel"><div class="empty"><b>ভর্তি আবেদন মডিউল এখনো সংযুক্ত নয়</b>অনলাইন আবেদন গ্রহণ, Application ID, কাগজপত্র আপলোড ও অনুমোদনের জন্য নিরাপদ backend প্রয়োজন।</div></div></section>
-<section class="page" id="attendance"><div class="welcome"><div><h2>উপস্থিতি ব্যবস্থাপনা</h2><p>দৈনিক ও মাসিক উপস্থিতির মডিউল।</p></div></div><div class="panel"><div class="empty"><b>উপস্থিতি মডিউল প্রস্তুত করা বাকি</b>শ্রেণিভিত্তিক উপস্থিতি, Present/Absent/Late এবং রিপোর্ট পরবর্তী ধাপে যুক্ত হবে।</div></div></section>
+<section class="page" id="attendance">
+<div class="welcome"><div><h2>উপস্থিতি ব্যবস্থাপনা</h2><p>শ্রেণি ও তারিখ অনুযায়ী শিক্ষার্থীদের দৈনিক উপস্থিতি নিন।</p></div></div>
+<div class="panel">
+<div class="formrow">
+<div class="field"><label>শ্রেণি নির্বাচন *</label><select id="attendanceClass"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
+<div class="field"><label>তারিখ *</label><input id="attendanceDate" type="date"></div>
+</div>
+<div class="toolbar"><button class="btn" id="loadAttendanceBtn" type="button">শিক্ষার্থীর তালিকা দেখুন</button><span class="muted" id="attendanceMessage">প্রথমে শ্রেণি ও তারিখ নির্বাচন করুন।</span></div>
+<div class="stats" style="grid-template-columns:repeat(4,1fr);margin:14px 0">
+<div class="stat"><div class="stathead">উপস্থিত</div><strong id="attPresent">০</strong></div>
+<div class="stat"><div class="stathead">অনুপস্থিত</div><strong id="attAbsent">০</strong></div>
+<div class="stat"><div class="stathead">দেরিতে</div><strong id="attLate">০</strong></div>
+<div class="stat"><div class="stathead">ছুটি</div><strong id="attExcused">০</strong></div>
+</div>
+<div class="tablewrap" id="attendanceTable"><div class="empty">শ্রেণি ও তারিখ নির্বাচন করে তালিকা দেখুন।</div></div>
+<div class="toolbar"><button class="btn" id="saveAttendanceBtn" type="button" disabled>উপস্থিতি সংরক্ষণ করুন</button><span class="muted">শুধু নির্বাচিত স্ট্যাটাসগুলো সংরক্ষিত হবে।</span></div>
+</div>
+</section>
 <section class="page" id="exams"><div class="welcome"><div><h2>পরীক্ষা ও ফলাফল</h2><p>পরীক্ষা, নম্বর, গ্রেড ও রিপোর্ট কার্ড।</p></div></div><div class="panel"><div class="empty"><b>পরীক্ষা মডিউল এখনো সংযুক্ত নয়</b>পরীক্ষা তৈরি, নম্বর এন্ট্রি, GPA/গ্রেড ও ফলাফল প্রকাশের ব্যবস্থা পরবর্তী ধাপে যুক্ত হবে।</div></div></section>
 <section class="page" id="fees"><div class="welcome"><div><h2>ফি ও হিসাব</h2><p>ফি, বকেয়া ও পেমেন্ট রসিদ ব্যবস্থাপনা।</p></div></div><div class="panel"><div class="empty"><b>ফাইন্যান্স মডিউল এখনো সংযুক্ত নয়</b>ফি কাঠামো, পেমেন্ট রেকর্ড, বকেয়া রিপোর্ট ও রসিদ নিরাপদ ডেটাবেজের সঙ্গে যুক্ত করতে হবে।</div></div></section>
 <section class="page" id="notices"><div class="welcome"><div><h2>নোটিশ ব্যবস্থাপনা</h2><p>এই ডেমো ব্রাউজারে নোটিশ তৈরি করে দেখতে পারবেন।</p></div></div><div class="panel"><form id="noticeForm" class="formrow"><div class="field full"><label>নোটিশের শিরোনাম *</label><input name="title" required></div><div class="field full"><label>বিস্তারিত</label><input name="body"></div><div class="field full"><button class="btn">নোটিশ যোগ করুন</button></div></form><div id="noticeList" style="margin-top:18px"></div></div></section>
@@ -309,5 +326,121 @@ studentTable.addEventListener('click', async event => {
     toast('শিক্ষার্থীর রেকর্ড মুছে ফেলা হয়েছে');
   }
 });
+
 if (await loadStudentClasses()) await loadStudents();
+
+// Attendance management: records are saved in public.attendance.
+const attendanceClass = document.getElementById('attendanceClass');
+const attendanceDate = document.getElementById('attendanceDate');
+const attendanceTable = document.getElementById('attendanceTable');
+const attendanceMessage = document.getElementById('attendanceMessage');
+const loadAttendanceBtn = document.getElementById('loadAttendanceBtn');
+const saveAttendanceBtn = document.getElementById('saveAttendanceBtn');
+let attendanceStudents = [];
+let attendanceExisting = new Map();
+
+attendanceClass.innerHTML = '<option value="">শ্রেণি নির্বাচন করুন</option>' +
+  classRows.map(item => '<option value="' + item.id + '">' + escapeHtml(item.name) + '</option>').join('');
+const todayLocal = new Date();
+attendanceDate.value = [todayLocal.getFullYear(), String(todayLocal.getMonth()+1).padStart(2,'0'), String(todayLocal.getDate()).padStart(2,'0')].join('-');
+
+function attendanceStatusLabel(status) {
+  return ({present:'উপস্থিত',absent:'অনুপস্থিত',late:'দেরিতে',excused:'ছুটি'})[status] || 'নির্বাচন করুন';
+}
+function updateAttendanceSummary() {
+  const counts = {present:0,absent:0,late:0,excused:0};
+  attendanceTable.querySelectorAll('[data-attendance-status]').forEach(select => {
+    if (counts[select.value] !== undefined) counts[select.value]++;
+  });
+  document.getElementById('attPresent').textContent = counts.present;
+  document.getElementById('attAbsent').textContent = counts.absent;
+  document.getElementById('attLate').textContent = counts.late;
+  document.getElementById('attExcused').textContent = counts.excused;
+}
+async function loadAttendance() {
+  const classId = attendanceClass.value;
+  const date = attendanceDate.value;
+  if (!classId || !date) {
+    attendanceMessage.textContent = 'শ্রেণি ও তারিখ নির্বাচন করুন।';
+    return;
+  }
+  loadAttendanceBtn.disabled = true;
+  loadAttendanceBtn.textContent = 'লোড হচ্ছে...';
+  saveAttendanceBtn.disabled = true;
+  const {data: students, error: studentError} = await supabase.from('students')
+    .select('id,student_code,full_name,section')
+    .eq('class_id', classId).eq('status','active').order('full_name');
+  if (studentError) {
+    attendanceTable.innerHTML = '<div class="empty">শিক্ষার্থীর তালিকা লোড হয়নি: ' + escapeHtml(studentError.message) + '</div>';
+    attendanceMessage.textContent = 'তথ্য পাওয়া যায়নি।';
+    loadAttendanceBtn.disabled = false;
+    loadAttendanceBtn.textContent = 'শিক্ষার্থীর তালিকা দেখুন';
+    return;
+  }
+  const {data: records, error: attendanceError} = await supabase.from('attendance')
+    .select('student_id,status,note').eq('class_id',classId).eq('attendance_date',date);
+  if (attendanceError) {
+    attendanceTable.innerHTML = '<div class="empty">উপস্থিতির তথ্য লোড হয়নি: ' + escapeHtml(attendanceError.message) + '</div>';
+    attendanceMessage.textContent = 'attendance টেবিল বা অনুমতি যাচাই করুন।';
+    loadAttendanceBtn.disabled = false;
+    loadAttendanceBtn.textContent = 'শিক্ষার্থীর তালিকা দেখুন';
+    return;
+  }
+  attendanceStudents = students || [];
+  attendanceExisting = new Map((records || []).map(row => [row.student_id,row]));
+  if (!attendanceStudents.length) {
+    attendanceTable.innerHTML = '<div class="empty">এই শ্রেণিতে কোনো সক্রিয় শিক্ষার্থী পাওয়া যায়নি।</div>';
+  } else {
+    attendanceTable.innerHTML = '<table><thead><tr><th>ক্রম</th><th>শিক্ষার্থী আইডি</th><th>শিক্ষার্থীর নাম</th><th>শাখা</th><th>উপস্থিতির অবস্থা</th></tr></thead><tbody>' +
+      attendanceStudents.map((student,index) => {
+        const existing = attendanceExisting.get(student.id);
+        const status = existing?.status || '';
+        return '<tr><td>'+(index+1)+'</td><td>'+escapeHtml(student.student_code)+'</td><td>'+escapeHtml(student.full_name)+'</td><td>'+escapeHtml(student.section || '—')+'</td><td><select data-attendance-status data-student-id="'+student.id+'" aria-label="'+escapeHtml(student.full_name)+' এর উপস্থিতি"><option value="">নির্বাচন করুন</option><option value="present" '+(status==='present'?'selected':'')+'>উপস্থিত</option><option value="absent" '+(status==='absent'?'selected':'')+'>অনুপস্থিত</option><option value="late" '+(status==='late'?'selected':'')+'>দেরিতে</option><option value="excused" '+(status==='excused'?'selected':'')+'>ছুটি</option></select></td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+  attendanceMessage.textContent = attendanceStudents.length + ' জন সক্রিয় শিক্ষার্থী · আগে সংরক্ষিত উপস্থিতি থাকলে তা দেখানো হয়েছে।';
+  loadAttendanceBtn.disabled = false;
+  loadAttendanceBtn.textContent = 'তালিকা পুনরায় লোড';
+  saveAttendanceBtn.disabled = !attendanceStudents.length;
+  updateAttendanceSummary();
+}
+attendanceTable.addEventListener('change', event => {
+  if (event.target.matches('[data-attendance-status]')) updateAttendanceSummary();
+});
+loadAttendanceBtn.addEventListener('click', loadAttendance);
+saveAttendanceBtn.addEventListener('click', async () => {
+  const sessionResult = await supabase.auth.getSession();
+  const userId = sessionResult.data.session?.user?.id;
+  if (!userId) {
+    attendanceMessage.textContent = 'সেশন শেষ হয়েছে। আবার লগইন করুন।';
+    return;
+  }
+  const selected = [...attendanceTable.querySelectorAll('[data-attendance-status]')]
+    .filter(select => select.value)
+    .map(select => ({
+      student_id: select.dataset.studentId,
+      class_id: attendanceClass.value,
+      attendance_date: attendanceDate.value,
+      status: select.value,
+      marked_by: userId
+    }));
+  if (!selected.length) {
+    attendanceMessage.textContent = 'সংরক্ষণের আগে অন্তত একজনের উপস্থিতির অবস্থা নির্বাচন করুন।';
+    return;
+  }
+  saveAttendanceBtn.disabled = true;
+  saveAttendanceBtn.textContent = 'সংরক্ষণ হচ্ছে...';
+  const {error} = await supabase.from('attendance').upsert(selected,{onConflict:'student_id,attendance_date'});
+  saveAttendanceBtn.disabled = false;
+  saveAttendanceBtn.textContent = 'উপস্থিতি সংরক্ষণ করুন';
+  if (error) {
+    attendanceMessage.textContent = 'সংরক্ষণ হয়নি: ' + error.message;
+    console.error('Attendance save error:',error);
+    return;
+  }
+  attendanceMessage.textContent = selected.length + ' জন শিক্ষার্থীর উপস্থিতি সফলভাবে সংরক্ষিত হয়েছে।';
+  toast('উপস্থিতির তথ্য ডেটাবেজে সংরক্ষিত হয়েছে');
+  await loadAttendance();
+});
+
 </script></body></html>
