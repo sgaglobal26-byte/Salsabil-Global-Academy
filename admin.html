@@ -20,6 +20,8 @@
 .logout-btn{border:1px solid var(--line);background:#fff;color:var(--deep);border-radius:8px;padding:7px 11px;font-size:12px}
 .layout{display:none}body.authenticated .layout{display:grid}
 @media(max-width:650px){body.authenticated .layout{display:block}}
+
+@media print{body *{visibility:hidden!important}#reportCardPrint,#reportCardPrint *{visibility:visible!important}#reportCardPrint{position:absolute!important;left:0!important;top:0!important;width:100%!important;margin:0!important;padding:18px!important;background:#fff!important;color:#111!important}.report-sheet{border:0!important;box-shadow:none!important;max-width:none!important}.report-sheet table{font-size:12px!important}.report-sheet th,.report-sheet td{border:1px solid #777!important;padding:7px!important}.report-school{text-align:center;margin-bottom:18px}.report-school h2{margin:0;color:#073b36}.report-school p{margin:3px 0}.report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.report-summary div{border:1px solid #999;padding:8px;text-align:center}}
 </style></head>
 <body>
 <section class="auth-gate" id="authGate">
@@ -109,6 +111,18 @@
  <div class="toolbar"><button class="btn" id="loadResultsBtn" type="button">শিক্ষার্থীদের নম্বর লোড করুন</button><button class="btn secondary" id="publishExamBtn" type="button" disabled>ফলাফল প্রকাশ করুন</button><span class="muted" id="resultMessage">পরীক্ষা ও বিষয় নির্বাচন করুন।</span></div>
  <div class="tablewrap" id="resultTable"><div class="empty">পরীক্ষা ও বিষয় নির্বাচন করে নম্বর এন্ট্রি শুরু করুন।</div></div>
  <div class="toolbar"><button class="btn" id="saveResultsBtn" type="button" disabled>নম্বর সংরক্ষণ করুন</button><span class="muted">নম্বর ০ থেকে পূর্ণমানের মধ্যে হতে হবে। গ্রেড স্বয়ংক্রিয়ভাবে নির্ধারিত হবে।</span></div>
+</div>
+
+<div class="panel" style="margin-top:16px">
+ <div class="panelhead"><h3>GPA, মেধাতালিকা ও রিপোর্ট কার্ড</h3><span class="muted">Academic Report</span></div>
+ <div class="formrow">
+  <div class="field"><label>পরীক্ষা নির্বাচন *</label><select id="reportExam"><option value="">পরীক্ষা নির্বাচন করুন</option></select></div>
+  <div class="field"><label>শিক্ষার্থী নির্বাচন</label><select id="reportStudent" disabled><option value="">আগে পরীক্ষার ফলাফল লোড করুন</option></select></div>
+ </div>
+ <div class="toolbar"><button class="btn" id="loadReportBtn" type="button">GPA ও মেধাতালিকা তৈরি করুন</button><button class="btn secondary" id="printReportBtn" type="button" disabled>রিপোর্ট কার্ড প্রিন্ট</button><span class="muted" id="reportMessage">পরীক্ষা নির্বাচন করে ফলাফল লোড করুন।</span></div>
+ <div id="meritList" class="tablewrap"><div class="empty">এখানে শ্রেণিভিত্তিক মেধাতালিকা দেখা যাবে।</div></div>
+ <div id="reportCardPrint" style="margin-top:16px"></div>
+ <p class="footnote">GPA ৫.০০ স্কেলে গণনা করা হবে। অসম্পূর্ণ বিষয় থাকা শিক্ষার্থীকে মেধাতালিকায় স্থান দেওয়া হবে না।</p>
 </div>
 </section>
 <section class="page" id="fees"><div class="welcome"><div><h2>ফি ও হিসাব</h2><p>ফি, বকেয়া ও পেমেন্ট রসিদ ব্যবস্থাপনা।</p></div></div><div class="panel"><div class="empty"><b>ফাইন্যান্স মডিউল এখনো সংযুক্ত নয়</b>ফি কাঠামো, পেমেন্ট রেকর্ড, বকেয়া রিপোর্ট ও রসিদ নিরাপদ ডেটাবেজের সঙ্গে যুক্ত করতে হবে।</div></div></section>
@@ -603,6 +617,88 @@ publishExamBtn.addEventListener('click',async()=>{
   resultMessage.textContent=next?'ফলাফল প্রকাশিত হয়েছে।':'ফলাফল অপ্রকাশিত করা হয়েছে।';
   toast(next?'ফলাফল প্রকাশিত হয়েছে':'ফলাফল অপ্রকাশিত হয়েছে');await loadExamSetup();resultExam.value=exam.id;publishExamBtn.textContent=next?'প্রকাশিত — পুনরায় অপ্রকাশিত করুন':'ফলাফল প্রকাশ করুন';
 });
+
+
+const reportExam = document.getElementById('reportExam');
+const reportStudent = document.getElementById('reportStudent');
+const reportMessage = document.getElementById('reportMessage');
+const meritList = document.getElementById('meritList');
+const reportCardPrint = document.getElementById('reportCardPrint');
+const printReportBtn = document.getElementById('printReportBtn');
+let reportRows = [];
+let reportStudents = [];
+function gradePointForMarks(marks,maxMarks){
+  const percentage=maxMarks>0?(Number(marks)/Number(maxMarks))*100:0;
+  if(percentage>=80)return 5;if(percentage>=70)return 4;if(percentage>=60)return 3.5;
+  if(percentage>=50)return 3;if(percentage>=40)return 2;if(percentage>=33)return 1;return 0;
+}
+function letterGradeFromPoint(point){
+  if(point>=5)return 'A+';if(point>=4)return 'A';if(point>=3.5)return 'A-';
+  if(point>=3)return 'B';if(point>=2)return 'C';if(point>=1)return 'D';return 'F';
+}
+function formatReportNumber(value){return Number(value||0).toLocaleString('bn-BD',{maximumFractionDigits:2});}
+function calculateStudentReport(student, resultRows, subjectCount){
+  const rows=resultRows.filter(r=>r.student_id===student.id);
+  const uniqueSubjects=new Set(rows.map(r=>r.subject_id));
+  const total=rows.reduce((sum,r)=>sum+Number(r.marks),0);
+  const maxTotal=rows.reduce((sum,r)=>sum+Number(r.max_marks),0);
+  const points=rows.map(r=>gradePointForMarks(r.marks,r.max_marks));
+  const gpa=points.length?points.reduce((a,b)=>a+b,0)/points.length:0;
+  return {student,rows,total,maxTotal,percentage:maxTotal?(total/maxTotal)*100:0,gpa,grade:letterGradeFromPoint(gpa),complete:subjectCount>0&&uniqueSubjects.size===subjectCount&&rows.length===subjectCount};
+}
+function renderReportCard(item, exam){
+  if(!item){reportCardPrint.innerHTML='';printReportBtn.disabled=true;return;}
+  const className=exam.academic_classes?.name||'';
+  const rows=item.rows.slice().sort((a,b)=>(a.subjects?.name_bn||'').localeCompare(b.subjects?.name_bn||'','bn'));
+  reportCardPrint.innerHTML='<div class="panel report-sheet" style="max-width:850px;margin:0 auto;border:1px solid #dce5de;padding:24px">'+
+    '<div class="report-school"><h2>সালসাবিল গ্লোবাল একাডেমি</h2><p>মির্জাপুর, টাঙ্গাইল, বাংলাদেশ</p><h3>'+escapeHtml(exam.title)+' — ফলাফল</h3></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px"><div><b>শিক্ষার্থীর নাম:</b> '+escapeHtml(item.student.full_name)+'</div><div><b>শিক্ষার্থী আইডি:</b> '+escapeHtml(item.student.student_code)+'</div><div><b>শ্রেণি:</b> '+escapeHtml(className)+'</div><div><b>শিক্ষাবর্ষ:</b> '+escapeHtml(exam.academic_year)+'</div></div>'+
+    '<div class="report-summary"><div><b>GPA</b><br>'+formatReportNumber(item.gpa)+'</div><div><b>গ্রেড</b><br>'+item.grade+'</div><div><b>মোট নম্বর</b><br>'+formatReportNumber(item.total)+' / '+formatReportNumber(item.maxTotal)+'</div><div><b>শতকরা</b><br>'+formatReportNumber(item.percentage)+'%</div></div>'+
+    '<table><thead><tr><th>বিষয়</th><th>প্রাপ্ত নম্বর</th><th>পূর্ণমান</th><th>গ্রেড</th><th>গ্রেড পয়েন্ট</th></tr></thead><tbody>'+
+    rows.map(r=>{const gp=gradePointForMarks(r.marks,r.max_marks);return '<tr><td>'+escapeHtml(r.subjects?.name_bn||'বিষয়')+'</td><td>'+formatReportNumber(r.marks)+'</td><td>'+formatReportNumber(r.max_marks)+'</td><td>'+gradeForMarks(Number(r.marks),Number(r.max_marks))+'</td><td>'+formatReportNumber(gp)+'</td></tr>';}).join('')+
+    '</tbody></table><p style="margin-top:35px;display:flex;justify-content:space-between;font-size:12px"><span>শ্রেণি শিক্ষকের স্বাক্ষর: __________________</span><span>প্রধান শিক্ষকের স্বাক্ষর: __________________</span></p></div>';
+  printReportBtn.disabled=false;
+}
+function renderMeritList(exam){
+  const subjectCount=new Set(reportRows.map(r=>r.subject_id)).size;
+  const calculated=reportStudents.map(st=>calculateStudentReport(st,reportRows,subjectCount));
+  const ranked=calculated.filter(x=>x.complete).sort((a,b)=>b.gpa-a.gpa||b.percentage-a.percentage||b.total-a.total||a.student.full_name.localeCompare(b.student.full_name,'bn'));
+  ranked.forEach((item,index)=>item.rank=index+1);
+  const rankMap=new Map(ranked.map(x=>[x.student.id,x.rank]));
+  const rows=calculated.slice().sort((a,b)=>{
+    const ar=rankMap.get(a.student.id)||999999,br=rankMap.get(b.student.id)||999999;
+    return ar-br||a.student.full_name.localeCompare(b.student.full_name,'bn');
+  });
+  meritList.innerHTML=rows.length?'<table><thead><tr><th>মেধাক্রম</th><th>শিক্ষার্থী আইডি</th><th>নাম</th><th>বিষয় সম্পন্ন</th><th>মোট নম্বর</th><th>GPA</th><th>গ্রেড</th><th>অবস্থা</th></tr></thead><tbody>'+
+    rows.map(x=>'<tr><td>'+(rankMap.get(x.student.id)||'—')+'</td><td>'+escapeHtml(x.student.student_code)+'</td><td>'+escapeHtml(x.student.full_name)+'</td><td>'+x.rows.length+'/'+subjectCount+'</td><td>'+formatReportNumber(x.total)+'/'+formatReportNumber(x.maxTotal)+'</td><td>'+formatReportNumber(x.gpa)+'</td><td>'+x.grade+'</td><td>'+(x.complete?'সম্পূর্ণ':'অসম্পূর্ণ')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এই পরীক্ষার কোনো নম্বর পাওয়া যায়নি।</div>';
+  reportStudent.innerHTML='<option value="">রিপোর্ট কার্ডের জন্য শিক্ষার্থী নির্বাচন করুন</option>'+reportStudents.map(st=>'<option value="'+st.id+'">'+escapeHtml(st.full_name)+' ('+escapeHtml(st.student_code)+')</option>').join('');
+  reportStudent.disabled=!reportStudents.length;
+  reportStudent.onchange=()=>{
+    const selected=calculated.find(x=>x.student.id===reportStudent.value);
+    if(!selected){renderReportCard(null,exam);return;}
+    renderReportCard(selected,exam);
+    if(!selected.complete)reportMessage.textContent='এই শিক্ষার্থীর সব বিষয়ের নম্বর এখনো দেওয়া হয়নি; রিপোর্টে অসম্পূর্ণ ফলাফল দেখানো হচ্ছে।';
+    else reportMessage.textContent='রিপোর্ট কার্ড প্রস্তুত। প্রিন্ট করতে বাটনে ক্লিক করুন।';
+  };
+  if(reportStudents.length){reportStudent.value=reportStudents[0].id;reportStudent.onchange();}
+  else renderReportCard(null,exam);
+}
+document.getElementById('loadReportBtn').addEventListener('click',async()=>{
+  const exam=examRows.find(e=>e.id===reportExam.value);
+  if(!exam){reportMessage.textContent='আগে একটি পরীক্ষা নির্বাচন করুন।';return;}
+  reportMessage.textContent='GPA ও মেধাতালিকা তৈরি হচ্ছে...';printReportBtn.disabled=true;reportCardPrint.innerHTML='';
+  const [studentsRes,resultsRes]=await Promise.all([
+    supabase.from('students').select('id,student_code,full_name,section').eq('class_id',exam.class_id).eq('status','active').order('full_name'),
+    supabase.from('exam_results').select('student_id,subject_id,marks,max_marks,grade,subjects(name_bn)').eq('exam_id',exam.id)
+  ]);
+  if(studentsRes.error||resultsRes.error){reportMessage.textContent='রিপোর্ট তৈরি হয়নি: '+(studentsRes.error||resultsRes.error).message;return;}
+  reportStudents=studentsRes.data||[];reportRows=resultsRes.data||[];
+  if(!reportRows.length){meritList.innerHTML='<div class="empty">এই পরীক্ষায় এখনো কোনো নম্বর সংরক্ষণ করা হয়নি।</div>';reportMessage.textContent='আগে বিষয়ভিত্তিক নম্বর সংরক্ষণ করুন।';reportStudent.innerHTML='<option value="">কোনো ফলাফল নেই</option>';return;}
+  renderMeritList(exam);
+  const completed=reportStudents.filter(st=>calculateStudentReport(st,reportRows,new Set(reportRows.map(r=>r.subject_id)).size).complete).length;
+  reportMessage.textContent=reportRows.length+'টি নম্বর রেকর্ড লোড হয়েছে। '+completed+' জনের ফলাফল সম্পূর্ণ। GPA ৫.০০ স্কেলে।';
+});
+printReportBtn.addEventListener('click',()=>{if(reportCardPrint.innerHTML.trim())window.print();});
 
 </script></body></html>
 <!-- Trigger Vercel Git deployment after repository connection -->
