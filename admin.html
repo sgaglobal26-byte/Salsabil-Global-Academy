@@ -529,6 +529,7 @@ function renderSubjectOptions() {
 function renderExamList() {
   examTotal.textContent = examRows.length+'টি পরীক্ষা';
   resultExam.innerHTML = '<option value="">পরীক্ষা নির্বাচন করুন</option>' + examRows.map(e=>'<option value="'+e.id+'">'+escapeHtml(e.title)+' — '+escapeHtml(e.academic_classes?.name||'শ্রেণি')+' ('+e.academic_year+')'+(e.is_published?' · প্রকাশিত':'')+'</option>').join('');
+  if (typeof reportExam !== 'undefined') reportExam.innerHTML = '<option value="">পরীক্ষা নির্বাচন করুন</option>' + examRows.map(e=>'<option value="'+e.id+'">'+escapeHtml(e.title)+' — '+escapeHtml(e.academic_classes?.name||'শ্রেণি')+' ('+e.academic_year+')'+(e.is_published?' · প্রকাশিত':'')+'</option>').join('');
   examList.innerHTML = examRows.length ? '<table><thead><tr><th>পরীক্ষা</th><th>শ্রেণি</th><th>শিক্ষাবর্ষ</th><th>তারিখ</th><th>অবস্থা</th></tr></thead><tbody>'+examRows.map(e=>'<tr><td>'+escapeHtml(e.title)+'</td><td>'+escapeHtml(e.academic_classes?.name||'—')+'</td><td>'+e.academic_year+'</td><td>'+escapeHtml(e.exam_date||'—')+'</td><td>'+(e.is_published?'প্রকাশিত':'প্রস্তুত')+'</td></tr>').join('')+'</tbody></table>' : '<div class="empty">এখনো কোনো পরীক্ষা তৈরি হয়নি। উপরের ফরম থেকে তৈরি করুন।</div>';
 }
 examForm.addEventListener('submit',async event=>{
