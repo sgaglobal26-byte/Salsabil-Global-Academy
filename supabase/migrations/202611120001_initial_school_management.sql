@@ -393,7 +393,8 @@ for select to anon, authenticated using (
       or (
         (select auth.uid()) is not null
         and (
-          (audience = 'parents' and public.sga_has_role('parent'::public.sga_role))
+          (audience = 'all')
+          or (audience = 'parents' and public.sga_has_role('parent'::public.sga_role))
           or (audience = 'teachers' and public.sga_has_role('teacher'::public.sga_role))
           or (audience = 'students' and public.sga_has_role('parent'::public.sga_role))
         )
