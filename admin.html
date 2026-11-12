@@ -9,15 +9,36 @@
 :root{--green:#075b45;--deep:#073b36;--navy:#122e43;--gold:#d6ad54;--bg:#f4f7f4;--line:#e3eae5;--muted:#718078;--ink:#203a33}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:'Hind Siliguri',sans-serif}button,input,select{font:inherit}button{cursor:pointer}.layout{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.side{background:#073b36;color:#eaf4ed;padding:25px 17px;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:11px;padding:4px 9px 25px;border-bottom:1px solid #ffffff20}.logo{width:42px;height:42px;border-radius:13px;background:#ffffff17;color:#f1d58c;display:grid;place-items:center;font-size:23px}.brand b{display:block;font-size:16px}.brand small{font:9px Manrope;letter-spacing:1px;color:#b5c9be}.navlabel{font:10px Manrope;letter-spacing:1.5px;color:#91b0a2;margin:24px 10px 9px}.nav button{width:100%;border:0;background:transparent;color:#d7e7de;text-align:left;padding:11px 12px;border-radius:9px;margin:2px 0;font-size:14px;display:flex;gap:11px;align-items:center}.nav button.active,.nav button:hover{background:#ffffff18;color:#fff}.nav button span:first-child{width:20px;text-align:center}.sidefoot{margin-top:auto;padding:15px 10px 0;border-top:1px solid #ffffff20;color:#b5c9be;font-size:12px;line-height:1.7}.main{min-width:0}.topbar{height:75px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px}.topbar h1{font-size:21px;margin:0;color:var(--deep)}.topright{display:flex;align-items:center;gap:14px}.status{font-size:11px;background:#fff5d9;color:#85641e;border:1px solid #f0dfad;padding:6px 10px;border-radius:99px}.avatar{width:37px;height:37px;border-radius:50%;display:grid;place-items:center;background:#e4efe7;color:var(--green);font-weight:700}.content{padding:27px 32px 45px;max-width:1450px;margin:auto}.notice{background:#fff7e4;border:1px solid #f0dfad;color:#705b2c;border-radius:12px;padding:13px 16px;font-size:13px;margin-bottom:22px;line-height:1.7}.welcome{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin-bottom:23px}.welcome h2{font-size:25px;margin:0;color:var(--deep)}.welcome p{margin:3px 0 0;color:var(--muted);font-size:13px}.btn{border:0;border-radius:9px;padding:10px 15px;background:var(--green);color:white;font-weight:600}.btn.secondary{background:#e8f0e9;color:var(--green)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px}.stathead{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}.staticon{width:33px;height:33px;border-radius:10px;background:#eaf2eb;color:var(--green);display:grid;place-items:center}.stat strong{display:block;font:800 27px Manrope;color:var(--deep);margin:12px 0 3px}.stat small{font-size:11px;color:#8a9890}.grid{display:grid;grid-template-columns:1.35fr .9fr;gap:16px;margin-top:18px}.panel{background:white;border:1px solid var(--line);border-radius:13px;padding:19px;min-width:0}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.panel h3{margin:0;color:var(--deep);font-size:17px}.muted{color:var(--muted);font-size:12px}.empty{border:1px dashed #d5e0d8;border-radius:10px;padding:26px 15px;text-align:center;color:var(--muted);font-size:13px}.empty b{display:block;color:var(--deep);font-size:14px;margin-bottom:5px}.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick button{border:1px solid var(--line);border-radius:10px;background:#fff;padding:13px 11px;text-align:left;color:var(--deep);font-size:13px}.quick button:hover{border-color:#9dbca7;background:#f6faf6}.quick i{display:block;font-style:normal;font-size:20px;margin-bottom:5px}.page{display:none}.page.active{display:block}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:12px 9px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{color:var(--muted);font-weight:600}.formrow{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field label{display:block;font-size:13px;margin-bottom:5px}.field input,.field select{width:100%;border:1px solid #dce5de;border-radius:8px;padding:10px;background:#fff}.field.full{grid-column:1/-1}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}.toolbar input{flex:1;min-width:170px;border:1px solid #dce5de;border-radius:8px;padding:10px}.mobilemenu{display:none;border:0;background:none;font-size:22px;color:var(--deep)}.toast{position:fixed;bottom:20px;right:20px;background:#073b36;color:white;padding:12px 17px;border-radius:10px;display:none;z-index:20}.footnote{font-size:11px;color:var(--muted);margin-top:18px}
 @media(max-width:950px){.layout{grid-template-columns:210px 1fr}.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.content{padding:22px}}
 @media(max-width:650px){.layout{display:block}.side{position:fixed;z-index:10;top:0;bottom:0;left:-270px;width:250px;transition:.2s;box-shadow:10px 0 30px #001a1220}.side.open{left:0}.mobilemenu{display:block}.topbar{padding:0 16px;height:66px}.topbar h1{font-size:17px}.status{display:none}.content{padding:18px 14px 35px}.stats{gap:9px}.stat{padding:13px}.stat strong{font-size:22px}.welcome{align-items:flex-start;flex-direction:column}.welcome h2{font-size:22px}.formrow{grid-template-columns:1fr}.field.full{grid-column:auto}.quick{grid-template-columns:1fr 1fr}}
+
+.auth-gate{min-height:100vh;display:grid;place-items:center;padding:22px;background:linear-gradient(135deg,#073b36,#122e43)}
+.auth-card{width:min(100%,430px);background:#fff;border-radius:18px;padding:30px;box-shadow:0 22px 70px #001a1240}
+.auth-brand{text-align:center;margin-bottom:22px}.auth-brand .logo{margin:0 auto 12px;background:#e8f0e9;color:var(--green)}
+.auth-card h1{margin:0;color:var(--deep);font-size:23px;text-align:center}.auth-card p{color:var(--muted);font-size:13px;line-height:1.7;text-align:center}
+.auth-card label{display:block;font-size:13px;margin:14px 0 5px}.auth-card input{width:100%;padding:12px;border:1px solid #dce5de;border-radius:9px}
+.auth-card button{width:100%;margin-top:18px}.auth-error{color:#a32929!important;background:#fff0f0;border-radius:8px;padding:9px;display:none;text-align:left!important}
+.auth-help{font-size:11px!important;margin-top:16px}
+.logout-btn{border:1px solid var(--line);background:#fff;color:var(--deep);border-radius:8px;padding:7px 11px;font-size:12px}
+.layout{display:none}body.authenticated .layout{display:grid}
+@media(max-width:650px){body.authenticated .layout{display:block}}
 </style></head>
 <body>
+<section class="auth-gate" id="authGate">
+  <form class="auth-card" id="loginForm">
+    <div class="auth-brand"><div class="logo">س</div><h1>সালসাবিল গ্লোবাল একাডেমি</h1><p>নিরাপদ অ্যাডমিন লগইন</p></div>
+    <label for="adminEmail">ইমেইল</label><input id="adminEmail" name="email" type="email" autocomplete="username" required placeholder="আপনার অ্যাডমিন ইমেইল">
+    <label for="adminPassword">পাসওয়ার্ড</label><input id="adminPassword" name="password" type="password" autocomplete="current-password" required placeholder="পাসওয়ার্ড">
+    <p class="auth-error" id="authError" role="alert"></p>
+    <button class="btn" id="loginButton" type="submit">লগইন করুন</button>
+    <p class="auth-help">শুধু Supabase-এ অনুমোদিত admin role থাকা অ্যাকাউন্ট প্রবেশ করতে পারবে।</p>
+  </form>
+</section>
 <div class="layout">
 <aside class="side" id="side"><div class="brand"><div class="logo">س</div><div><b>সালসাবিল গ্লোবাল</b><small>ADMIN CONSOLE</small></div></div>
 <div class="navlabel">MAIN MENU</div><nav class="nav" id="nav">
 <button class="active" data-page="dashboard"><span>▦</span> ড্যাশবোর্ড</button>
 <button data-page="students"><span>♙</span> শিক্ষার্থী</button><button data-page="teachers"><span>♧</span> শিক্ষক</button><button data-page="admissions"><span>▤</span> ভর্তি আবেদন</button><button data-page="attendance"><span>◷</span> উপস্থিতি</button><button data-page="exams"><span>✎</span> পরীক্ষা ও ফলাফল</button><button data-page="fees"><span>৳</span> ফি ও হিসাব</button><button data-page="notices"><span>▧</span> নোটিশ</button>
 </nav><div class="navlabel">SYSTEM</div><nav class="nav"><button data-page="settings"><span>⚙</span> সেটিংস</button><a href="/" style="display:block;text-decoration:none"><button><span>↗</span> ওয়েবসাইট দেখুন</button></a></nav><div class="sidefoot">Salsabil Global Academy<br>Mirzapur, Tangail<br><span style="color:#f0d48b">Faith · Knowledge · Character</span></div></aside>
-<main class="main"><header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="mobilemenu" id="mobilemenu">☰</button><h1 id="title">অ্যাডমিন ড্যাশবোর্ড</h1></div><div class="topright"><span class="status">ডেমো সংস্করণ · Backend সংযুক্ত নয়</span><div class="avatar">A</div></div></header>
+<main class="main"><header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="mobilemenu" id="mobilemenu">☰</button><h1 id="title">অ্যাডমিন ড্যাশবোর্ড</h1></div><div class="topright"><span class="status">নিরাপদ Admin Session</span><button class="logout-btn" id="logoutButton" type="button">লগআউট</button><div class="avatar" id="adminAvatar">A</div></div></header>
 <div class="content">
 <div class="notice"><b>ডেমো/প্রিভিউ:</b> এই প্যানেলের তথ্য শুধু এই ব্রাউজারের Local Storage-এ থাকে। এখনো নিরাপদ অ্যাডমিন লগইন, কেন্দ্রীয় ডেটাবেজ, ব্যাকআপ বা বহু-ব্যবহারকারী অ্যাক্সেস যুক্ত হয়নি। বাস্তব শিক্ষার্থীর ব্যক্তিগত তথ্য এখানে সংরক্ষণ করবেন না।</div>
 <section class="page active" id="dashboard"><div class="welcome"><div><h2>আসসালামু আলাইকুম 👋</h2><p>প্রতিষ্ঠানের ব্যবস্থাপনা এক জায়গা থেকে দেখুন।</p></div><button class="btn" onclick="showPage('students')">＋ শিক্ষার্থী যোগ করুন</button></div>
@@ -50,5 +71,85 @@ function renderDashboard(){document.getElementById('studentCount').textContent=r
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function exportData(){const data={students:read('students'),teachers:read('teachers'),notices:read('notices')};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sga-demo-data.json';a.click();URL.revokeObjectURL(a.href)}
 function clearDemo(){if(confirm('এই ব্রাউজারের সব ডেমো ডেটা মুছে ফেলবেন?')){['students','teachers','notices'].forEach(k=>localStorage.removeItem('sga_'+k));renderDashboard();renderStudents();renderTeachers();renderNotices();toast('ডেমো ডেটা মুছে ফেলা হয়েছে')}}
+
 renderDashboard();
+</script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://qzblmxcbgmdwkdmfsvuj.supabase.co';
+const SUPABASE_PUBLIC_KEY = 'sb_publishable_H7aYU2ThzGoXQnSVZTPO2w_PL3WZWsF';
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+
+const gate = document.getElementById('authGate');
+const form = document.getElementById('loginForm');
+const errorBox = document.getElementById('authError');
+const loginButton = document.getElementById('loginButton');
+
+function showAuthError(message) {
+  errorBox.textContent = message;
+  errorBox.style.display = 'block';
+}
+function showLogin() {
+  document.body.classList.remove('authenticated');
+  gate.style.display = 'grid';
+}
+async function verifyAdmin(session) {
+  if (!session) { showLogin(); return; }
+  const { data, error } = await supabase
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', session.user.id)
+    .eq('role', 'admin')
+    .maybeSingle();
+
+  if (error) {
+    await supabase.auth.signOut();
+    showLogin();
+    showAuthError('অ্যাডমিন অনুমতি যাচাই করা যায়নি। user_roles টেবিলের RLS SELECT policy পরীক্ষা করুন।');
+    console.error('Admin role check failed:', error);
+    return;
+  }
+  if (!data) {
+    await supabase.auth.signOut();
+    showLogin();
+    showAuthError('এই অ্যাকাউন্টে admin অনুমতি নেই। প্রতিষ্ঠানের সুপার অ্যাডমিনের সঙ্গে যোগাযোগ করুন।');
+    return;
+  }
+  errorBox.style.display = 'none';
+  gate.style.display = 'none';
+  document.body.classList.add('authenticated');
+  const avatar = document.getElementById('adminAvatar');
+  if (avatar) avatar.textContent = (session.user.email || 'A').slice(0,1).toUpperCase();
+}
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  errorBox.style.display = 'none';
+  loginButton.disabled = true;
+  loginButton.textContent = 'যাচাই হচ্ছে...';
+  const email = form.elements.email.value.trim();
+  const password = form.elements.password.value;
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  loginButton.disabled = false;
+  loginButton.textContent = 'লগইন করুন';
+  if (error) {
+    showAuthError('লগইন হয়নি। ইমেইল ও পাসওয়ার্ড যাচাই করে আবার চেষ্টা করুন।');
+    return;
+  }
+  await verifyAdmin(data.session);
+});
+
+document.getElementById('logoutButton').addEventListener('click', async () => {
+  await supabase.auth.signOut();
+  showLogin();
+});
+
+supabase.auth.onAuthStateChange((_event, session) => {
+  if (!session) showLogin();
+});
+
+const { data: sessionData } = await supabase.auth.getSession();
+if (sessionData.session) await verifyAdmin(sessionData.session);
+else showLogin();
 </script></body></html>
