@@ -61,7 +61,8 @@ create table if not exists public.students (
   admission_date date not null default current_date,
   notes text,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  unique (id, class_id)
 );
 
 create table if not exists public.student_guardians (
@@ -84,14 +85,15 @@ create table if not exists public.teacher_assignments (
 
 create table if not exists public.attendance (
   id uuid primary key default gen_random_uuid(),
-  student_id uuid not null references public.students(id) on delete cascade,
+  student_id uuid not null,
   class_id uuid not null references public.academic_classes(id),
   attendance_date date not null,
   status public.attendance_status not null,
   note text,
   marked_by uuid not null references auth.users(id),
   created_at timestamptz not null default now(),
-  unique (student_id, attendance_date)
+  unique (student_id, attendance_date),
+  foreign key (student_id, class_id) references public.students(id, class_id) on delete cascade
 );
 
 create table if not exists public.exams (
@@ -327,7 +329,7 @@ with check (public.sga_is_admin() or (public.sga_is_teacher_for(class_id) and ma
 drop policy if exists "attendance_teacher_update" on public.attendance;
 create policy "attendance_teacher_update" on public.attendance
 for update to authenticated
-using (public.sga_is_admin() or public.sga_is_teacher_for(class_id))
+using (public.sga_is_admin() or (public.sga_is_teacher_for(class_id) and marked_by = (select auth.uid())))
 with check (public.sga_is_admin() or (public.sga_is_teacher_for(class_id) and marked_by = (select auth.uid())));
 
 drop policy if exists "exams_read_scoped" on public.exams;
@@ -382,8 +384,30 @@ for all to authenticated using (public.sga_is_admin()) with check (public.sga_is
 drop policy if exists "notices_read_published" on public.notices;
 create policy "notices_read_published" on public.notices
 for select to anon, authenticated using (
-  (is_published = true and (published_at is null or published_at <= now()))
-  or (select auth.uid()) is not null and public.sga_is_admin()
+  public.sga_is_admin()
+  or (
+    is_published = true
+    and (published_at is null or published_at <= now())
+    and (
+      (audience = 'all' and class_id is null)
+      or (
+        (select auth.uid()) is not null
+        and (
+          (audience = 'parents' and public.sga_has_role('parent'::public.sga_role))
+          or (audience = 'teachers' and public.sga_has_role('teacher'::public.sga_role))
+          or (audience = 'students' and public.sga_has_role('parent'::public.sga_role))
+        )
+        and (
+          class_id is null
+          or public.sga_is_teacher_for(class_id)
+          or exists (
+            select 1 from public.students s
+            where s.class_id = notices.class_id and public.sga_is_guardian_of(s.id)
+          )
+        )
+      )
+    )
+  )
 );
 drop policy if exists "notices_admin_manage" on public.notices;
 create policy "notices_admin_manage" on public.notices
