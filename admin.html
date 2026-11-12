@@ -79,7 +79,38 @@
 <div class="toolbar"><button class="btn" id="saveAttendanceBtn" type="button" disabled>উপস্থিতি সংরক্ষণ করুন</button><span class="muted">শুধু নির্বাচিত স্ট্যাটাসগুলো সংরক্ষিত হবে।</span></div>
 </div>
 </section>
-<section class="page" id="exams"><div class="welcome"><div><h2>পরীক্ষা ও ফলাফল</h2><p>পরীক্ষা, নম্বর, গ্রেড ও রিপোর্ট কার্ড।</p></div></div><div class="panel"><div class="empty"><b>পরীক্ষা মডিউল এখনো সংযুক্ত নয়</b>পরীক্ষা তৈরি, নম্বর এন্ট্রি, GPA/গ্রেড ও ফলাফল প্রকাশের ব্যবস্থা পরবর্তী ধাপে যুক্ত হবে।</div></div></section>
+<section class="page" id="exams">
+<div class="welcome"><div><h2>পরীক্ষা ও ফলাফল</h2><p>পরীক্ষা তৈরি, বিষয়ভিত্তিক নম্বর এন্ট্রি, গ্রেড ও ফলাফল প্রকাশ।</p></div></div>
+<div class="panel">
+ <div class="panelhead"><h3>নতুন পরীক্ষা তৈরি</h3><span class="muted">Exam Setup</span></div>
+ <form id="examForm" class="formrow">
+  <div class="field"><label>পরীক্ষার নাম *</label><input name="title" required placeholder="যেমন: অর্ধবার্ষিক পরীক্ষা"></div>
+  <div class="field"><label>শ্রেণি *</label><select name="class_id" id="examClass" required><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
+  <div class="field"><label>পরীক্ষার তারিখ</label><input name="exam_date" type="date"></div>
+  <div class="field"><label>শিক্ষাবর্ষ *</label><input name="academic_year" type="number" min="2000" max="2100" required></div>
+  <div class="field full"><button class="btn" id="examCreateBtn" type="submit">পরীক্ষা সংরক্ষণ করুন</button><span class="muted" id="examFormMessage">পরীক্ষার তথ্য Supabase-এ সংরক্ষিত হবে।</span></div>
+ </form>
+</div>
+<div class="panel" style="margin-top:16px">
+ <div class="panelhead"><h3>বিষয় ব্যবস্থাপনা</h3><span class="muted">একবার যোগ করলে সব পরীক্ষায় ব্যবহার করতে পারবেন</span></div>
+ <form id="subjectForm" class="toolbar"><input id="newSubjectName" required maxlength="100" placeholder="নতুন বিষয়ের নাম (যেমন: বাংলা)"><button class="btn" type="submit">বিষয় যোগ করুন</button></form>
+ <div class="muted" id="subjectMessage">বিষয়গুলো ডেটাবেজে সংরক্ষিত থাকবে।</div>
+</div>
+<div class="panel" style="margin-top:16px">
+ <div class="panelhead"><h3>পরীক্ষার তালিকা</h3><span class="muted" id="examTotal">লোড হচ্ছে...</span></div>
+ <div class="tablewrap" id="examList"><div class="empty">পরীক্ষার তথ্য লোড হচ্ছে...</div></div>
+</div>
+<div class="panel" style="margin-top:16px">
+ <div class="panelhead"><h3>নম্বর এন্ট্রি ও ফলাফল</h3><span class="muted">Marks Entry</span></div>
+ <div class="formrow">
+  <div class="field"><label>পরীক্ষা নির্বাচন *</label><select id="resultExam"><option value="">পরীক্ষা নির্বাচন করুন</option></select></div>
+  <div class="field"><label>বিষয় নির্বাচন *</label><select id="resultSubject"><option value="">বিষয় নির্বাচন করুন</option></select></div>
+ </div>
+ <div class="toolbar"><button class="btn" id="loadResultsBtn" type="button">শিক্ষার্থীদের নম্বর লোড করুন</button><button class="btn secondary" id="publishExamBtn" type="button" disabled>ফলাফল প্রকাশ করুন</button><span class="muted" id="resultMessage">পরীক্ষা ও বিষয় নির্বাচন করুন।</span></div>
+ <div class="tablewrap" id="resultTable"><div class="empty">পরীক্ষা ও বিষয় নির্বাচন করে নম্বর এন্ট্রি শুরু করুন।</div></div>
+ <div class="toolbar"><button class="btn" id="saveResultsBtn" type="button" disabled>নম্বর সংরক্ষণ করুন</button><span class="muted">নম্বর ০ থেকে পূর্ণমানের মধ্যে হতে হবে। গ্রেড স্বয়ংক্রিয়ভাবে নির্ধারিত হবে।</span></div>
+</div>
+</section>
 <section class="page" id="fees"><div class="welcome"><div><h2>ফি ও হিসাব</h2><p>ফি, বকেয়া ও পেমেন্ট রসিদ ব্যবস্থাপনা।</p></div></div><div class="panel"><div class="empty"><b>ফাইন্যান্স মডিউল এখনো সংযুক্ত নয়</b>ফি কাঠামো, পেমেন্ট রেকর্ড, বকেয়া রিপোর্ট ও রসিদ নিরাপদ ডেটাবেজের সঙ্গে যুক্ত করতে হবে।</div></div></section>
 <section class="page" id="notices"><div class="welcome"><div><h2>নোটিশ ব্যবস্থাপনা</h2><p>এই ডেমো ব্রাউজারে নোটিশ তৈরি করে দেখতে পারবেন।</p></div></div><div class="panel"><form id="noticeForm" class="formrow"><div class="field full"><label>নোটিশের শিরোনাম *</label><input name="title" required></div><div class="field full"><label>বিস্তারিত</label><input name="body"></div><div class="field full"><button class="btn">নোটিশ যোগ করুন</button></div></form><div id="noticeList" style="margin-top:18px"></div></div></section>
 <section class="page" id="settings"><div class="welcome"><div><h2>সিস্টেম সেটিংস</h2><p>অ্যাডমিন ও ডেটাবেজ সংযোগ সংক্রান্ত তথ্য।</p></div></div><div class="panel"><h3>প্রোডাকশন সেটআপ প্রয়োজন</h3><p class="muted" style="line-height:1.9">নিরাপদ লগইনের জন্য Supabase Auth বা সমমানের সার্ভার-সাইড authentication, PostgreSQL database, role-based access control এবং private file storage যুক্ত করতে হবে। কোনো admin password এই static page-এ রাখা হয়নি।</p><button class="btn secondary" onclick="exportData()">ডেমো ডেটা JSON Export</button> <button class="btn secondary" onclick="clearDemo()">ডেমো ডেটা মুছুন</button></div></section>
@@ -150,6 +181,7 @@ async function verifyAdmin(session) {
   errorBox.style.display = 'none';
   gate.style.display = 'none';
   document.body.classList.add('authenticated');
+  loadExamSetup();
   const avatar = document.getElementById('adminAvatar');
   if (avatar) avatar.textContent = (session.user.email || 'A').slice(0,1).toUpperCase();
 }
@@ -441,6 +473,135 @@ saveAttendanceBtn.addEventListener('click', async () => {
   attendanceMessage.textContent = selected.length + ' জন শিক্ষার্থীর উপস্থিতি সফলভাবে সংরক্ষিত হয়েছে।';
   toast('উপস্থিতির তথ্য ডেটাবেজে সংরক্ষিত হয়েছে');
   await loadAttendance();
+});
+
+
+/* Exam and result management */
+const examClass = document.getElementById('examClass');
+const examForm = document.getElementById('examForm');
+const examFormMessage = document.getElementById('examFormMessage');
+const examList = document.getElementById('examList');
+const examTotal = document.getElementById('examTotal');
+const resultExam = document.getElementById('resultExam');
+const resultSubject = document.getElementById('resultSubject');
+const resultTable = document.getElementById('resultTable');
+const resultMessage = document.getElementById('resultMessage');
+const saveResultsBtn = document.getElementById('saveResultsBtn');
+const publishExamBtn = document.getElementById('publishExamBtn');
+let examRows = [];
+let subjectRows = [];
+let resultStudents = [];
+let existingResultRows = [];
+
+async function loadExamSetup() {
+  const [classesRes, subjectsRes, examsRes] = await Promise.all([
+    supabase.from('academic_classes').select('id,name').eq('is_active',true).order('sort_order'),
+    supabase.from('subjects').select('id,name_bn,name_en').eq('is_active',true).order('name_bn'),
+    supabase.from('exams').select('id,title,class_id,exam_date,academic_year,is_published,academic_classes(name)').order('created_at',{ascending:false})
+  ]);
+  if (classesRes.error) { examFormMessage.textContent = 'শ্রেণির তালিকা লোড হয়নি: '+classesRes.error.message; return; }
+  const classOptions = '<option value="">শ্রেণি নির্বাচন করুন</option>' + (classesRes.data||[]).map(x=>'<option value="'+x.id+'">'+escapeHtml(x.name)+'</option>').join('');
+  examClass.innerHTML = classOptions;
+  subjectRows = subjectsRes.data || [];
+  if (subjectsRes.error) document.getElementById('subjectMessage').textContent = 'বিষয় লোড হয়নি: '+subjectsRes.error.message;
+  renderSubjectOptions();
+  if (examsRes.error) { examList.innerHTML='<div class="empty">পরীক্ষা লোড হয়নি: '+escapeHtml(examsRes.error.message)+'</div>'; return; }
+  examRows = examsRes.data || [];
+  renderExamList();
+}
+function renderSubjectOptions() {
+  resultSubject.innerHTML = '<option value="">বিষয় নির্বাচন করুন</option>' + subjectRows.map(s=>'<option value="'+s.id+'">'+escapeHtml(s.name_bn)+(s.name_en?' / '+escapeHtml(s.name_en):'')+'</option>').join('');
+}
+function renderExamList() {
+  examTotal.textContent = examRows.length+'টি পরীক্ষা';
+  resultExam.innerHTML = '<option value="">পরীক্ষা নির্বাচন করুন</option>' + examRows.map(e=>'<option value="'+e.id+'">'+escapeHtml(e.title)+' — '+escapeHtml(e.academic_classes?.name||'শ্রেণি')+' ('+e.academic_year+')'+(e.is_published?' · প্রকাশিত':'')+'</option>').join('');
+  examList.innerHTML = examRows.length ? '<table><thead><tr><th>পরীক্ষা</th><th>শ্রেণি</th><th>শিক্ষাবর্ষ</th><th>তারিখ</th><th>অবস্থা</th></tr></thead><tbody>'+examRows.map(e=>'<tr><td>'+escapeHtml(e.title)+'</td><td>'+escapeHtml(e.academic_classes?.name||'—')+'</td><td>'+e.academic_year+'</td><td>'+escapeHtml(e.exam_date||'—')+'</td><td>'+(e.is_published?'প্রকাশিত':'প্রস্তুত')+'</td></tr>').join('')+'</tbody></table>' : '<div class="empty">এখনো কোনো পরীক্ষা তৈরি হয়নি। উপরের ফরম থেকে তৈরি করুন।</div>';
+}
+examForm.addEventListener('submit',async event=>{
+  event.preventDefault();
+  const data = new FormData(examForm);
+  const payload = {title:String(data.get('title')||'').trim(),class_id:data.get('class_id'),exam_date:data.get('exam_date')||null,academic_year:Number(data.get('academic_year'))};
+  if(!payload.title || !payload.class_id || !payload.academic_year){examFormMessage.textContent='সব প্রয়োজনীয় তথ্য পূরণ করুন।';return;}
+  const btn=document.getElementById('examCreateBtn');btn.disabled=true;btn.textContent='সংরক্ষণ হচ্ছে...';
+  const {error}=await supabase.from('exams').insert(payload);
+  btn.disabled=false;btn.textContent='পরীক্ষা সংরক্ষণ করুন';
+  if(error){examFormMessage.textContent='পরীক্ষা সংরক্ষণ হয়নি: '+error.message;return;}
+  examForm.reset();examForm.elements.academic_year.value=new Date().getFullYear();
+  examFormMessage.textContent='পরীক্ষা সফলভাবে সংরক্ষিত হয়েছে।';toast('নতুন পরীক্ষা তৈরি হয়েছে');await loadExamSetup();
+});
+examForm.elements.academic_year.value=new Date().getFullYear();
+document.getElementById('subjectForm').addEventListener('submit',async event=>{
+  event.preventDefault();
+  const input=document.getElementById('newSubjectName');const name=input.value.trim();if(!name)return;
+  const {data,error}=await supabase.from('subjects').insert({name_bn:name}).select('id,name_bn,name_en').single();
+  const msg=document.getElementById('subjectMessage');
+  if(error){msg.textContent='বিষয় যোগ হয়নি: '+error.message;return;}
+  subjectRows.push(data);subjectRows.sort((a,b)=>a.name_bn.localeCompare(b.name_bn,'bn'));renderSubjectOptions();input.value='';msg.textContent='বিষয়টি সফলভাবে যোগ হয়েছে।';toast('নতুন বিষয় যোগ হয়েছে');
+});
+resultExam.addEventListener('change',()=>{
+  const exam=examRows.find(e=>e.id===resultExam.value);
+  resultMessage.textContent=exam?(exam.is_published?'এই পরীক্ষার ফলাফল প্রকাশিত। প্রয়োজনে সংশোধনের পর আবার প্রকাশ করুন।':'বিষয় নির্বাচন করে নম্বর লোড করুন।'):'পরীক্ষা ও বিষয় নির্বাচন করুন।';
+  publishExamBtn.disabled=!exam;
+  resultTable.innerHTML='<div class="empty">বিষয় নির্বাচন করে নম্বর লোড করুন।</div>';saveResultsBtn.disabled=true;
+});
+function gradeForMarks(marks,maxMarks){
+  const p=maxMarks>0?(marks/maxMarks)*100:0;
+  if(p>=80)return 'A+';if(p>=70)return 'A';if(p>=60)return 'A-';if(p>=50)return 'B';if(p>=40)return 'C';if(p>=33)return 'D';return 'F';
+}
+document.getElementById('loadResultsBtn').addEventListener('click',async()=>{
+  const exam=examRows.find(e=>e.id===resultExam.value),subjectId=resultSubject.value;
+  if(!exam||!subjectId){resultMessage.textContent='পরীক্ষা ও বিষয় নির্বাচন করুন।';return;}
+  resultMessage.textContent='শিক্ষার্থীদের তথ্য লোড হচ্ছে...';
+  const [studentsRes,marksRes]=await Promise.all([
+    supabase.from('students').select('id,student_code,full_name,section').eq('class_id',exam.class_id).eq('status','active').order('full_name'),
+    supabase.from('exam_results').select('id,student_id,marks,max_marks,grade').eq('exam_id',exam.id).eq('subject_id',subjectId)
+  ]);
+  if(studentsRes.error||marksRes.error){resultMessage.textContent='তথ্য লোড হয়নি: '+(studentsRes.error||marksRes.error).message;return;}
+  resultStudents=studentsRes.data||[];existingResultRows=marksRes.data||[];
+  const markMap=new Map(existingResultRows.map(x=>[x.student_id,x]));
+  if(!resultStudents.length){resultTable.innerHTML='<div class="empty">এই শ্রেণিতে সক্রিয় শিক্ষার্থী পাওয়া যায়নি।</div>';resultMessage.textContent='কোনো শিক্ষার্থী নেই।';saveResultsBtn.disabled=true;return;}
+  resultTable.innerHTML='<table><thead><tr><th>শিক্ষার্থী আইডি</th><th>শিক্ষার্থীর নাম</th><th>প্রাপ্ত নম্বর</th><th>পূর্ণমান</th><th>গ্রেড</th></tr></thead><tbody>'+resultStudents.map(s=>{
+    const r=markMap.get(s.id);const marks=r?.marks??'';const max=r?.max_marks??100;const grade=marks!==''?gradeForMarks(Number(marks),Number(max)):'—';
+    return '<tr><td>'+escapeHtml(s.student_code)+'</td><td>'+escapeHtml(s.full_name)+'</td><td><input type="number" min="0" step="0.01" data-mark-student="'+s.id+'" value="'+marks+'" style="width:95px;padding:7px;border:1px solid #dce5de;border-radius:7px"></td><td><input type="number" min="1" step="0.01" data-max-student="'+s.id+'" value="'+max+'" style="width:95px;padding:7px;border:1px solid #dce5de;border-radius:7px"></td><td data-grade-student="'+s.id+'">'+grade+'</td></tr>';
+  }).join('')+'</tbody></table>';
+  resultTable.querySelectorAll('input').forEach(input=>input.addEventListener('input',()=>{
+    const id=input.dataset.markStudent||input.dataset.maxStudent;
+    const m=resultTable.querySelector('[data-mark-student="'+id+'"]')?.value;
+    const mx=resultTable.querySelector('[data-max-student="'+id+'"]')?.value;
+    const cell=resultTable.querySelector('[data-grade-student="'+id+'"]');
+    cell.textContent=m!==''&&mx!==''&&Number(mx)>0&&Number(m)>=0&&Number(m)<=Number(mx)?gradeForMarks(Number(m),Number(mx)):'—';
+  }));
+  resultMessage.textContent=resultStudents.length+' জন শিক্ষার্থী পাওয়া গেছে। আগে সংরক্ষিত নম্বর থাকলে দেখানো হয়েছে।';
+  saveResultsBtn.disabled=false;publishExamBtn.disabled=false;
+});
+saveResultsBtn.addEventListener('click',async()=>{
+  const exam=examRows.find(e=>e.id===resultExam.value),subjectId=resultSubject.value;
+  if(!exam||!subjectId||!resultStudents.length)return;
+  const payload=[];
+  for(const s of resultStudents){
+    const marksInput=resultTable.querySelector('[data-mark-student="'+s.id+'"]');
+    const maxInput=resultTable.querySelector('[data-max-student="'+s.id+'"]');
+    const marks=marksInput?.value.trim(),max=maxInput?.value.trim();
+    if(marks===''||marks==null)continue;
+    if(max===''||Number(marks)<0||Number(max)<=0||Number(marks)>Number(max)){resultMessage.textContent=escapeHtml(s.full_name)+'-এর নম্বর বা পূর্ণমান সঠিক নয়।';return;}
+    payload.push({exam_id:exam.id,student_id:s.id,subject_id:subjectId,marks:Number(marks),max_marks:Number(max),grade:gradeForMarks(Number(marks),Number(max))});
+  }
+  if(!payload.length){resultMessage.textContent='কমপক্ষে একজন শিক্ষার্থীর নম্বর লিখুন।';return;}
+  saveResultsBtn.disabled=true;saveResultsBtn.textContent='সংরক্ষণ হচ্ছে...';
+  const {error}=await supabase.from('exam_results').upsert(payload,{onConflict:'exam_id,student_id,subject_id'});
+  saveResultsBtn.disabled=false;saveResultsBtn.textContent='নম্বর সংরক্ষণ করুন';
+  if(error){resultMessage.textContent='নম্বর সংরক্ষণ হয়নি: '+error.message;return;}
+  resultMessage.textContent=payload.length+' জন শিক্ষার্থীর নম্বর সংরক্ষিত হয়েছে।';toast('নম্বর সফলভাবে সংরক্ষিত হয়েছে');
+  document.getElementById('loadResultsBtn').click();
+});
+publishExamBtn.addEventListener('click',async()=>{
+  const exam=examRows.find(e=>e.id===resultExam.value);if(!exam)return;
+  const next=!exam.is_published;
+  if(!confirm(next?'এই পরীক্ষার ফলাফল প্রকাশ করবেন? অভিভাবকেরা প্রকাশিত ফলাফল দেখতে পারবেন।':'ফলাফল পুনরায় অপ্রকাশিত করবেন?'))return;
+  const {error}=await supabase.from('exams').update({is_published:next}).eq('id',exam.id);
+  if(error){resultMessage.textContent='অবস্থা পরিবর্তন হয়নি: '+error.message;return;}
+  resultMessage.textContent=next?'ফলাফল প্রকাশিত হয়েছে।':'ফলাফল অপ্রকাশিত করা হয়েছে।';
+  toast(next?'ফলাফল প্রকাশিত হয়েছে':'ফলাফল অপ্রকাশিত হয়েছে');await loadExamSetup();resultExam.value=exam.id;publishExamBtn.textContent=next?'প্রকাশিত — পুনরায় অপ্রকাশিত করুন':'ফলাফল প্রকাশ করুন';
 });
 
 </script></body></html>
