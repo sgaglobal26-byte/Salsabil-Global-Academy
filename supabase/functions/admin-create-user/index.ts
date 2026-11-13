@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const allowedOrigins = new Set([
   "https://salsabil-global-academy.vercel.app",
   "https://salsabil-global-academy-sgaglobal26-2083.vercel.app",
+  "https://salsabil-global-academy-git-main-sgaglobal26-2083.vercel.app",
 ]);
 
 function corsHeaders(req: Request) {
