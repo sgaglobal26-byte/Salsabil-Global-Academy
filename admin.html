@@ -72,6 +72,7 @@
 <div class="field"><label>প্রাথমিক পাসওয়ার্ড *</label><input name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="কমপক্ষে ৮ অক্ষর"></div>
 <div class="field"><label>মোবাইল নম্বর</label><input name="phone" type="tel" placeholder="01XXXXXXXXX"></div>
 <div class="field" id="accountClassField"><label>শিক্ষকের দায়িত্বপ্রাপ্ত শ্রেণি *</label><select name="class_id" id="accountClass"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
+<div class="field" id="accountSectionField" style="display:none"><label>শিক্ষকের সেকশন (ফাঁকা রাখলে সব সেকশন)</label><input name="section" id="accountSection" maxlength="80" placeholder="যেমন: A / B"></div>
 <div class="field" id="accountStudentField" style="display:none"><label>যে শিক্ষার্থীর অভিভাবক *</label><select name="student_id" id="accountStudent"><option value="">শিক্ষার্থী নির্বাচন করুন</option></select></div>
 <div class="field full"><button class="btn" id="accountCreateBtn" type="submit">লগইন আইডি তৈরি করুন</button><span class="muted" id="accountCreateMessage" style="display:block;margin-top:9px">অ্যাকাউন্ট তৈরি হলে এই ইমেইল ও পাসওয়ার্ড দিয়ে সংশ্লিষ্ট পোর্টালে লগইন করা যাবে।</span></div>
 </form>
@@ -752,6 +753,8 @@ const accountRole=document.getElementById('accountRole');
 const accountClass=document.getElementById('accountClass');
 const accountStudent=document.getElementById('accountStudent');
 const accountClassField=document.getElementById('accountClassField');
+const accountSection=document.getElementById('accountSection');
+const accountSectionField=document.getElementById('accountSectionField');
 const accountStudentField=document.getElementById('accountStudentField');
 const accountCreateForm=document.getElementById('accountCreateForm');
 const accountCreateBtn=document.getElementById('accountCreateBtn');
@@ -763,8 +766,10 @@ function refreshAccountOptions(){
 function toggleAccountRoleFields(){
  const teacher=accountRole.value==='teacher';
  accountClassField.style.display=teacher?'block':'none';
+ accountSectionField.style.display=teacher?'block':'none';
  accountStudentField.style.display=teacher?'none':'block';
  accountClass.required=teacher;
+ accountSection.disabled=!teacher;
  accountStudent.required=!teacher;
 }
 accountRole.addEventListener('change',toggleAccountRoleFields);
@@ -781,9 +786,10 @@ accountCreateForm.addEventListener('submit',async event=>{
   password:String(fd.get('password')||''),
   phone:String(fd.get('phone')||'').trim()||null,
   class_id:fd.get('class_id')||null,
+  section:String(fd.get('section')||'').trim()||null,
   student_id:fd.get('student_id')||null
  };
- const {data,error}=await supabase.functions.invoke('bright-worker',{body:payload});
+ const {data,error}=await supabase.functions.invoke('admin-create-user',{body:payload});
  accountCreateBtn.disabled=false;
  accountCreateBtn.textContent='লগইন আইডি তৈরি করুন';
  if(error){
