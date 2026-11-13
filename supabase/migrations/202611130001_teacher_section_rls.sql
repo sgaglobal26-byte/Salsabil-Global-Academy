@@ -92,3 +92,8 @@ for select to authenticated using (
       )
   )
 );
+
+-- This helper is only needed by authenticated teacher-scoped RLS policies.
+revoke all on function public.sga_is_teacher_for_student(uuid) from public;
+revoke all on function public.sga_is_teacher_for_student(uuid) from anon;
+grant execute on function public.sga_is_teacher_for_student(uuid) to authenticated;
