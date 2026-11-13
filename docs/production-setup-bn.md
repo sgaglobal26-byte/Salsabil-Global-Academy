@@ -9,7 +9,7 @@
 - Admin/Teacher/Parent sign-in বর্তমানে Supabase JS browser client দিয়ে হয়; এটি এখনো Next.js SSR/HttpOnly-cookie session নয়। Database RLS হলো আসল data boundary।
 - Admin account তৈরি করার privileged কাজ Supabase Edge Function `admin-create-user`-এ করা হয়েছে; function JWT ও admin role যাচাই করে server-side service-role client ব্যবহার করে।
 - Vercel project-এ বর্তমানে কোনো Environment Variable configured নেই। বর্তমান static client-এর public Supabase config HTML-এ আছে; ভবিষ্যৎ Vercel server-side API/SSR-এর জন্য server-only variables লাগবে।
-- Supabase project ref source-এ `qzblmxcbgmdwkdmfsvuj` দেখা যাচ্ছে; Supabase Dashboard/CLI access ছাড়া database বা deployed function-এর অবস্থা নিশ্চিত করা যায়নি।
+- Supabase project ref source-এ `qzblmxcbgmdwkdmfsvuj` দেখা যাচ্ছে; Supabase Dashboard/CLI access ছাড়া database বা deployed function-এর অবস্থা নিশ্চিত করা যায়নি। Edge Function CORS কেবল academy-র পরিচিত Vercel production aliases গ্রহণ করে।
 
 ## Migration চালানোর ক্রম
 Supabase SQL Editor-এ নিচের migration-গুলো ক্রমানুসারে চালান:
