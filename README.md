@@ -385,17 +385,18 @@ IMPORTANT: Use the institution's real identity and information. Do not invent ac
 
 ---
 
-## Production backend foundation (12 November 2026)
 
-The current deployed website and admin panel are static HTML previews. The admin panel still stores demo records in browser Local Storage; it is **not** a secure live school management system.
+## Production backend foundation (13 November 2026)
 
-A first Supabase/PostgreSQL schema and Row Level Security (RLS) migration has been added:
-- `supabase/migrations/202611120001_initial_school_management.sql`
-- Bengali setup and security checklist: `docs/production-setup-bn.md`
-- Environment variable names only (no credentials): `.env.example`
+The live project remains a static HTML site. Supabase Auth is currently used from the browser with a public publishable key and database Row Level Security (RLS); privileged teacher/parent account creation is handled by the server-side Supabase Edge Function `admin-create-user`. A full SSR/HttpOnly-cookie application session has not yet been implemented.
 
-The schema covers profiles and roles (admin/teacher/parent), the 11 learning levels from Play Group to Class Eight, students, guardians, teacher/class assignments, attendance, exams/results, fee invoices/payments, notices and admission applications. RLS policies restrict student, attendance, result and finance records to admins, assigned teachers and linked guardians. Public users can read published notices only; admission applications intentionally have no anonymous table-insert policy.
+Database migrations are stored in `supabase/migrations/`. Apply them in order:
+1. `202611120001_initial_school_management.sql`
+2. `202611120002_student_guardian_contact.sql`
+3. `202611130001_teacher_section_rls.sql`
 
-**Not activated yet:** no Supabase project is connected, no migration has been applied, no Auth accounts/roles exist, and no Vercel environment variables are configured. Do not enter real student or financial information until server-side authentication, RLS tests, private file storage, backups and the production app integration are complete.
+The third migration adds teacher section assignments and scopes teacher access to assigned sections for student, attendance and result records. The account-creation form now calls the matching `admin-create-user` Edge Function and can assign a section.
 
-See [the Bengali production setup guide](docs/production-setup-bn.md) before provisioning a Supabase project.
+The Edge Function source is `supabase/functions/admin-create-user/index.ts`; JWT verification is enabled in `supabase/config.toml`. No service-role secret is stored in Git. The current Vercel project has no environment variables; the static public client configuration is not a service-role credential.
+
+**Not yet verified:** Supabase migrations have not been applied through an authenticated Supabase project connection, Edge Function deployment has not been confirmed, and no first admin account/role has been created. Do not enter real student or financial information until RLS isolation tests, private storage, backups and production review are complete. See [বাংলা setup guide](docs/production-setup-bn.md).
