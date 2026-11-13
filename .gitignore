@@ -33,3 +33,12 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+
+# Environment secrets (keep only the documented template)
+.env
+.env.*
+!.env.example
+
+# Supabase local state
+supabase/.temp/
