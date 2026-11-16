@@ -38,7 +38,7 @@
 <aside class="side" id="side"><div class="brand"><div class="logo">س</div><div><b>সালসাবিল গ্লোবাল</b><small>ADMIN CONSOLE</small></div></div>
 <div class="navlabel">MAIN MENU</div><nav class="nav" id="nav">
 <button class="active" data-page="dashboard"><span>▦</span> ড্যাশবোর্ড</button>
-<button data-page="students"><span>♙</span> শিক্ষার্থী</button><button data-page="teachers"><span>♧</span> শিক্ষক</button><button data-page="accounts"><span>🔑</span> লগইন আইডি তৈরি</button><button data-page="admissions"><span>▤</span> ভর্তি আবেদন</button><button data-page="attendance"><span>◷</span> উপস্থিতি</button><button data-page="exams"><span>✎</span> পরীক্ষা ও ফলাফল</button><button data-page="fees"><span>▤</span> ফি ইনভয়েস</button><button data-page="income"><span>↙</span> আয় হিসাব</button><button data-page="expenses"><span>↗</span> ব্যয় হিসাব</button><button data-page="notices"><span>▧</span> নোটিশ</button>
+<button data-page="students"><span>♙</span> শিক্ষার্থী</button><button data-page="teachers"><span>♧</span> শিক্ষক</button><button data-page="accounts"><span>🔑</span> লগইন আইডি তৈরি</button><button data-page="admissions"><span>▤</span> ভর্তি আবেদন</button><button data-page="attendance"><span>◷</span> উপস্থিতি</button><button data-page="exams"><span>✎</span> পরীক্ষা ও ফলাফল</button><button data-page="fees"><span>▤</span> ফি ইনভয়েস</button><button data-page="dues"><span>৳</span> বকেয়া আদায়</button><button data-page="income"><span>↙</span> আয় হিসাব</button><button data-page="expenses"><span>↗</span> ব্যয় হিসাব</button><button data-page="notices"><span>▧</span> নোটিশ</button>
 </nav><div class="navlabel">SYSTEM</div><nav class="nav"><button data-page="settings"><span>⚙</span> সেটিংস</button><a href="/leadership-admin.html" style="display:block;text-decoration:none;color:#f1d58c;padding:11px 12px;font-size:14px">♙ চেয়ারম্যান, শিক্ষক ও প্রশাসনিক পরিচিতি</a><a href="/content-admin.html" style="display:block;text-decoration:none;color:#f1d58c;padding:11px 12px;font-size:14px">✎ Home Page তথ্য সম্পাদনা</a><a href="/teacher.html" style="display:block;text-decoration:none;color:#d7e7de;padding:11px 12px;font-size:14px">♧ শিক্ষক লগইন</a><a href="/student.html" style="display:block;text-decoration:none;color:#d7e7de;padding:11px 12px;font-size:14px">♙ শিক্ষার্থী লগইন</a><a href="/" style="display:block;text-decoration:none"><button><span>↗</span> ওয়েবসাইট দেখুন</button></a></nav><div class="sidefoot">Salsabil Global Academy<br>Mirzapur, Tangail<br><span style="color:#f0d48b">Faith · Knowledge · Character</span></div></aside>
 <main class="main"><header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="mobilemenu" id="mobilemenu">☰</button><h1 id="title">অ্যাডমিন ড্যাশবোর্ড</h1></div><div class="topright"><span class="status">নিরাপদ Admin Session</span><button class="logout-btn" id="logoutButton" type="button">লগআউট</button><div class="avatar" id="adminAvatar">A</div></div></header>
 <div class="content">
@@ -142,6 +142,18 @@
 </div>
 </section>
 <section class="page" id="fees"><div class="welcome"><div><h2>ফি ও হিসাব</h2><p>ইনভয়েস তৈরি, পেমেন্ট সংগ্রহ ও বকেয়া হিসাব।</p></div></div><div class="panel"><h3>নতুন ফি ইনভয়েস</h3><form id="invoiceForm" class="formrow" style="margin-top:12px"><div class="field"><label>শিক্ষার্থী *</label><select name="student_id" id="feeStudent" required></select></div><div class="field"><label>ইনভয়েস নম্বর *</label><input name="invoice_number" required></div><div class="field"><label>ফি/বিবরণ *</label><input name="description" required placeholder="মাসিক বেতন / ভর্তি ফি"></div><div class="field"><label>টাকার পরিমাণ *</label><input name="amount" type="number" min="0" step=".01" required></div><div class="field"><label>শেষ তারিখ</label><input name="due_date" type="date"></div><div class="field full"><button class="btn">ইনভয়েস তৈরি করুন</button><span class="muted" id="invoiceMessage"></span></div></form></div><div class="panel" style="margin-top:16px"><h3>পেমেন্ট গ্রহণ</h3><form id="paymentForm" class="formrow" style="margin-top:12px"><div class="field"><label>ইনভয়েস *</label><select name="invoice_id" id="paymentInvoice" required></select></div><div class="field"><label>জমার পরিমাণ *</label><input name="amount" type="number" min=".01" step=".01" required></div><div class="field"><label>পেমেন্ট পদ্ধতি</label><select name="payment_method"><option value="cash">নগদ</option><option value="bank">ব্যাংক</option><option value="mobile_banking">মোবাইল ব্যাংকিং</option></select></div><div class="field"><label>রসিদ নম্বর</label><input name="receipt_number"></div><div class="field full"><button class="btn">পেমেন্ট সংরক্ষণ</button><span class="muted" id="paymentMessage"></span></div></form></div><div class="panel" style="margin-top:16px"><h3>ইনভয়েস ও বকেয়া তালিকা</h3><div id="feeList" class="tablewrap"></div></div></section>
+<section class="page" id="dues">
+<div class="welcome"><div><h2>শিক্ষার্থীদের বকেয়া আদায়</h2><p>প্রতি শিক্ষার্থীর বকেয়া, পরিশোধের শেষ তারিখ ও বকেয়া আদায়ের অগ্রগতি দেখুন।</p></div><button class="btn secondary" type="button" id="refreshDuesBtn">↻ হালনাগাদ</button></div>
+<div class="stats" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px">
+<div class="stat"><div class="stathead">মোট বকেয়া</div><strong id="duesTotal">—</strong><small>আংশিক/অপরিশোধিত ইনভয়েস</small></div>
+<div class="stat"><div class="stathead">মেয়াদোত্তীর্ণ বকেয়া</div><strong id="overdueTotal">—</strong><small>শেষ তারিখ পার হয়েছে</small></div>
+<div class="stat"><div class="stathead">বকেয়া ইনভয়েস</div><strong id="duesCount">—</strong><small>যেসব ইনভয়েসে টাকা বাকি</small></div>
+</div>
+<div class="panel"><div class="panelhead"><h3>বকেয়া শিক্ষার্থীর তালিকা</h3><span class="muted">Student-wise outstanding</span></div>
+<div class="toolbar"><input id="duesSearch" type="search" placeholder="শিক্ষার্থীর নাম, আইডি বা ইনভয়েস দিয়ে খুঁজুন"><select id="duesFilter" style="border:1px solid #dce5de;border-radius:8px;padding:10px"><option value="all">সব বকেয়া</option><option value="overdue">মেয়াদোত্তীর্ণ</option><option value="upcoming">মেয়াদ আছে</option></select></div>
+<div class="tablewrap" id="duesList"><div class="empty">বকেয়ার তথ্য লোড হচ্ছে...</div></div>
+<p class="muted" id="duesMessage">বকেয়া পরিশোধ নিতে “পেমেন্ট নিন” চাপুন।</p></div>
+</section>
 <section class="page" id="income">
 <div class="welcome"><div><h2>আয় হিসাব</h2><p>শিক্ষার্থীদের কাছ থেকে বাস্তবে জমা হওয়া ফি ও অন্যান্য পেমেন্টের তালিকা।</p></div><button class="btn secondary" type="button" id="refreshIncomeBtn">↻ হালনাগাদ</button></div>
 <div class="stats" style="grid-template-columns:repeat(2,1fr);margin-bottom:16px">
@@ -174,10 +186,10 @@
 <p class="footnote">© Salsabil Global Academy · Admin Console · Supabase-secured access</p>
 </div></main></div><div class="toast" id="toast"></div>
 <script>
-const titles={dashboard:'অ্যাডমিন ড্যাশবোর্ড',students:'শিক্ষার্থী ব্যবস্থাপনা',teachers:'শিক্ষক ব্যবস্থাপনা',accounts:'লগইন আইডি তৈরি',admissions:'ভর্তি আবেদন',attendance:'উপস্থিতি ব্যবস্থাপনা',exams:'পরীক্ষা ও ফলাফল',fees:'ফি ইনভয়েস',income:'আয়ের হিসাব',expenses:'ব্যয়ের হিসাব',notices:'নোটিশ ব্যবস্থাপনা',settings:'সিস্টেম সেটিংস'};
+const titles={dashboard:'অ্যাডমিন ড্যাশবোর্ড',students:'শিক্ষার্থী ব্যবস্থাপনা',teachers:'শিক্ষক ব্যবস্থাপনা',accounts:'লগইন আইডি তৈরি',admissions:'ভর্তি আবেদন',attendance:'উপস্থিতি ব্যবস্থাপনা',exams:'পরীক্ষা ও ফলাফল',fees:'ফি ইনভয়েস',dues:'বকেয়া আদায়',income:'আয়ের হিসাব',expenses:'ব্যয়ের হিসাব',notices:'নোটিশ ব্যবস্থাপনা',settings:'সিস্টেম সেটিংস'};
 const read=k=>JSON.parse(localStorage.getItem('sga_'+k)||'[]');const write=(k,v)=>localStorage.setItem('sga_'+k,JSON.stringify(v));
 function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2300)}
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='teachers')renderTeachers();if(id==='income'&&typeof loadIncome==='function')void loadIncome();if(id==='expenses'&&typeof loadExpenses==='function')void loadExpenses();if(id==='dashboard'&&typeof window.sgaRefreshDashboard==='function')void window.sgaRefreshDashboard()}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='teachers')renderTeachers();if(id==='dues'&&typeof loadDues==='function')void loadDues();if(id==='income'&&typeof loadIncome==='function')void loadIncome();if(id==='expenses'&&typeof loadExpenses==='function')void loadExpenses();if(id==='dashboard'&&typeof window.sgaRefreshDashboard==='function')void window.sgaRefreshDashboard()}
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 document.getElementById('mobilemenu').onclick=()=>document.getElementById('side').classList.toggle('open');
 
@@ -868,6 +880,31 @@ const expenseForm=document.getElementById('expenseForm');
 const expenseLabels={salary:'শিক্ষক-কর্মচারীর বেতন',education:'শিক্ষা উপকরণ',utility:'বিদ্যুৎ / পানি / ইন্টারনেট',rent:'ভাড়া',transport:'পরিবহন',maintenance:'রক্ষণাবেক্ষণ',food:'খাবার / আপ্যায়ন',office:'অফিস খরচ',other:'অন্যান্য'};
 function financeMoney(value){return '৳ '+Number(value||0).toLocaleString('bn-BD',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function financeDate(value){if(!value)return '—';return new Intl.DateTimeFormat('bn-BD',{dateStyle:'medium',timeZone:'Asia/Dhaka'}).format(new Date(value));}
+let duesRows=[];
+async function loadDues(){
+ const box=document.getElementById('duesList');box.innerHTML='<div class="empty">বকেয়ার তথ্য লোড হচ্ছে...</div>';
+ const {data,error}=await supabase.from('fee_invoices').select('id,student_id,invoice_number,description,amount,due_date,status,students(full_name,student_code,guardian_name,guardian_phone,academic_classes(name)),fee_payments(amount)').not('status','eq','void').order('due_date',{ascending:true});
+ if(error){box.innerHTML='<div class="empty">বকেয়ার তথ্য লোড হয়নি: '+escapeHtml(error.message)+'</div>';['duesTotal','overdueTotal','duesCount'].forEach(id=>document.getElementById(id).textContent='—');document.getElementById('duesMessage').textContent='fee_invoices, fee_payments এবং Admin RLS permission যাচাই করুন।';return;}
+ const today=getDhakaDate();
+ duesRows=(data||[]).map(inv=>{const paid=(inv.fee_payments||[]).reduce((sum,p)=>sum+Number(p.amount||0),0);return {...inv,paid,due:Math.max(0,Number(inv.amount||0)-paid),overdue:!!inv.due_date&&inv.due_date<today&&Number(inv.amount||0)-paid>0};}).filter(inv=>inv.due>0.009);
+ const total=duesRows.reduce((sum,x)=>sum+x.due,0),overdue=duesRows.filter(x=>x.overdue).reduce((sum,x)=>sum+x.due,0);
+ document.getElementById('duesTotal').textContent=financeMoney(total);
+ document.getElementById('overdueTotal').textContent=financeMoney(overdue);
+ document.getElementById('duesCount').textContent=duesRows.length.toLocaleString('bn-BD');
+ renderDues();
+}
+function renderDues(){
+ const q=(document.getElementById('duesSearch').value||'').trim().toLowerCase(),filter=document.getElementById('duesFilter').value;
+ const rows=duesRows.filter(x=>{const s=x.students||{};const matches=[s.full_name,s.student_code,s.guardian_name,s.guardian_phone,x.invoice_number,x.description].some(v=>String(v||'').toLowerCase().includes(q));return matches&&(filter==='all'||(filter==='overdue'?x.overdue:!x.overdue));});
+ const box=document.getElementById('duesList');
+ box.innerHTML=rows.length?'<table><thead><tr><th>শিক্ষার্থী</th><th>আইডি / শ্রেণি</th><th>অভিভাবক ও মোবাইল</th><th>ইনভয়েস / ফি</th><th>মোট</th><th>জমা</th><th>বকেয়া</th><th>শেষ তারিখ</th><th>অবস্থা</th><th>কাজ</th></tr></thead><tbody>'+rows.map(x=>{const s=x.students||{};return '<tr><td>'+escapeHtml(s.full_name||'—')+'</td><td>'+escapeHtml(s.student_code||'—')+'<br><small>'+escapeHtml(s.academic_classes?.name||'')+'</small></td><td>'+escapeHtml(s.guardian_name||'—')+'<br>'+escapeHtml(s.guardian_phone||'—')+'</td><td>'+escapeHtml(x.invoice_number)+'<br>'+escapeHtml(x.description||'')+'</td><td>'+financeMoney(x.amount)+'</td><td>'+financeMoney(x.paid)+'</td><td><b>'+financeMoney(x.due)+'</b></td><td>'+financeDate(x.due_date)+'</td><td>'+(x.overdue?'<span style="color:#a32929">মেয়াদোত্তীর্ণ</span>':'<span style="color:#087443">বকেয়া</span>')+'</td><td><button class="btn" type="button" data-collect-due="'+x.id+'">পেমেন্ট নিন</button></td></tr>';}).join('')+'</tbody></table>':'<div class="empty">'+(duesRows.length?'এই ফিল্টারে কোনো বকেয়া পাওয়া যায়নি।':'কোনো বকেয়া নেই। সব ইনভয়েস পরিশোধিত।')+'</div>';
+ box.querySelectorAll('[data-collect-due]').forEach(btn=>btn.addEventListener('click',async()=>{const id=btn.dataset.collectDue;showPage('fees');await loadFees();paymentInvoice.value=id;document.getElementById('paymentForm').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('paymentForm').elements.amount.focus();}));
+ document.getElementById('duesMessage').textContent=rows.length+'টি বকেয়া ইনভয়েস দেখানো হচ্ছে। পেমেন্ট গ্রহণ করলে বকেয়া স্বয়ংক্রিয়ভাবে কমে যাবে।';
+}
+document.getElementById('duesSearch').addEventListener('input',renderDues);
+document.getElementById('duesFilter').addEventListener('change',renderDues);
+document.getElementById('refreshDuesBtn').addEventListener('click',loadDues);
+
 async function loadIncome(){
  const box=document.getElementById('incomeList');box.innerHTML='<div class="empty">আয়ের তথ্য লোড হচ্ছে...</div>';
  const {data,error}=await supabase.from('fee_payments').select('id,amount,payment_method,receipt_number,created_at,fee_invoices(invoice_number,description,students(full_name,student_code))').order('created_at',{ascending:false});
