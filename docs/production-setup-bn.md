@@ -16,8 +16,10 @@ Supabase SQL Editor-এ নিচের migration-গুলো ক্রমা�
 1. `supabase/migrations/202611120001_initial_school_management.sql`
 2. `supabase/migrations/202611120002_student_guardian_contact.sql`
 3. `supabase/migrations/202611130001_teacher_section_rls.sql`
+4. `supabase/migrations/202611160001_home_page_content.sql`
+5. `supabase/migrations/202611160002_admin_dashboard_summary.sql`
 
-তৃতীয় migration শিক্ষককে নির্দিষ্ট section-এ সীমাবদ্ধ করে। Teacher assignment-এর `section` ফাঁকা থাকলে সেই শিক্ষক পুরো class-এর দায়িত্বে থাকবেন; section দেওয়া থাকলে শুধু সেই section-এর student/attendance/result row দেখা যাবে। Migration প্রয়োগের আগে dev project-এ পরীক্ষা করুন।
+তৃতীয় migration শিক্ষককে নির্দিষ্ট section-এ সীমাবদ্ধ করে। Teacher assignment-এর `section` ফাঁকা থাকলে সেই শিক্ষক পুরো class-এর দায়িত্বে থাকবেন; section দেওয়া থাকলে শুধু সেই section-এর student/attendance/result row দেখা যাবে। চতুর্থ migration Home Page-এর সম্পাদনাযোগ্য content table তৈরি করে। পঞ্চম migration admin-only `sga_admin_dashboard_summary()` function তৈরি করে; এটি dashboard-এর aggregate count ও finance summary দেয় এবং Bangladesh time zone (`Asia/Dhaka`) অনুযায়ী দিন/মাস গণনা করে। Migration প্রয়োগের আগে dev project-এ পরীক্ষা করুন.
 
 ## Edge Function deploy
 Repository-তে function source: `supabase/functions/admin-create-user/index.ts`।
@@ -56,3 +58,7 @@ values ('<ADMIN_AUTH_USER_UUID>', 'admin');
 - Vercel environment variables এখনো শূন্য; SSR/API migration-এর আগে server-only Supabase URL/key configuration করতে হবে।
 
 **বাস্তব student/guardian/teacher personal data দেবেন না যতক্ষণ migration, Edge Function, RLS isolation tests, private file storage এবং backup যাচাই সম্পন্ন না হয়।**
+
+
+## Admin dashboard summary যাচাই
+পঞ্চম migration চালানোর পর অনুমোদিত Admin account দিয়ে `/admin.html` খুলুন। মোট শিক্ষার্থী/শিক্ষক/শ্রেণি, অপেক্ষমাণ ভর্তি, আজকের উপস্থিতি, চলতি মাসের ফি আদায়, বকেয়া এবং আসন্ন পরীক্ষার সংখ্যা ডেটাবেজ থেকে আসার কথা। Dashboard-এ migration-সংক্রান্ত বার্তা দেখালে SQL Editor-এ পঞ্চম migration সফল হয়েছে কি না এবং `user_roles`-এ ঐ Auth user-এর `admin` role আছে কি না যাচাই করুন। Parent/Teacher account দিয়ে RPC call করলে `42501` permission error হওয়া প্রত্যাশিত। এই development run-এ Supabase Dashboard access না থাকায় migration বাস্তব project-এ প্রয়োগ বা runtime result যাচাই করা হয়নি.
