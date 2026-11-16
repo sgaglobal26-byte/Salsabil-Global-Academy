@@ -394,9 +394,15 @@ Database migrations are stored in `supabase/migrations/`. Apply them in order:
 1. `202611120001_initial_school_management.sql`
 2. `202611120002_student_guardian_contact.sql`
 3. `202611130001_teacher_section_rls.sql`
+4. `202611160001_home_page_content.sql`
+5. `202611160002_admin_dashboard_summary.sql`
 
-The third migration adds teacher section assignments and scopes teacher access to assigned sections for student, attendance and result records. The account-creation form now calls the matching `admin-create-user` Edge Function and can assign a section.
+The third migration adds teacher section assignments and scopes teacher access to assigned sections for student, attendance and result records. The account-creation form now calls the matching `admin-create-user` Edge Function and can assign a section. The fourth migration adds editable homepage content; the fifth adds the admin-only dashboard summary function.
 
 The Edge Function source is `supabase/functions/admin-create-user/index.ts`; JWT verification is enabled in `supabase/config.toml`. No service-role secret is stored in Git. The current Vercel project has no environment variables; the static public client configuration is not a service-role credential.
 
 **Not yet verified:** Supabase migrations have not been applied through an authenticated Supabase project connection, Edge Function deployment has not been confirmed, and no first admin account/role has been created. Do not enter real student or financial information until RLS isolation tests, private storage, backups and production review are complete. See [বাংলা setup guide](docs/production-setup-bn.md).
+
+
+## Admin dashboard summary (16 November 2026)
+The admin dashboard reads eight headline metrics from `sga_admin_dashboard_summary()` and shows the five most recent students plus upcoming examinations. The PostgreSQL function checks `sga_is_admin()` on the database side and calculates attendance and fee collection using `Asia/Dhaka` date boundaries. Apply migration `202611160002_admin_dashboard_summary.sql` before expecting the summary values to appear. This code change does not prove that the migration has been applied to the connected Supabase project.
