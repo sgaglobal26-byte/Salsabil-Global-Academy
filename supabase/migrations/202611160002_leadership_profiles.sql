@@ -1,7 +1,7 @@
 -- Leadership profiles and messages (publicly readable, admin-managed).
 create table if not exists public.leadership_profiles (
  id uuid primary key default gen_random_uuid(),
- role_key text not null unique check (role_key in ('chairman','headmaster','director','teacher','administrator')),
+ role_key text not null check (role_key in ('chairman','headmaster','director','teacher','administrator')),
  role_bn text not null,
  name_bn text not null,
  designation_bn text,
