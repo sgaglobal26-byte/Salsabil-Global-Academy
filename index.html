@@ -59,9 +59,9 @@ document.getElementById('year').textContent=new Date().getFullYear();
 <script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const client=createClient('https://qzblmxcbgmdwkdmfsvuj.supabase.co','sb_publishable_H7aYU2ThzGoXQnSVZTPO2w_PL3WZWsF');
-const labels={intro:'আমাদের কথা',vision:'লক্ষ্য ও উদ্দেশ্য',departments:'শিক্ষা বিভাগসমূহ',curriculum:'পাঠ্যক্রম',activities:'সহশিক্ষা কার্যক্রম',why_us:'কেন সালসাবিল গ্লোবাল একাডেমি',support_transport:'বিশেষ সহায়তা ও পরিবহন',admission:'ভর্তি ও ড্রেস কোড',faq:'অভিভাবকদের প্রশ্নোত্তর',contact:'ঠিকানা ও যোগাযোগ'};
+const labels={hero:'প্রতিষ্ঠানের স্লোগান ও পরিচিতি',intro:'আমাদের কথা',vision:'লক্ষ্য ও উদ্দেশ্য',departments:'শিক্ষা বিভাগসমূহ',curriculum:'পাঠ্যক্রম',activities:'সহশিক্ষা কার্যক্রম',why_us:'কেন সালসাবিল গ্লোবাল একাডেমি',support_transport:'বিশেষ সহায়তা ও পরিবহন',admission:'ভর্তি ও ড্রেস কোড',faq:'অভিভাবকদের প্রশ্নোত্তর',contact:'ঠিকানা ও যোগাযোগ'};
 const {data,error}=await client.from('home_page_sections').select('section_key,title_bn,body_bn,sort_order').eq('is_published',true).order('sort_order');
 const root=document.getElementById('managedHomeSections');
-if(!error&&data?.length){root.innerHTML=data.map(row=>'<article class="card"><div class="iconbox">📘</div><h3>'+escape(row.title_bn||labels[row.section_key])+'</h3><p style="white-space:pre-line">'+escape(row.body_bn)+'</p></article>').join('')}
+if(!error&&data?.length){const hero=data.find(row=>row.section_key==='hero');if(hero){const h=document.querySelector('.hero h1');const p=document.querySelector('.hero p');if(h){h.textContent=hero.title_bn;h.style.whiteSpace='pre-line'}if(p&&hero.body_bn)p.textContent=hero.body_bn;}root.innerHTML=data.filter(row=>row.section_key!=='hero').map(row=>'<article class="card"><div class="iconbox">📘</div><h3>'+escape(row.title_bn||labels[row.section_key])+'</h3><p style="white-space:pre-line">'+escape(row.body_bn)+'</p></article>').join('')}
 function escape(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 </script></body></html>
