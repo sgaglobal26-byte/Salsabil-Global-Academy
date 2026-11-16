@@ -44,8 +44,8 @@
 <div class="content">
 <div class="notice"><b>নিরাপদ অ্যাডমিন প্যানেল:</b> লগইন Supabase Auth দিয়ে যাচাই করা হয়। শিক্ষার্থী ব্যবস্থাপনার তথ্য Supabase ডেটাবেজে সংরক্ষিত হবে।</div>
 <section class="page active" id="dashboard"><div class="welcome"><div><h2>আসসালামু আলাইকুম 👋</h2><p>প্রতিষ্ঠানের ব্যবস্থাপনা এক জায়গা থেকে দেখুন।</p></div><button class="btn" onclick="showPage('students')">＋ শিক্ষার্থী যোগ করুন</button></div>
-<div class="stats"><div class="stat"><div class="stathead">মোট শিক্ষার্থী <span class="staticon">♙</span></div><strong id="studentCount">০</strong><small>Supabase ডেটাবেজ</small></div><div class="stat"><div class="stathead">মোট শিক্ষক <span class="staticon">♧</span></div><strong id="teacherCount">০</strong><small>এখনো পরবর্তী ধাপে যুক্ত হবে</small></div><div class="stat"><div class="stathead">ভর্তি আবেদন <span class="staticon">▤</span></div><strong>০</strong><small>কোনো আবেদন ডেটাবেজে নেই</small></div><div class="stat"><div class="stathead">আজকের উপস্থিতি <span class="staticon">◷</span></div><strong>—</strong><small>Attendance module pending</small></div></div>
-<div class="grid"><div class="panel"><div class="panelhead"><h3>সাম্প্রতিক শিক্ষার্থী</h3><button class="btn secondary" onclick="showPage('students')">সব দেখুন</button></div><div id="recent" class="empty"><b>এখনো কোনো শিক্ষার্থী যোগ করা হয়নি</b>শিক্ষার্থী বিভাগ থেকে নতুন রেকর্ড যোগ করতে পারবেন।</div></div><div class="panel"><div class="panelhead"><h3>দ্রুত কাজ</h3><span class="muted">Quick actions</span></div><div class="quick"><button onclick="showPage('students')"><i>♙</i>শিক্ষার্থী যোগ</button><button onclick="showPage('teachers')"><i>♧</i>শিক্ষক যোগ</button><button onclick="showPage('admissions')"><i>▤</i>ভর্তি আবেদন</button><button onclick="showPage('notices')"><i>▧</i>নোটিশ তৈরি</button></div></div></div></section>
+<div class="stats"><div class="stat"><div class="stathead">মোট শিক্ষার্থী <span class="staticon">♙</span></div><strong id="studentCount">—</strong><small>ডেটাবেজের সব রেকর্ড</small></div><div class="stat"><div class="stathead">মোট শিক্ষক <span class="staticon">♧</span></div><strong id="teacherCount">—</strong><small>অনুমোদিত Teacher account</small></div><div class="stat"><div class="stathead">সক্রিয় শ্রেণি <span class="staticon">🏫</span></div><strong id="classCount">—</strong><small>একাডেমিক শ্রেণি</small></div><div class="stat"><div class="stathead">অপেক্ষমাণ ভর্তি <span class="staticon">▤</span></div><strong id="pendingAdmissionCount">—</strong><small>Admin review প্রয়োজন</small></div><div class="stat"><div class="stathead">আজকের উপস্থিতি <span class="staticon">◷</span></div><strong id="todayAttendanceCount">—</strong><small>বাংলাদেশ সময় অনুযায়ী</small></div><div class="stat"><div class="stathead">চলতি মাসে আদায় <span class="staticon">৳</span></div><strong id="monthlyCollectionCount">—</strong><small>সংরক্ষিত payment</small></div><div class="stat"><div class="stathead">মোট বকেয়া <span class="staticon">৳</span></div><strong id="outstandingFeesCount">—</strong><small>ইনভয়েসের অবশিষ্ট</small></div><div class="stat"><div class="stathead">আসন্ন পরীক্ষা <span class="staticon">✎</span></div><strong id="upcomingExamCount">—</strong><small>তারিখ নির্ধারিত পরীক্ষা</small></div></div><p id="dashboardMessage" class="muted" role="status" aria-live="polite">ডেটাবেজ থেকে তথ্য লোড করা হচ্ছে...</p>
+<div class="grid"><div class="panel"><div class="panelhead"><h3>সাম্প্রতিক শিক্ষার্থী</h3><button class="btn secondary" onclick="showPage('students')">সব দেখুন</button></div><div id="recent" class="empty">ডেটাবেজ থেকে তথ্য লোড করা হচ্ছে...</div></div><div class="panel"><div class="panelhead"><h3>দ্রুত কাজ</h3><span class="muted">Quick actions</span></div><div class="quick"><button onclick="showPage('students')"><i>♙</i>শিক্ষার্থী যোগ</button><button onclick="showPage('accounts')"><i>♧</i>শিক্ষক লগইন আইডি</button><button onclick="showPage('admissions')"><i>▤</i>ভর্তি আবেদন</button><button onclick="showPage('notices')"><i>▧</i>নোটিশ তৈরি</button></div><div class="panelhead" style="margin-top:18px"><h3>আসন্ন পরীক্ষা</h3><button class="btn secondary" onclick="showPage('exams')">সব দেখুন</button></div><div id="upcomingExamList" class="empty">পরীক্ষার তথ্য লোড করা হচ্ছে...</div></div></div></section>
 <section class="page" id="students"><div class="welcome"><div><h2>শিক্ষার্থী ব্যবস্থাপনা</h2><p>শিক্ষার্থীর তথ্য Supabase-এ সংরক্ষণ, সম্পাদনা ও মুছে ফেলুন।</p></div></div><div class="panel"><h3>নতুন শিক্ষার্থী</h3><form id="studentForm" class="formrow" style="margin-top:15px">
 <input type="hidden" name="id">
 <div class="field"><label>শিক্ষার্থীর নাম *</label><input name="full_name" required placeholder="পূর্ণ নাম"></div>
@@ -150,21 +150,19 @@
 const titles={dashboard:'অ্যাডমিন ড্যাশবোর্ড',students:'শিক্ষার্থী ব্যবস্থাপনা',teachers:'শিক্ষক ব্যবস্থাপনা',accounts:'লগইন আইডি তৈরি',admissions:'ভর্তি আবেদন',attendance:'উপস্থিতি ব্যবস্থাপনা',exams:'পরীক্ষা ও ফলাফল',fees:'ফি ও হিসাব',notices:'নোটিশ ব্যবস্থাপনা',settings:'সিস্টেম সেটিংস'};
 const read=k=>JSON.parse(localStorage.getItem('sga_'+k)||'[]');const write=(k,v)=>localStorage.setItem('sga_'+k,JSON.stringify(v));
 function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2300)}
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='teachers')renderTeachers();if(id==='notices')renderNotices()}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='teachers')renderTeachers();if(id==='dashboard'&&typeof window.sgaRefreshDashboard==='function')void window.sgaRefreshDashboard()}
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 document.getElementById('mobilemenu').onclick=()=>document.getElementById('side').classList.toggle('open');
 
 document.getElementById('teacherForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target),a=read('teachers');a.push({name:f.get('name'),subject:f.get('subject'),phone:f.get('phone')});write('teachers',a);e.target.reset();renderTeachers();renderDashboard();toast('ডেমো শিক্ষক যোগ হয়েছে')});
-document.getElementById('noticeForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target),a=read('notices');a.unshift({title:f.get('title'),body:f.get('body'),date:new Date().toLocaleDateString('bn-BD')});write('notices',a);e.target.reset();renderNotices();toast('ডেমো নোটিশ যোগ হয়েছে')});
 function renderStudents(){ /* Supabase module renders the student list. */ }
 function renderTeachers(){const a=read('teachers');document.getElementById('teacherTable').innerHTML=a.length?'<table><thead><tr><th>নাম</th><th>বিষয়</th><th>মোবাইল</th></tr></thead><tbody>'+a.map(s=>'<tr><td>'+esc(s.name)+'</td><td>'+esc(s.subject)+'</td><td>'+esc(s.phone)+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এখনো কোনো শিক্ষক নেই</div>'}
 function renderNotices(){const a=read('notices');document.getElementById('noticeList').innerHTML=a.length?a.map(n=>'<div style="padding:12px;border-bottom:1px solid #e3eae5"><b>'+esc(n.title)+'</b><div class="muted">'+esc(n.date)+' · '+esc(n.body)+'</div></div>').join(''):'<div class="empty">কোনো ডেমো নোটিশ নেই</div>'}
-function renderDashboard(){document.getElementById('studentCount').textContent=read('students').length;document.getElementById('teacherCount').textContent=read('teachers').length;const a=read('students');document.getElementById('recent').innerHTML=a.length?'<div class="tablewrap"><table><thead><tr><th>নাম</th><th>শ্রেণি</th><th>আইডি</th></tr></thead><tbody>'+a.slice(-5).reverse().map(s=>'<tr><td>'+esc(s.name)+'</td><td>'+esc(s.cls)+'</td><td>'+esc(s.sid)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty"><b>এখনো কোনো শিক্ষার্থী যোগ করা হয়নি</b>শিক্ষার্থী বিভাগ থেকে নতুন রেকর্ড যোগ করতে পারবেন।</div>'}
+function renderDashboard(){ /* Live dashboard metrics are loaded from Supabase after admin verification. */ }
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function exportData(){const data={students:read('students'),teachers:read('teachers'),notices:read('notices')};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sga-demo-data.json';a.click();URL.revokeObjectURL(a.href)}
-function clearDemo(){if(confirm('এই ব্রাউজারের সব ডেমো ডেটা মুছে ফেলবেন?')){['students','teachers','notices'].forEach(k=>localStorage.removeItem('sga_'+k));renderDashboard();renderStudents();renderTeachers();renderNotices();toast('ডেমো ডেটা মুছে ফেলা হয়েছে')}}
+function clearDemo(){if(confirm('এই ব্রাউজারের সব ডেমো ডেটা মুছে ফেলবেন?')){['students','teachers','notices'].forEach(k=>localStorage.removeItem('sga_'+k));renderDashboard();renderStudents();renderTeachers();toast('ডেমো ডেটা মুছে ফেলা হয়েছে')}}
 
-renderDashboard();
 </script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -177,6 +175,8 @@ const gate = document.getElementById('authGate');
 const form = document.getElementById('loginForm');
 const errorBox = document.getElementById('authError');
 const loginButton = document.getElementById('loginButton');
+let adminModulesInitialized = false;
+let adminModulesPromise = null;
 
 function showAuthError(message) {
   errorBox.textContent = message;
@@ -186,6 +186,108 @@ function showLogin() {
   document.body.classList.remove('authenticated');
   gate.style.display = 'grid';
 }
+
+function getDhakaDateParts() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit'
+  }).formatToParts(new Date());
+  return Object.fromEntries(parts.filter(part => part.type !== 'literal').map(part => [part.type, part.value]));
+}
+function getDhakaDate() {
+  const parts = getDhakaDateParts();
+  return parts.year + '-' + parts.month + '-' + parts.day;
+}
+function formatDashboardNumber(value) {
+  return new Intl.NumberFormat('bn-BD').format(Number(value || 0));
+}
+function formatDashboardMoney(value) {
+  return '৳ ' + new Intl.NumberFormat('bn-BD', { maximumFractionDigits: 0 }).format(Number(value || 0));
+}
+async function loadAdminDashboard() {
+  const message = document.getElementById('dashboardMessage');
+  const recentBox = document.getElementById('recent');
+  const examBox = document.getElementById('upcomingExamList');
+  const numberFields = {
+    studentCount: 'total_students',
+    teacherCount: 'total_teachers',
+    classCount: 'total_classes',
+    pendingAdmissionCount: 'pending_admissions',
+    todayAttendanceCount: 'today_attendance',
+    upcomingExamCount: 'upcoming_exams'
+  };
+  Object.keys(numberFields).forEach(id => { document.getElementById(id).textContent = '…'; });
+  document.getElementById('monthlyCollectionCount').textContent = '…';
+  document.getElementById('outstandingFeesCount').textContent = '…';
+
+  const today = getDhakaDate();
+  const results = await Promise.all([
+    supabase.rpc('sga_admin_dashboard_summary'),
+    supabase.from('students')
+      .select('student_code,full_name,section,status,created_at,academic_classes(name)')
+      .order('created_at', { ascending: false }).limit(5),
+    supabase.from('exams')
+      .select('title,exam_date,academic_year,academic_classes(name)', { count: 'exact' })
+      .gte('exam_date', today).order('exam_date', { ascending: true }).limit(5)
+  ]);
+  const summaryResult = results[0];
+  const recentResult = results[1];
+  const upcomingResult = results[2];
+  const summary = summaryResult.data && !Array.isArray(summaryResult.data) ? summaryResult.data : {};
+
+  Object.entries(numberFields).forEach(([id, key]) => {
+    const value = summary[key];
+    document.getElementById(id).textContent = summaryResult.error || value == null ? '—' : formatDashboardNumber(value);
+  });
+  document.getElementById('monthlyCollectionCount').textContent =
+    summaryResult.error || summary.monthly_collection == null ? '—' : formatDashboardMoney(summary.monthly_collection);
+  document.getElementById('outstandingFeesCount').textContent =
+    summaryResult.error || summary.outstanding_fees == null ? '—' : formatDashboardMoney(summary.outstanding_fees);
+
+  if (recentResult.error) {
+    recentBox.innerHTML = '<div class="empty">সাম্প্রতিক শিক্ষার্থীর তালিকা লোড হয়নি।</div>';
+  } else {
+    const rows = recentResult.data || [];
+    recentBox.innerHTML = rows.length
+      ? '<div class="tablewrap"><table><thead><tr><th>আইডি</th><th>নাম</th><th>শ্রেণি / শাখা</th><th>অবস্থা</th></tr></thead><tbody>' +
+        rows.map(student => '<tr><td>' + escapeHtml(student.student_code) + '</td><td>' + escapeHtml(student.full_name) +
+          '</td><td>' + escapeHtml(student.academic_classes?.name || '—') + (student.section ? ' · ' + escapeHtml(student.section) : '') +
+          '</td><td>' + escapeHtml(({active:'সক্রিয়',inactive:'নিষ্ক্রিয়',graduated:'উত্তীর্ণ',transferred:'স্থানান্তরিত'})[student.status] || student.status || '—') +
+          '</td></tr>').join('') + '</tbody></table></div>'
+      : '<div class="empty"><b>এখনো কোনো শিক্ষার্থী যোগ করা হয়নি</b>শিক্ষার্থী বিভাগ থেকে নতুন রেকর্ড যোগ করতে পারবেন।</div>';
+  }
+
+  if (upcomingResult.error) {
+    examBox.innerHTML = '<div class="empty">আসন্ন পরীক্ষার তালিকা লোড হয়নি।</div>';
+  } else {
+    const rows = upcomingResult.data || [];
+    examBox.innerHTML = rows.length
+      ? '<div>' + rows.map(exam => {
+          const dateLabel = new Intl.DateTimeFormat('bn-BD', {
+            dateStyle: 'medium', timeZone: 'Asia/Dhaka'
+          }).format(new Date(String(exam.exam_date) + 'T00:00:00+06:00'));
+          return '<div style="padding:10px 0;border-bottom:1px solid var(--line)"><b>' + escapeHtml(exam.title) +
+            '</b><div class="muted">' + escapeHtml(exam.academic_classes?.name || 'শ্রেণি') + ' · ' +
+            escapeHtml(dateLabel) + ' · ' + escapeHtml(exam.academic_year) + '</div></div>';
+        }).join('') + '</div>'
+      : '<div class="empty">এখনো কোনো আসন্ন পরীক্ষা নির্ধারিত নেই।</div>';
+  }
+
+  const errors = [];
+  if (summaryResult.error) errors.push('ড্যাশবোর্ড সারাংশ');
+  if (recentResult.error) errors.push('সাম্প্রতিক শিক্ষার্থী');
+  if (upcomingResult.error) errors.push('আসন্ন পরীক্ষা');
+  if (errors.length) {
+    message.textContent = errors.join(' ও ') + ' লোড হয়নি। Dashboard summary-এর জন্য Supabase-এ 202611160002_admin_dashboard_summary.sql migration চালানো এবং Admin role যাচাই করা প্রয়োজন।';
+    console.error('Admin dashboard load errors:', results.filter(result => result.error).map(result => result.error));
+  } else {
+    message.textContent = 'সর্বশেষ হালনাগাদ: ' + new Intl.DateTimeFormat('bn-BD', {
+      dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Dhaka'
+    }).format(new Date());
+  }
+}
+window.sgaRefreshDashboard = loadAdminDashboard;
+document.getElementById('refreshDashboardBtn').addEventListener('click', loadAdminDashboard);
+
 async function verifyAdmin(session) {
   if (!session) { showLogin(); return; }
   const { data, error } = await supabase
@@ -211,7 +313,7 @@ async function verifyAdmin(session) {
   errorBox.style.display = 'none';
   gate.style.display = 'none';
   document.body.classList.add('authenticated');
-  loadExamSetup();
+  await initializeAdminModules();
   const avatar = document.getElementById('adminAvatar');
   if (avatar) avatar.textContent = (session.user.email || 'A').slice(0,1).toUpperCase();
 }
@@ -235,16 +337,17 @@ form.addEventListener('submit', async (event) => {
 
 document.getElementById('logoutButton').addEventListener('click', async () => {
   await supabase.auth.signOut();
+  adminModulesInitialized = false;
+  adminModulesPromise = null;
   showLogin();
 });
 
 supabase.auth.onAuthStateChange((_event, session) => {
-  if (!session) showLogin();
+  if (!session) {
+    adminModulesInitialized = false;
+    showLogin();
+  }
 });
-
-const { data: sessionData } = await supabase.auth.getSession();
-if (sessionData.session) await verifyAdmin(sessionData.session);
-else showLogin();
 
 // Student management: all reads and writes use the authenticated Supabase session.
 const studentForm = document.getElementById('studentForm');
@@ -303,7 +406,6 @@ async function loadStudents() {
   }
   studentRows = data || [];
   renderStudentTable();
-  document.getElementById('studentCount').textContent = studentRows.length;
 }
 function renderStudentTable() {
   const q = (studentSearch.value || '').trim().toLowerCase();
@@ -389,8 +491,6 @@ studentTable.addEventListener('click', async event => {
   }
 });
 
-if (await loadStudentClasses()) await loadStudents();
-
 // Attendance management: records are saved in public.attendance.
 const attendanceClass = document.getElementById('attendanceClass');
 const attendanceDate = document.getElementById('attendanceDate');
@@ -401,10 +501,6 @@ const saveAttendanceBtn = document.getElementById('saveAttendanceBtn');
 let attendanceStudents = [];
 let attendanceExisting = new Map();
 
-attendanceClass.innerHTML = '<option value="">শ্রেণি নির্বাচন করুন</option>' +
-  classRows.map(item => '<option value="' + item.id + '">' + escapeHtml(item.name) + '</option>').join('');
-const todayLocal = new Date();
-attendanceDate.value = [todayLocal.getFullYear(), String(todayLocal.getMonth()+1).padStart(2,'0'), String(todayLocal.getDate()).padStart(2,'0')].join('-');
 
 function attendanceStatusLabel(status) {
   return ({present:'উপস্থিত',absent:'অনুপস্থিত',late:'দেরিতে',excused:'ছুটি'})[status] || 'নির্বাচন করুন';
@@ -806,9 +902,54 @@ accountCreateForm.addEventListener('submit',async event=>{
  refreshAccountOptions();
  toast('নতুন লগইন আইডি তৈরি হয়েছে');
 });
-refreshAccountOptions();
-toggleAccountRoleFields();
 
-loadBusinessModules();
+
+async function initializeAdminModules() {
+  if (adminModulesInitialized) {
+    await loadAdminDashboard();
+    return;
+  }
+  if (adminModulesPromise) {
+    await adminModulesPromise;
+    return;
+  }
+  adminModulesPromise = (async () => {
+    try {
+      const classesLoaded = await loadStudentClasses();
+      if (classesLoaded) {
+        attendanceClass.innerHTML = '<option value="">শ্রেণি নির্বাচন করুন</option>' +
+          classRows.map(item => '<option value="' + item.id + '">' + escapeHtml(item.name) + '</option>').join('');
+        await loadStudents();
+      } else {
+        attendanceClass.innerHTML = '<option value="">শ্রেণি পাওয়া যায়নি</option>';
+      }
+      attendanceDate.value = getDhakaDate();
+      refreshAccountOptions();
+      toggleAccountRoleFields();
+      await Promise.allSettled([loadExamSetup(), loadBusinessModules(), loadAdminDashboard()]);
+      adminModulesInitialized = true;
+    } catch (error) {
+      console.error('Admin module initialization failed:', error);
+      const message = document.getElementById('dashboardMessage');
+      if (message) message.textContent = 'Admin module চালু হয়নি। Supabase connection, migration এবং RLS configuration যাচাই করুন।';
+    }
+  })();
+  try {
+    await adminModulesPromise;
+  } finally {
+    adminModulesPromise = null;
+  }
+}
+
+const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+if (sessionError) {
+  showLogin();
+  showAuthError('লগইন সেশন যাচাই করা যায়নি। আবার লগইন করুন।');
+} else if (sessionData.session) {
+  await verifyAdmin(sessionData.session);
+} else {
+  showLogin();
+}
+
 </script></body></html>
 <!-- Trigger Vercel Git deployment after repository connection -->
