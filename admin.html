@@ -562,6 +562,7 @@ let attendanceExisting = new Map();
 let qrScanner = null;
 let qrScannerRunning = false;
 const scannedQrTokens = new Set();
+const pendingQrTokens = new Set();
 const startQrScannerBtn = document.getElementById('startQrScannerBtn');
 const stopQrScannerBtn = document.getElementById('stopQrScannerBtn');
 const qrScannerStatus = document.getElementById('qrScannerStatus');
@@ -576,27 +577,30 @@ async function recordQrAttendance(decodedText) {
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token)) {
     setQrScanMessage('এটি Salsabil Academy-এর বৈধ Student QR Code নয়।', true); return;
   }
-  if (scannedQrTokens.has(token)) { setQrScanMessage('এই QR Code এই সেশনে ইতিমধ্যে স্ক্যান করা হয়েছে।'); return; }
+  if (scannedQrTokens.has(token) || pendingQrTokens.has(token)) { setQrScanMessage('এই QR Code এই সেশনে ইতিমধ্যে স্ক্যান করা হয়েছে বা যাচাই হচ্ছে।'); return; }
   if (!attendanceClass.value || !attendanceDate.value) {
     setQrScanMessage('আগে শ্রেণি ও তারিখ নির্বাচন করুন।', true); return;
   }
+  pendingQrTokens.add(token);
   qrScannerStatus.textContent = 'শিক্ষার্থীর তথ্য যাচাই হচ্ছে...';
   const {data: student, error: lookupError} = await supabase.from('students')
     .select('id,student_code,full_name,class_id,section,qr_token,academic_classes(name)')
     .eq('qr_token', token).eq('status','active').maybeSingle();
   if (lookupError || !student) {
     qrScannerStatus.textContent = 'QR যাচাই ব্যর্থ';
+    pendingQrTokens.delete(token);
     setQrScanMessage(lookupError ? 'ডেটাবেজে যাচাই করা যায়নি: '+lookupError.message : 'এই QR Code-এর কোনো সক্রিয় শিক্ষার্থী পাওয়া যায়নি।', true);
     return;
   }
   if (student.class_id !== attendanceClass.value) {
     qrScannerStatus.textContent = 'শ্রেণি মিলেনি';
+    pendingQrTokens.delete(token);
     setQrScanMessage(student.full_name+' — '+(student.academic_classes?.name || 'অজানা শ্রেণি')+'। নির্বাচিত শ্রেণির সঙ্গে মিল নেই।', true);
     return;
   }
   const {data: sessionData} = await supabase.auth.getSession();
   const userId = sessionData.session?.user?.id;
-  if (!userId) { qrScannerStatus.textContent='লগইন প্রয়োজন'; setQrScanMessage('সেশন শেষ হয়েছে। আবার লগইন করুন।',true); return; }
+  if (!userId) { pendingQrTokens.delete(token); qrScannerStatus.textContent='লগইন প্রয়োজন'; setQrScanMessage('সেশন শেষ হয়েছে। আবার লগইন করুন।',true); return; }
   const time = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
   const row = {
     student_id: student.id,
@@ -609,9 +613,11 @@ async function recordQrAttendance(decodedText) {
   const {error: saveError} = await supabase.from('attendance').upsert(row,{onConflict:'student_id,attendance_date'});
   if (saveError) {
     qrScannerStatus.textContent='সংরক্ষণ হয়নি';
+    pendingQrTokens.delete(token);
     setQrScanMessage(student.full_name+'-এর হাজিরা সংরক্ষণ হয়নি: '+saveError.message,true);
     return;
   }
+  pendingQrTokens.delete(token);
   scannedQrTokens.add(token);
   qrScannerStatus.textContent='সফলভাবে হাজিরা নেওয়া হয়েছে';
   setQrScanMessage('✓ '+student.full_name+' ('+student.student_code+') — উপস্থিত · '+time+' · '+(student.academic_classes?.name || '')+' সংরক্ষিত হয়েছে।');
