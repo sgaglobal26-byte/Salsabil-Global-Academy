@@ -380,14 +380,25 @@ form.addEventListener('submit', async (event) => {
   loginButton.textContent = 'যাচাই হচ্ছে...';
   const email = form.elements.email.value.trim();
   const password = form.elements.password.value;
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  loginButton.disabled = false;
-  loginButton.textContent = 'লগইন করুন';
-  if (error) {
-    showAuthError('লগইন হয়নি। ইমেইল ও পাসওয়ার্ড যাচাই করে আবার চেষ্টা করুন।');
-    return;
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      console.error('Supabase sign-in failed:', error);
+      showAuthError('Supabase লগইন সমস্যা: ' + (error.message || 'ইমেইল/পাসওয়ার্ড যাচাই করুন।'));
+      return;
+    }
+    if (!data.session) {
+      showAuthError('লগইন সেশন তৈরি হয়নি। ইমেইল ভেরিফিকেশন ও Supabase Auth settings পরীক্ষা করুন।');
+      return;
+    }
+    await verifyAdmin(data.session);
+  } catch (error) {
+    console.error('Unexpected login error:', error);
+    showAuthError('লগইনের সময় সমস্যা হয়েছে: ' + (error?.message || String(error)));
+  } finally {
+    loginButton.disabled = false;
+    loginButton.textContent = 'লগইন করুন';
   }
-  await verifyAdmin(data.session);
 });
 
 document.getElementById('logoutButton').addEventListener('click', async () => {
