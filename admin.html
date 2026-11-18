@@ -511,8 +511,10 @@ function showStudentIdCard(s) {
 }
 
 studentTable.addEventListener('click', async event => {
+  const cardButton = event.target.closest('[data-card-student]');
   const editButton = event.target.closest('[data-edit-student]');
   const deleteButton = event.target.closest('[data-delete-student]');
+  if (cardButton) { const s = studentRows.find(row => row.id === cardButton.dataset.cardStudent); if (s) showStudentIdCard(s); }
   if (editButton) {
     const s = studentRows.find(row => row.id === editButton.dataset.editStudent);
     if (!s) return;
