@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin.html
+Disallow: /leadership-admin.html
+
+Sitemap: https://salsabil-global-academy.vercel.app/sitemap.xml
