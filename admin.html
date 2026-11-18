@@ -22,7 +22,8 @@
 @media(max-width:650px){body.authenticated .layout{display:block}}
 
 @media print{body *{visibility:hidden!important}#reportCardPrint,#reportCardPrint *{visibility:visible!important}#reportCardPrint{position:absolute!important;left:0!important;top:0!important;width:100%!important;margin:0!important;padding:18px!important;background:#fff!important;color:#111!important}.report-sheet{border:0!important;box-shadow:none!important;max-width:none!important}.report-sheet table{font-size:12px!important}.report-sheet th,.report-sheet td{border:1px solid #777!important;padding:7px!important}.report-school{text-align:center;margin-bottom:18px}.report-school h2{margin:0;color:#073b36}.report-school p{margin:3px 0}.report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.report-summary div{border:1px solid #999;padding:8px;text-align:center}}
-</style></head>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+</head>
 <body>
 <section class="auth-gate" id="authGate">
   <form class="auth-card" id="loginForm">
@@ -434,7 +435,7 @@ function escapeHtml(value) {
 async function loadStudents() {
   studentTable.innerHTML = '<div class="empty">Supabase থেকে তথ্য আনা হচ্ছে...</div>';
   const { data, error } = await supabase.from('students')
-    .select('id,student_code,full_name,date_of_birth,gender,class_id,section,status,admission_date,guardian_name,guardian_phone,academic_classes(name)')
+    .select('id,student_code,full_name,date_of_birth,gender,class_id,section,status,admission_date,guardian_name,guardian_phone,qr_token,academic_classes(name)')
     .order('created_at', { ascending: false });
   if (error) {
     studentTotal.textContent = 'তথ্য পাওয়া যায়নি';
@@ -457,7 +458,7 @@ function renderStudentTable() {
     return;
   }
   studentTable.innerHTML = '<table><thead><tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>অভিভাবক</th><th>মোবাইল</th><th>অবস্থা</th><th>কাজ</th></tr></thead><tbody>' +
-    filtered.map(s => '<tr><td>' + escapeHtml(s.student_code) + '</td><td>' + escapeHtml(s.full_name) + '</td><td>' + escapeHtml(s.academic_classes?.name || '') + (s.section ? ' · ' + escapeHtml(s.section) : '') + '</td><td>' + escapeHtml(s.guardian_name || '—') + '</td><td>' + escapeHtml(s.guardian_phone || '—') + '</td><td>' + escapeHtml(({active:'সক্রিয়',inactive:'নিষ্ক্রিয়',graduated:'উত্তীর্ণ',transferred:'স্থানান্তরিত'})[s.status] || s.status) + '</td><td><button class="btn secondary" type="button" data-edit-student="' + s.id + '">সম্পাদনা</button> <button class="btn secondary" type="button" data-delete-student="' + s.id + '">মুছুন</button></td></tr>').join('') +
+    filtered.map(s => '<tr><td>' + escapeHtml(s.student_code) + '</td><td>' + escapeHtml(s.full_name) + '</td><td>' + escapeHtml(s.academic_classes?.name || '') + (s.section ? ' · ' + escapeHtml(s.section) : '') + '</td><td>' + escapeHtml(s.guardian_name || '—') + '</td><td>' + escapeHtml(s.guardian_phone || '—') + '</td><td>' + escapeHtml(({active:'সক্রিয়',inactive:'নিষ্ক্রিয়',graduated:'উত্তীর্ণ',transferred:'স্থানান্তরিত'})[s.status] || s.status) + '</td><td><button class="btn secondary" type="button" data-card-student="' + s.id + '">ID Card / QR</button> <button class="btn secondary" type="button" data-edit-student="' + s.id + '">সম্পাদনা</button> <button class="btn secondary" type="button" data-delete-student="' + s.id + '">মুছুন</button></td></tr>').join('') +
     '</tbody></table>';
 }
 studentSearch.addEventListener('input', renderStudentTable);
@@ -468,6 +469,7 @@ studentForm.addEventListener('submit', async event => {
   studentSaveBtn.textContent = 'সংরক্ষণ হচ্ছে...';
   const fd = new FormData(studentForm);
   const payload = {
+    qr_token: id ? undefined : crypto.randomUUID(),
     student_code: String(fd.get('student_code')).trim(),
     full_name: String(fd.get('full_name')).trim(),
     class_id: fd.get('class_id'),
@@ -490,10 +492,24 @@ studentForm.addEventListener('submit', async event => {
     console.error('Student save error:', result.error);
     return;
   }
+  const createdStudentCode = payload.student_code;
   resetStudentForm();
   await loadStudents();
   toast(id ? 'শিক্ষার্থীর তথ্য আপডেট হয়েছে' : 'নতুন শিক্ষার্থী ডেটাবেজে যোগ হয়েছে');
+  if (!id) { const created = studentRows.find(row => row.student_code === createdStudentCode); if (created) showStudentIdCard(created); }
 });
+function showStudentIdCard(s) {
+  if (!window.QRCode) { studentMessage('QR Code লাইব্রেরি লোড হয়নি। পেজ Refresh করে আবার চেষ্টা করুন।', true); return; }
+  const existing = document.getElementById('studentQrCardModal'); if (existing) existing.remove();
+  const className = s.academic_classes?.name || '';
+  const modal = document.createElement('div'); modal.id='studentQrCardModal'; modal.style.cssText='position:fixed;inset:0;background:#071d1bd9;z-index:99999;display:grid;place-items:center;padding:16px;overflow:auto';
+  modal.innerHTML = '<div style="background:#fff;color:#142b27;width:min(420px,100%);padding:22px;border-radius:16px;text-align:center"><div id="studentQrCardPrint" style="border:2px solid #08745c;border-radius:14px;padding:18px"><div style="font-size:13px;color:#08745c;font-weight:800;letter-spacing:.5px">SALSABIL GLOBAL ACADEMY</div><div style="font-size:19px;font-weight:800;margin:3px 0 12px">শিক্ষার্থী পরিচয়পত্র</div><div id="studentQrCode" style="display:flex;justify-content:center;margin:12px auto"></div><div style="font-size:20px;font-weight:800">'+escapeHtml(s.full_name)+'</div><div style="font-size:14px;margin-top:5px">Student ID: <b>'+escapeHtml(s.student_code)+'</b></div><div style="font-size:14px">শ্রেণি: '+escapeHtml(className)+(s.section?' · '+escapeHtml(s.section):'')+'</div><div style="font-size:11px;color:#667;margin-top:12px">শিক্ষা হোক আধুনিক, জীবন হোক ইসলামিক।</div></div><div style="display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button type="button" class="btn" id="printStudentQrCard">প্রিন্ট / PDF</button><button type="button" class="btn secondary" id="closeStudentQrCard">বন্ধ করুন</button></div><p style="font-size:12px;color:#667;margin:12px 0 0">এই QR Code শিক্ষার্থীর ইউনিক পরিচয় শনাক্ত করার জন্য।</p></div>';
+  document.body.appendChild(modal);
+  new QRCode(document.getElementById('studentQrCode'), {text:'SGA-STUDENT:'+s.qr_token, width:180, height:180, correctLevel:QRCode.CorrectLevel.M});
+  document.getElementById('closeStudentQrCard').onclick=()=>modal.remove();
+  document.getElementById('printStudentQrCard').onclick=()=>{const card=document.getElementById('studentQrCardPrint').innerHTML;const w=window.open('','_blank','width=600,height=700');if(!w){alert('প্রিন্ট করার জন্য Pop-up অনুমতি দিন।');return;}w.document.write('<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>Student ID Card</title><style>body{font-family:Arial,sans-serif;display:grid;place-items:start center;padding:24px;color:#142b27}#card{width:320px;border:2px solid #08745c;border-radius:14px;padding:18px;text-align:center}img{max-width:180px} @media print{body{padding:0}}</style></head><body><div id="card">'+card+'</div><script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();};
+}
+
 studentTable.addEventListener('click', async event => {
   const editButton = event.target.closest('[data-edit-student]');
   const deleteButton = event.target.closest('[data-delete-student]');
