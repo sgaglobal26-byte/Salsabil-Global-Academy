@@ -56,6 +56,10 @@
 <div class="field"><label>শাখা</label><input name="section" placeholder="যেমন: A"></div>
 <div class="field"><label>জন্মতারিখ</label><input name="date_of_birth" type="date"></div>
 <div class="field"><label>লিঙ্গ</label><select name="gender"><option value="">নির্বাচন করুন</option><option value="male">ছেলে</option><option value="female">মেয়ে</option><option value="other">অন্যান্য</option></select></div>
+<div class="field"><label>বাবার নাম</label><input name="father_name" placeholder="বাবার পূর্ণ নাম"></div>
+<div class="field"><label>শিক্ষার্থীর মোবাইল নম্বর</label><input name="student_phone" type="tel" placeholder="01XXXXXXXXX"></div>
+<div class="field"><label>রক্তের গ্রুপ</label><select name="blood_group"><option value="">নির্বাচন করুন</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option><option>জানা নেই</option></select></div>
+<div class="field full"><label>ঠিকানা</label><textarea name="address" rows="2" placeholder="গ্রাম/মহল্লা, ডাকঘর, উপজেলা, জেলা"></textarea></div>
 <div class="field"><label>অভিভাবকের নাম</label><input name="guardian_name" placeholder="অভিভাবকের পূর্ণ নাম"></div>
 <div class="field"><label>অভিভাবকের মোবাইল</label><input name="guardian_phone" placeholder="01XXXXXXXXX"></div>
 <div class="field"><label>ভর্তির তারিখ</label><input name="admission_date" type="date"></div>
@@ -437,7 +441,7 @@ function escapeHtml(value) {
 async function loadStudents() {
   studentTable.innerHTML = '<div class="empty">Supabase থেকে তথ্য আনা হচ্ছে...</div>';
   const { data, error } = await supabase.from('students')
-    .select('id,student_code,full_name,date_of_birth,gender,class_id,section,status,admission_date,guardian_name,guardian_phone,qr_token,academic_classes(name)')
+    .select('id,student_code,full_name,date_of_birth,gender,class_id,section,status,admission_date,father_name,student_phone,blood_group,address,guardian_name,guardian_phone,qr_token,academic_classes(name)')
     .order('created_at', { ascending: false });
   if (error) {
     studentTotal.textContent = 'তথ্য পাওয়া যায়নি';
@@ -470,6 +474,7 @@ studentForm.addEventListener('submit', async event => {
   studentSaveBtn.disabled = true;
   studentSaveBtn.textContent = 'সংরক্ষণ হচ্ছে...';
   const fd = new FormData(studentForm);
+  const id = fd.get('id');
   const payload = {
     qr_token: id ? undefined : crypto.randomUUID(),
     student_code: String(fd.get('student_code')).trim(),
@@ -478,12 +483,15 @@ studentForm.addEventListener('submit', async event => {
     section: String(fd.get('section') || '').trim() || null,
     date_of_birth: fd.get('date_of_birth') || null,
     gender: fd.get('gender') || null,
+    father_name: String(fd.get('father_name') || '').trim() || null,
+    student_phone: String(fd.get('student_phone') || '').trim() || null,
+    blood_group: String(fd.get('blood_group') || '').trim() || null,
+    address: String(fd.get('address') || '').trim() || null,
     guardian_name: String(fd.get('guardian_name') || '').trim() || null,
     guardian_phone: String(fd.get('guardian_phone') || '').trim() || null,
     admission_date: fd.get('admission_date') || undefined,
     status: fd.get('status') || 'active'
   };
-  const id = fd.get('id');
   const result = id
     ? await supabase.from('students').update(payload).eq('id', id)
     : await supabase.from('students').insert(payload);
@@ -505,7 +513,7 @@ function showStudentIdCard(s) {
   const existing = document.getElementById('studentQrCardModal'); if (existing) existing.remove();
   const className = s.academic_classes?.name || '';
   const modal = document.createElement('div'); modal.id='studentQrCardModal'; modal.style.cssText='position:fixed;inset:0;background:#071d1bd9;z-index:99999;display:grid;place-items:center;padding:16px;overflow:auto';
-  modal.innerHTML = '<div style="background:#fff;color:#142b27;width:min(420px,100%);padding:22px;border-radius:16px;text-align:center"><div id="studentQrCardPrint" style="border:2px solid #08745c;border-radius:14px;padding:18px"><div style="font-size:13px;color:#08745c;font-weight:800;letter-spacing:.5px">SALSABIL GLOBAL ACADEMY</div><div style="font-size:19px;font-weight:800;margin:3px 0 12px">শিক্ষার্থী পরিচয়পত্র</div><div id="studentQrCode" style="display:flex;justify-content:center;margin:12px auto"></div><div style="font-size:20px;font-weight:800">'+escapeHtml(s.full_name)+'</div><div style="font-size:14px;margin-top:5px">Student ID: <b>'+escapeHtml(s.student_code)+'</b></div><div style="font-size:14px">শ্রেণি: '+escapeHtml(className)+(s.section?' · '+escapeHtml(s.section):'')+'</div><div style="font-size:11px;color:#667;margin-top:12px">শিক্ষা হোক আধুনিক, জীবন হোক ইসলামিক।</div></div><div style="display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button type="button" class="btn" id="printStudentQrCard">প্রিন্ট / PDF</button><button type="button" class="btn secondary" id="closeStudentQrCard">বন্ধ করুন</button></div><p style="font-size:12px;color:#667;margin:12px 0 0">এই QR Code শিক্ষার্থীর ইউনিক পরিচয় শনাক্ত করার জন্য।</p></div>';
+  modal.innerHTML = '<div style="background:#fff;color:#142b27;width:min(460px,100%);padding:18px;border-radius:16px;text-align:center"><div id="studentQrCardPrint" style="border:2px solid #08745c;border-radius:14px;padding:16px"><div style="font-size:13px;color:#08745c;font-weight:800;letter-spacing:.5px">SALSABIL GLOBAL ACADEMY</div><div style="font-size:19px;font-weight:800;margin:3px 0 10px">শিক্ষার্থী পরিচয়পত্র</div><div id="studentQrCode" style="display:flex;justify-content:center;margin:8px auto"></div><div style="font-size:20px;font-weight:800">'+escapeHtml(s.full_name)+'</div><div style="font-size:14px;margin-top:4px">Student ID: <b>'+escapeHtml(s.student_code)+'</b></div><div style="font-size:14px">শ্রেণি: '+escapeHtml(className)+(s.section?' · '+escapeHtml(s.section):'')+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:left;font-size:12px;margin-top:12px;border-top:1px solid #dce8e2;padding-top:10px"><div><b>বাবার নাম:</b> '+escapeHtml(s.father_name || '—')+'</div><div><b>মোবাইল:</b> '+escapeHtml(s.student_phone || '—')+'</div><div><b>রক্তের গ্রুপ:</b> '+escapeHtml(s.blood_group || '—')+'</div><div style="grid-column:1/-1"><b>ঠিকানা:</b> '+escapeHtml(s.address || '—')+'</div></div><div style="font-size:11px;color:#667;margin-top:12px">শিক্ষা হোক আধুনিক, জীবন হোক ইসলামিক।</div></div><div style="display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button type="button" class="btn" id="printStudentQrCard">প্রিন্ট / PDF</button><button type="button" class="btn secondary" id="closeStudentQrCard">বন্ধ করুন</button></div><p style="font-size:12px;color:#667;margin:12px 0 0">এই QR Code শিক্ষার্থীর ইউনিক পরিচয় শনাক্ত করার জন্য।</p></div>';
   document.body.appendChild(modal);
   new QRCode(document.getElementById('studentQrCode'), {text:'SGA-STUDENT:'+s.qr_token, width:180, height:180, correctLevel:QRCode.CorrectLevel.M});
   document.getElementById('closeStudentQrCard').onclick=()=>modal.remove();
@@ -527,6 +535,10 @@ studentTable.addEventListener('click', async event => {
     studentForm.elements.section.value = s.section || '';
     studentForm.elements.date_of_birth.value = s.date_of_birth || '';
     studentForm.elements.gender.value = s.gender || '';
+    studentForm.elements.father_name.value = s.father_name || '';
+    studentForm.elements.student_phone.value = s.student_phone || '';
+    studentForm.elements.blood_group.value = s.blood_group || '';
+    studentForm.elements.address.value = s.address || '';
     studentForm.elements.guardian_name.value = s.guardian_name || '';
     studentForm.elements.guardian_phone.value = s.guardian_phone || '';
     studentForm.elements.admission_date.value = s.admission_date || '';
