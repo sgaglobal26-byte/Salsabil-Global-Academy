@@ -40,7 +40,7 @@
 <aside class="side" id="side"><div class="brand"><div class="logo">س</div><div><b>সালসাবিল গ্লোবাল</b><small>ADMIN CONSOLE</small></div></div>
 <div class="navlabel">MAIN MENU</div><nav class="nav" id="nav">
 <button class="active" data-page="dashboard"><span>▦</span> ড্যাশবোর্ড</button>
-<button data-page="students"><span>♙</span> শিক্ষার্থী</button><button data-page="teachers"><span>♧</span> শিক্ষক</button><button data-page="accounts"><span>🔑</span> লগইন আইডি তৈরি</button><button data-page="admissions"><span>▤</span> ভর্তি আবেদন</button><button data-page="attendance"><span>◷</span> উপস্থিতি</button><button data-page="exams"><span>✎</span> পরীক্ষা ও ফলাফল</button><button data-page="fees"><span>▤</span> ফি ইনভয়েস</button><button data-page="dues"><span>৳</span> বকেয়া আদায়</button><button data-page="income"><span>↙</span> আয় হিসাব</button><button data-page="expenses"><span>↗</span> ব্যয় হিসাব</button><button data-page="notices"><span>▧</span> নোটিশ</button>
+<button data-page="students"><span>♙</span> শিক্ষার্থী</button><button data-page="teachers"><span>♧</span> শিক্ষক</button><button data-page="accounts"><span>🔑</span> লগইন আইডি তৈরি</button><button data-page="admissions"><span>▤</span> ভর্তি আবেদন</button><button data-page="attendance"><span>◷</span> উপস্থিতি</button><button data-page="attendanceReports"><span>▤</span> উপস্থিতি রিপোর্ট</button><button data-page="exams"><span>✎</span> পরীক্ষা ও ফলাফল</button><button data-page="fees"><span>▤</span> ফি ইনভয়েস</button><button data-page="dues"><span>৳</span> বকেয়া আদায়</button><button data-page="income"><span>↙</span> আয় হিসাব</button><button data-page="expenses"><span>↗</span> ব্যয় হিসাব</button><button data-page="notices"><span>▧</span> নোটিশ</button>
 </nav><div class="navlabel">SYSTEM</div><nav class="nav"><button data-page="settings"><span>⚙</span> সেটিংস</button><a href="/leadership-admin.html" style="display:block;text-decoration:none;color:#f1d58c;padding:11px 12px;font-size:14px">♙ চেয়ারম্যান, শিক্ষক ও প্রশাসনিক পরিচিতি</a><a href="/content-admin.html" style="display:block;text-decoration:none;color:#f1d58c;padding:11px 12px;font-size:14px">✎ Home Page তথ্য সম্পাদনা</a><a href="/teacher.html" style="display:block;text-decoration:none;color:#d7e7de;padding:11px 12px;font-size:14px">♧ শিক্ষক লগইন</a><a href="/student.html" style="display:block;text-decoration:none;color:#d7e7de;padding:11px 12px;font-size:14px">♙ শিক্ষার্থী লগইন</a><a href="/" style="display:block;text-decoration:none"><button><span>↗</span> ওয়েবসাইট দেখুন</button></a></nav><div class="sidefoot">Salsabil Global Academy<br>Mirzapur, Tangail<br><span style="color:#f0d48b">Faith · Knowledge · Character</span></div></aside>
 <main class="main"><header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="mobilemenu" id="mobilemenu">☰</button><h1 id="title">অ্যাডমিন ড্যাশবোর্ড</h1></div><div class="topright"><span class="status">নিরাপদ Admin Session</span><button class="logout-btn" id="logoutButton" type="button">লগআউট</button><div class="avatar" id="adminAvatar">A</div></div></header>
 <div class="content">
@@ -104,6 +104,13 @@
 <div class="tablewrap" id="attendanceTable"><div class="empty">শ্রেণি ও তারিখ নির্বাচন করে তালিকা দেখুন।</div></div>
 <div class="toolbar"><button class="btn" id="saveAttendanceBtn" type="button" disabled>উপস্থিতি সংরক্ষণ করুন</button><span class="muted">শুধু নির্বাচিত স্ট্যাটাসগুলো সংরক্ষিত হবে।</span></div>
 </div>
+</section>
+<section class="page" id="attendanceReports">
+<div class="welcome"><div><h2>উপস্থিতি রিপোর্ট ও বিস্তারিত</h2><p>শিক্ষার্থী, শিক্ষক এবং QR Scan-এর তারিখভিত্তিক রিপোর্ট দেখুন।</p></div></div>
+<div class="panel"><div class="panelhead"><h3>রিপোর্টের সময়সীমা</h3><span class="muted">Date range</span></div><div class="formrow"><div class="field"><label>শুরুর তারিখ</label><input id="attReportFrom" type="date"></div><div class="field"><label>শেষ তারিখ</label><input id="attReportTo" type="date"></div></div><div class="toolbar"><button class="btn" id="loadStudentAttReport">শিক্ষার্থী রিপোর্ট দেখুন</button><button class="btn secondary" id="loadTeacherAttReport">শিক্ষক রিপোর্ট দেখুন</button><button class="btn secondary" id="printAttReport">রিপোর্ট প্রিন্ট</button><span class="muted" id="attReportMessage">তারিখ নির্বাচন করে রিপোর্ট লোড করুন।</span></div></div>
+<div class="panel" style="margin-top:16px"><div class="panelhead"><h3>শিক্ষার্থীদের উপস্থিতি সারসংক্ষেপ</h3><span class="muted">Student Attendance</span></div><div class="stats" style="grid-template-columns:repeat(4,1fr);margin:12px 0"><div class="stat"><div class="stathead">উপস্থিত</div><strong id="reportStudentPresent">০</strong></div><div class="stat"><div class="stathead">অনুপস্থিত</div><strong id="reportStudentAbsent">০</strong></div><div class="stat"><div class="stathead">দেরিতে</div><strong id="reportStudentLate">০</strong></div><div class="stat"><div class="stathead">ছুটি</div><strong id="reportStudentExcused">০</strong></div></div><div class="tablewrap" id="studentAttReportTable"><div class="empty">এখনো রিপোর্ট লোড করা হয়নি।</div></div></div>
+<div class="panel" style="margin-top:16px"><div class="panelhead"><h3>QR Scan Attendance Details</h3><span class="muted">QR Scan Report</span></div><p class="muted">যেসব উপস্থিতির নোটে QR Scan লেখা আছে, সেগুলো এখানে আলাদাভাবে দেখাবে।</p><div class="tablewrap" id="qrAttReportTable"><div class="empty">শিক্ষার্থী রিপোর্ট লোড করুন।</div></div></div>
+<div class="panel" style="margin-top:16px"><div class="panelhead"><h3>শিক্ষকদের উপস্থিতি রিপোর্ট</h3><span class="muted">Teacher Attendance</span></div><div class="tablewrap" id="teacherAttReportTable"><div class="empty">শিক্ষক রিপোর্ট লোড করুন।</div></div><p class="footnote">শিক্ষক উপস্থিতি রিপোর্ট চালু করতে teacher_attendance SQL Migration একবার Supabase-এ রান করুন। এরপর শিক্ষক উপস্থিতির তথ্য ওই টেবিলে সংরক্ষিত হলে এখানে দেখা যাবে।</p></div>
 </section>
 <section class="page" id="exams">
 <div class="welcome"><div><h2>পরীক্ষা ও ফলাফল</h2><p>পরীক্ষা তৈরি, বিষয়ভিত্তিক নম্বর এন্ট্রি, গ্রেড ও ফলাফল প্রকাশ।</p></div></div>
@@ -194,10 +201,10 @@
 <p class="footnote">© Salsabil Global Academy · Admin Console · Supabase-secured access</p>
 </div></main></div><div class="toast" id="toast"></div>
 <script>
-const titles={dashboard:'অ্যাডমিন ড্যাশবোর্ড',students:'শিক্ষার্থী ব্যবস্থাপনা',teachers:'শিক্ষক ব্যবস্থাপনা',accounts:'লগইন আইডি তৈরি',admissions:'ভর্তি আবেদন',attendance:'উপস্থিতি ব্যবস্থাপনা',exams:'পরীক্ষা ও ফলাফল',fees:'ফি ইনভয়েস',dues:'বকেয়া আদায়',income:'আয়ের হিসাব',expenses:'ব্যয়ের হিসাব',notices:'নোটিশ ব্যবস্থাপনা',settings:'সিস্টেম সেটিংস'};
+const titles={dashboard:'অ্যাডমিন ড্যাশবোর্ড',students:'শিক্ষার্থী ব্যবস্থাপনা',teachers:'শিক্ষক ব্যবস্থাপনা',accounts:'লগইন আইডি তৈরি',admissions:'ভর্তি আবেদন',attendance:'উপস্থিতি ব্যবস্থাপনা',attendanceReports:'উপস্থিতি রিপোর্ট',exams:'পরীক্ষা ও ফলাফল',fees:'ফি ইনভয়েস',dues:'বকেয়া আদায়',income:'আয়ের হিসাব',expenses:'ব্যয়ের হিসাব',notices:'নোটিশ ব্যবস্থাপনা',settings:'সিস্টেম সেটিংস'};
 const read=k=>JSON.parse(localStorage.getItem('sga_'+k)||'[]');const write=(k,v)=>localStorage.setItem('sga_'+k,JSON.stringify(v));
 function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2300)}
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='teachers')renderTeachers();if(id==='dues'&&typeof loadDues==='function')void loadDues();if(id==='income'&&typeof loadIncome==='function')void loadIncome();if(id==='expenses'&&typeof loadExpenses==='function')void loadExpenses();if(id==='dashboard'&&typeof window.sgaRefreshDashboard==='function')void window.sgaRefreshDashboard()}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='teachers')renderTeachers();if(id==='attendanceReports'){const today=getDhakaDate();document.getElementById('attReportTo').value ||= today;document.getElementById('attReportFrom').value ||= today;}if(id==='dues'&&typeof loadDues==='function')void loadDues();if(id==='income'&&typeof loadIncome==='function')void loadIncome();if(id==='expenses'&&typeof loadExpenses==='function')void loadExpenses();if(id==='dashboard'&&typeof window.sgaRefreshDashboard==='function')void window.sgaRefreshDashboard()}
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 document.getElementById('mobilemenu').onclick=()=>document.getElementById('side').classList.toggle('open');
 
@@ -651,6 +658,40 @@ studentTable.addEventListener('click', async event => {
     toast('শিক্ষার্থীর রেকর্ড মুছে ফেলা হয়েছে');
   }
 });
+
+
+// Attendance reports: student totals, QR scan audit and teacher attendance.
+const reportFrom = document.getElementById('attReportFrom');
+const reportTo = document.getElementById('attReportTo');
+const reportMessage = document.getElementById('attReportMessage');
+let studentAttendanceReportRows = [];
+function reportStatus(status){return ({present:'উপস্থিত',absent:'অনুপস্থিত',late:'দেরিতে',excused:'ছুটি'})[status]||status||'—';}
+async function loadStudentAttendanceReport(){
+  const from=reportFrom.value,to=reportTo.value;
+  if(!from||!to||from>to){reportMessage.textContent='সঠিক শুরুর ও শেষ তারিখ দিন।';return;}
+  reportMessage.textContent='শিক্ষার্থীদের উপস্থিতি লোড হচ্ছে...';
+  const {data,error}=await supabase.from('attendance').select('student_id,class_id,attendance_date,status,note,students(student_code,full_name,academic_classes(name))').gte('attendance_date',from).lte('attendance_date',to).order('attendance_date',{ascending:false}).limit(5000);
+  if(error){document.getElementById('studentAttReportTable').innerHTML='<div class="empty">রিপোর্ট লোড হয়নি: '+escapeHtml(error.message)+'</div>';reportMessage.textContent='ডেটাবেজের অনুমতি বা attendance সম্পর্ক যাচাই করুন।';return;}
+  studentAttendanceReportRows=data||[];
+  const counts={present:0,absent:0,late:0,excused:0};studentAttendanceReportRows.forEach(r=>{if(counts[r.status]!==undefined)counts[r.status]++;});
+  for(const [key,id] of Object.entries({present:'reportStudentPresent',absent:'reportStudentAbsent',late:'reportStudentLate',excused:'reportStudentExcused'}))document.getElementById(id).textContent=counts[key].toLocaleString('bn-BD');
+  const rows=studentAttendanceReportRows;
+  document.getElementById('studentAttReportTable').innerHTML=rows.length?'<table><thead><tr><th>তারিখ</th><th>Student ID</th><th>শিক্ষার্থীর নাম</th><th>শ্রেণি</th><th>অবস্থা</th><th>রেকর্ড</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escapeHtml(r.attendance_date)+'</td><td>'+escapeHtml(r.students?.student_code||'—')+'</td><td>'+escapeHtml(r.students?.full_name||'—')+'</td><td>'+escapeHtml(r.students?.academic_classes?.name||'—')+'</td><td>'+escapeHtml(reportStatus(r.status))+'</td><td>'+escapeHtml(r.note||'Manual')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এই সময়সীমায় কোনো উপস্থিতি রেকর্ড পাওয়া যায়নি।</div>';
+  const qr=rows.filter(r=>/QR Scan/i.test(r.note||''));
+  document.getElementById('qrAttReportTable').innerHTML=qr.length?'<table><thead><tr><th>তারিখ</th><th>সময় / স্ক্যান নোট</th><th>Student ID</th><th>শিক্ষার্থীর নাম</th><th>শ্রেণি</th><th>ফলাফল</th></tr></thead><tbody>'+qr.map(r=>'<tr><td>'+escapeHtml(r.attendance_date)+'</td><td>'+escapeHtml(r.note||'—')+'</td><td>'+escapeHtml(r.students?.student_code||'—')+'</td><td>'+escapeHtml(r.students?.full_name||'—')+'</td><td>'+escapeHtml(r.students?.academic_classes?.name||'—')+'</td><td>'+escapeHtml(reportStatus(r.status))+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এই সময়সীমায় QR Scan-এর কোনো রেকর্ড পাওয়া যায়নি।</div>';
+  reportMessage.textContent=rows.length.toLocaleString('bn-BD')+'টি শিক্ষার্থী উপস্থিতি রেকর্ড · QR Scan '+qr.length.toLocaleString('bn-BD')+'টি।';
+}
+async function loadTeacherAttendanceReport(){
+ const from=reportFrom.value,to=reportTo.value;if(!from||!to||from>to){reportMessage.textContent='সঠিক শুরুর ও শেষ তারিখ দিন।';return;}
+ const box=document.getElementById('teacherAttReportTable');box.innerHTML='<div class="empty">শিক্ষক রিপোর্ট লোড হচ্ছে...</div>';
+ const {data,error}=await supabase.from('teacher_attendance').select('attendance_date,status,note,teacher_id,profiles(full_name)').gte('attendance_date',from).lte('attendance_date',to).order('attendance_date',{ascending:false}).limit(3000);
+ if(error){box.innerHTML='<div class="empty">শিক্ষক রিপোর্ট লোড হয়নি: '+escapeHtml(error.message)+'। teacher_attendance Migration রান হয়েছে কি না দেখুন।</div>';reportMessage.textContent='শিক্ষক উপস্থিতি টেবিল প্রস্তুত নয় বা অনুমতি নেই।';return;}
+ const rows=data||[];box.innerHTML=rows.length?'<table><thead><tr><th>তারিখ</th><th>শিক্ষকের নাম</th><th>অবস্থা</th><th>বিবরণ</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escapeHtml(r.attendance_date)+'</td><td>'+escapeHtml(r.profiles?.full_name||r.teacher_id)+'</td><td>'+escapeHtml(reportStatus(r.status))+'</td><td>'+escapeHtml(r.note||'—')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এই সময়সীমায় কোনো শিক্ষক উপস্থিতি রেকর্ড নেই।</div>';
+ reportMessage.textContent=rows.length.toLocaleString('bn-BD')+'টি শিক্ষক উপস্থিতি রেকর্ড পাওয়া গেছে।';
+}
+document.getElementById('loadStudentAttReport').addEventListener('click',loadStudentAttendanceReport);
+document.getElementById('loadTeacherAttReport').addEventListener('click',loadTeacherAttendanceReport);
+document.getElementById('printAttReport').addEventListener('click',()=>window.print());
 
 // Attendance management: records are saved in public.attendance.
 const attendanceClass = document.getElementById('attendanceClass');
