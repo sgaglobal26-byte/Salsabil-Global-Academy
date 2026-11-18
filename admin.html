@@ -23,6 +23,7 @@
 
 @media print{body *{visibility:hidden!important}#reportCardPrint,#reportCardPrint *{visibility:visible!important}#reportCardPrint{position:absolute!important;left:0!important;top:0!important;width:100%!important;margin:0!important;padding:18px!important;background:#fff!important;color:#111!important}.report-sheet{border:0!important;box-shadow:none!important;max-width:none!important}.report-sheet table{font-size:12px!important}.report-sheet th,.report-sheet td{border:1px solid #777!important;padding:7px!important}.report-school{text-align:center;margin-bottom:18px}.report-school h2{margin:0;color:#073b36}.report-school p{margin:3px 0}.report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.report-summary div{border:1px solid #999;padding:8px;text-align:center}}
 </style><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
 </head>
 <body>
 <section class="auth-gate" id="authGate">
@@ -87,6 +88,7 @@
 <div class="field"><label>শ্রেণি নির্বাচন *</label><select id="attendanceClass"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
 <div class="field"><label>তারিখ *</label><input id="attendanceDate" type="date"></div>
 </div>
+<div class="panel" style="margin:14px 0;border:1px solid #d7e8df"><div class="panelhead"><h3>📷 মোবাইল ক্যামেরায় QR স্ক্যান</h3><span class="muted">QR Attendance</span></div><p class="muted">প্রথমে শ্রেণি ও তারিখ নির্বাচন করুন। এরপর শিক্ষার্থীর ID Card-এর QR Code ক্যামেরার সামনে ধরুন।</p><div class="toolbar"><button class="btn" id="startQrScannerBtn" type="button">ক্যামেরা চালু করুন</button><button class="btn secondary" id="stopQrScannerBtn" type="button" disabled>ক্যামেরা বন্ধ</button><span id="qrScannerStatus" class="muted">ক্যামেরা বন্ধ আছে।</span></div><div id="qrReader" style="width:min(100%,520px);margin:12px auto;display:none"></div><div id="qrScanResult" class="muted" aria-live="polite">স্ক্যানের ফলাফল এখানে দেখা যাবে।</div></div>
 <div class="toolbar"><button class="btn" id="loadAttendanceBtn" type="button">শিক্ষার্থীর তালিকা দেখুন</button><span class="muted" id="attendanceMessage">প্রথমে শ্রেণি ও তারিখ নির্বাচন করুন।</span></div>
 <div class="stats" style="grid-template-columns:repeat(4,1fr);margin:14px 0">
 <div class="stat"><div class="stathead">উপস্থিত</div><strong id="attPresent">০</strong></div>
@@ -557,6 +559,100 @@ const loadAttendanceBtn = document.getElementById('loadAttendanceBtn');
 const saveAttendanceBtn = document.getElementById('saveAttendanceBtn');
 let attendanceStudents = [];
 let attendanceExisting = new Map();
+let qrScanner = null;
+let qrScannerRunning = false;
+const scannedQrTokens = new Set();
+const startQrScannerBtn = document.getElementById('startQrScannerBtn');
+const stopQrScannerBtn = document.getElementById('stopQrScannerBtn');
+const qrScannerStatus = document.getElementById('qrScannerStatus');
+const qrScanResult = document.getElementById('qrScanResult');
+const qrReader = document.getElementById('qrReader');
+function setQrScanMessage(message, isError = false) {
+  qrScanResult.textContent = message;
+  qrScanResult.style.color = isError ? '#a32929' : '#08745c';
+}
+async function recordQrAttendance(decodedText) {
+  const token = String(decodedText || '').trim().replace(/^SGA-STUDENT:/i, '');
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token)) {
+    setQrScanMessage('এটি Salsabil Academy-এর বৈধ Student QR Code নয়।', true); return;
+  }
+  if (scannedQrTokens.has(token)) { setQrScanMessage('এই QR Code এই সেশনে ইতিমধ্যে স্ক্যান করা হয়েছে।'); return; }
+  if (!attendanceClass.value || !attendanceDate.value) {
+    setQrScanMessage('আগে শ্রেণি ও তারিখ নির্বাচন করুন।', true); return;
+  }
+  qrScannerStatus.textContent = 'শিক্ষার্থীর তথ্য যাচাই হচ্ছে...';
+  const {data: student, error: lookupError} = await supabase.from('students')
+    .select('id,student_code,full_name,class_id,section,qr_token,academic_classes(name)')
+    .eq('qr_token', token).eq('status','active').maybeSingle();
+  if (lookupError || !student) {
+    qrScannerStatus.textContent = 'QR যাচাই ব্যর্থ';
+    setQrScanMessage(lookupError ? 'ডেটাবেজে যাচাই করা যায়নি: '+lookupError.message : 'এই QR Code-এর কোনো সক্রিয় শিক্ষার্থী পাওয়া যায়নি।', true);
+    return;
+  }
+  if (student.class_id !== attendanceClass.value) {
+    qrScannerStatus.textContent = 'শ্রেণি মিলেনি';
+    setQrScanMessage(student.full_name+' — '+(student.academic_classes?.name || 'অজানা শ্রেণি')+'। নির্বাচিত শ্রেণির সঙ্গে মিল নেই।', true);
+    return;
+  }
+  const {data: sessionData} = await supabase.auth.getSession();
+  const userId = sessionData.session?.user?.id;
+  if (!userId) { qrScannerStatus.textContent='লগইন প্রয়োজন'; setQrScanMessage('সেশন শেষ হয়েছে। আবার লগইন করুন।',true); return; }
+  const time = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
+  const row = {
+    student_id: student.id,
+    class_id: student.class_id,
+    attendance_date: attendanceDate.value,
+    status: 'present',
+    note: 'QR Scan · '+time+' (Asia/Dhaka)',
+    marked_by: userId
+  };
+  const {error: saveError} = await supabase.from('attendance').upsert(row,{onConflict:'student_id,attendance_date'});
+  if (saveError) {
+    qrScannerStatus.textContent='সংরক্ষণ হয়নি';
+    setQrScanMessage(student.full_name+'-এর হাজিরা সংরক্ষণ হয়নি: '+saveError.message,true);
+    return;
+  }
+  scannedQrTokens.add(token);
+  qrScannerStatus.textContent='সফলভাবে হাজিরা নেওয়া হয়েছে';
+  setQrScanMessage('✓ '+student.full_name+' ('+student.student_code+') — উপস্থিত · '+time+' · '+(student.academic_classes?.name || '')+' সংরক্ষিত হয়েছে।');
+  const existing = attendanceTable.querySelector('[data-attendance-status][data-student-id="'+student.id+'"]');
+  if (existing) { existing.value='present'; updateAttendanceSummary(); }
+  toast(student.full_name+'-এর হাজিরা নেওয়া হয়েছে');
+}
+startQrScannerBtn.addEventListener('click', async () => {
+  if (!attendanceClass.value || !attendanceDate.value) {
+    setQrScanMessage('ক্যামেরা চালুর আগে শ্রেণি ও তারিখ নির্বাচন করুন।', true); return;
+  }
+  if (!window.Html5Qrcode) {
+    setQrScanMessage('QR Scanner লাইব্রেরি লোড হয়নি। ইন্টারনেট সংযোগসহ পেজ Refresh করুন।', true); return;
+  }
+  if (!navigator.mediaDevices?.getUserMedia) {
+    setQrScanMessage('এই ব্রাউজারে ক্যামেরা সুবিধা নেই। HTTPS-এ খোলা আধুনিক Chrome ব্যবহার করুন।', true); return;
+  }
+  try {
+    qrReader.style.display='block';
+    qrScanner = new Html5Qrcode('qrReader');
+    await qrScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:240,height:240}},async text => {
+      if (qrScannerRunning) await recordQrAttendance(text);
+    },()=>{});
+    qrScannerRunning=true;
+    startQrScannerBtn.disabled=true; stopQrScannerBtn.disabled=false;
+    qrScannerStatus.textContent='ক্যামেরা চালু — QR Code স্ক্যান করুন।';
+    setQrScanMessage('ক্যামেরা চালু হয়েছে। শিক্ষার্থীর ID Card-এর QR Code ফ্রেমের মধ্যে ধরুন।');
+  } catch(error) {
+    qrScannerRunning=false; qrReader.style.display='none';
+    qrScannerStatus.textContent='ক্যামেরা চালু হয়নি';
+    setQrScanMessage('ক্যামেরা চালু করা যায়নি। Browser camera permission দিন এবং HTTPS ব্যবহার করুন। '+(error?.message || ''),true);
+    console.error('QR camera error:',error);
+  }
+});
+stopQrScannerBtn.addEventListener('click', async () => {
+  if (qrScanner && qrScannerRunning) { try { await qrScanner.stop(); await qrScanner.clear(); } catch(error) { console.warn(error); } }
+  qrScannerRunning=false; qrScanner=null; qrReader.style.display='none';
+  startQrScannerBtn.disabled=false; stopQrScannerBtn.disabled=true;
+  qrScannerStatus.textContent='ক্যামেরা বন্ধ আছে।';
+});
+
 
 
 function attendanceStatusLabel(status) {
