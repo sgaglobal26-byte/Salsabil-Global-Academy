@@ -457,15 +457,15 @@ async function loadStudents() {
 function renderStudentTable() {
   const q = (studentSearch.value || '').trim().toLowerCase();
   const filtered = studentRows.filter(s =>
-    [s.full_name,s.student_code,s.guardian_phone,s.guardian_name].some(v => String(v || '').toLowerCase().includes(q))
+    [s.full_name,s.student_code,s.student_phone,s.guardian_phone,s.guardian_name].some(v => String(v || '').toLowerCase().includes(q))
   );
   studentTotal.textContent = studentRows.length + ' জন';
   if (!filtered.length) {
     studentTable.innerHTML = '<div class="empty">' + (q ? 'আপনার খোঁজের সঙ্গে মেলে এমন শিক্ষার্থী পাওয়া যায়নি।' : 'এখনো কোনো শিক্ষার্থী যোগ করা হয়নি।') + '</div>';
     return;
   }
-  studentTable.innerHTML = '<table><thead><tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>অভিভাবক</th><th>মোবাইল</th><th>অবস্থা</th><th>কাজ</th></tr></thead><tbody>' +
-    filtered.map(s => '<tr><td>' + escapeHtml(s.student_code) + '</td><td>' + escapeHtml(s.full_name) + '</td><td>' + escapeHtml(s.academic_classes?.name || '') + (s.section ? ' · ' + escapeHtml(s.section) : '') + '</td><td>' + escapeHtml(s.guardian_name || '—') + '</td><td>' + escapeHtml(s.guardian_phone || '—') + '</td><td>' + escapeHtml(({active:'সক্রিয়',inactive:'নিষ্ক্রিয়',graduated:'উত্তীর্ণ',transferred:'স্থানান্তরিত'})[s.status] || s.status) + '</td><td><button class="btn secondary" type="button" data-card-student="' + s.id + '">ID Card / QR</button> <button class="btn secondary" type="button" data-edit-student="' + s.id + '">সম্পাদনা</button> <button class="btn secondary" type="button" data-delete-student="' + s.id + '">মুছুন</button></td></tr>').join('') +
+  studentTable.innerHTML = '<table><thead><tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>শিক্ষার্থীর মোবাইল</th><th>অভিভাবক</th><th>অভিভাবকের মোবাইল</th><th>অবস্থা</th><th>কাজ</th></tr></thead><tbody>' +
+    filtered.map(s => '<tr><td>' + escapeHtml(s.student_code) + '</td><td>' + escapeHtml(s.full_name) + '</td><td>' + escapeHtml(s.academic_classes?.name || '') + (s.section ? ' · ' + escapeHtml(s.section) : '') + '</td><td>' + escapeHtml(s.student_phone || '—') + '</td><td>' + escapeHtml(s.guardian_name || '—') + '</td><td>' + escapeHtml(s.guardian_phone || '—') + '</td><td>' + escapeHtml(({active:'সক্রিয়',inactive:'নিষ্ক্রিয়',graduated:'উত্তীর্ণ',transferred:'স্থানান্তরিত'})[s.status] || s.status) + '</td><td><button class="btn secondary" type="button" data-card-student="' + s.id + '">ID Card / QR</button> <button class="btn secondary" type="button" data-edit-student="' + s.id + '">সম্পাদনা</button> <button class="btn secondary" type="button" data-delete-student="' + s.id + '">মুছুন</button></td></tr>').join('') +
     '</tbody></table>';
 }
 studentSearch.addEventListener('input', renderStudentTable);
