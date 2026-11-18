@@ -587,7 +587,7 @@ function showStudentIdCard(s) {
   .id-actions{display:flex;justify-content:center;gap:9px;margin-top:14px}.id-hint{text-align:center;color:#74847c;font-size:11px;margin:9px 0 0}
   @media(max-width:700px){.id-preview-grid{grid-template-columns:1fr}.sga-id-card{max-width:430px}.id-modal{padding:10px}}
   @media print{
-    @page{size:CR80 landscape;margin:0}
+    @page{size:85.6mm 54mm;margin:0}
     body{margin:0!important;padding:0!important;background:#fff!important}
     .id-modal{width:auto!important;max-height:none!important;overflow:visible!important;padding:0!important;box-shadow:none!important}
     .id-preview-grid{display:block!important}
@@ -663,6 +663,7 @@ let attendanceStudents = [];
 let attendanceExisting = new Map();
 let qrScanner = null;
 let qrScannerRunning = false;
+let qrSuccessAudioContext = null;
 const scannedQrTokens = new Set();
 const pendingQrTokens = new Set();
 const startQrScannerBtn = document.getElementById('startQrScannerBtn');
@@ -722,19 +723,17 @@ async function recordQrAttendance(decodedText) {
   pendingQrTokens.delete(token);
   scannedQrTokens.add(token);
   try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (AudioCtx) {
-      const audio = new AudioCtx();
+    const audio = qrSuccessAudioContext;
+    if (audio && audio.state === 'running') {
       const oscillator = audio.createOscillator();
       const gain = audio.createGain();
       oscillator.type = 'sine';
       oscillator.frequency.setValueAtTime(880, audio.currentTime);
       gain.gain.setValueAtTime(0.0001, audio.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.12, audio.currentTime + 0.015);
-      gain.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + 0.22);
+      gain.gain.exponentialRampToValueAtTime(0.14, audio.currentTime + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + 0.24);
       oscillator.connect(gain); gain.connect(audio.destination);
-      oscillator.start(); oscillator.stop(audio.currentTime + 0.23);
-      oscillator.onended = () => audio.close();
+      oscillator.start(); oscillator.stop(audio.currentTime + 0.25);
     }
   } catch (soundError) { console.warn('Success beep unavailable:', soundError); }
   qrScannerStatus.textContent='✓ SUCCESS — হাজিরা সংরক্ষিত হয়েছে';
@@ -754,6 +753,11 @@ startQrScannerBtn.addEventListener('click', async () => {
     setQrScanMessage('এই ব্রাউজারে ক্যামেরা সুবিধা নেই। HTTPS-এ খোলা আধুনিক Chrome ব্যবহার করুন।', true); return;
   }
   try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      if (!qrSuccessAudioContext || qrSuccessAudioContext.state === 'closed') qrSuccessAudioContext = new AudioCtx();
+      await qrSuccessAudioContext.resume();
+    }
     qrReader.style.display='block';
     qrScanner = new Html5Qrcode('qrReader');
     await qrScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:240,height:240}},async text => {
