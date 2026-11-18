@@ -535,60 +535,77 @@ function showStudentIdCard(s) {
   const className = s.academic_classes?.name || '';
   const photoUrl = s.photo_path ? supabase.storage.from('student-photos').getPublicUrl(s.photo_path).data.publicUrl : '';
   const schoolAddress = 'ক্যাডেট কলেজ (পুরাতন গেটের বিপরীত পাশে), মির্জাপুর, টাঙ্গাইল, বাংলাদেশ';
-  const schoolPhones = '০১৮০৫৮৩৯৮১৪ · ০১৮০৫৮৩৯৮১৫ · ০১৮০৫৮৩৯৮১৬';
-  const safePhoto = photoUrl ? '<img class="id-photo" src="'+escapeHtml(photoUrl)+'" alt="শিক্ষার্থীর ছবি">' : '<div class="id-photo id-photo-empty">ছবি<br>সংযুক্ত নয়</div>';
-  const modal = document.createElement('div');
-  modal.id='studentQrCardModal';
+  const schoolPhones = '01805839814 · 01805839815 · 01805839816';
+  const logoUrl = '/WhatsApp%20Image%202026-10-20%20at%206.22.41%20PM.jpeg';
+  const safePhoto = photoUrl ? '<img class="id-photo" src="'+escapeHtml(photoUrl)+'" alt="শিক্ষার্থীর ছবি">' : '<div class="id-photo id-photo-empty">শিক্ষার্থীর ছবি</div>';
+  const modal = document.createElement('div'); modal.id='studentQrCardModal';
   modal.style.cssText='position:fixed;inset:0;background:#071d1bd9;z-index:99999;display:grid;place-items:center;padding:16px;overflow:auto';
-  modal.innerHTML = '<div class="id-modal"><div id="studentQrCardPrint" class="sga-id-card">'+
-    '<div class="id-top"><div class="id-logo">س</div><div class="id-school"><div class="id-school-en">SALSABIL GLOBAL ACADEMY</div><div class="id-school-bn">সালসাবিল গ্লোবাল একাডেমি</div><div class="id-tagline">শিক্ষা হোক আধুনিক, জীবন হোক ইসলামিক।</div></div></div>'+
-    '<div class="id-ribbon">STUDENT IDENTITY CARD · শিক্ষার্থী পরিচয়পত্র</div>'+
-    '<div class="id-main"><div class="id-person">'+safePhoto+'<div class="id-student-name">'+escapeHtml(s.full_name)+'</div><div class="id-student-code">'+escapeHtml(s.student_code)+'</div></div><div class="id-details">'+
-    '<div><small>CLASS / শ্রেণি</small><b>'+escapeHtml(className)+(s.section?' · '+escapeHtml(s.section):'')+'</b></div>'+
-    '<div><small>FATHER / পিতার নাম</small><b>'+escapeHtml(s.father_name||'—')+'</b></div>'+
-    '<div><small>STUDENT MOBILE / মোবাইল</small><b>'+escapeHtml(s.student_phone||'—')+'</b></div>'+
-    '<div><small>BLOOD GROUP / রক্তের গ্রুপ</small><b class="id-blood">'+escapeHtml(s.blood_group||'—')+'</b></div>'+
-    '<div class="id-address"><small>ADDRESS / ঠিকানা</small><b>'+escapeHtml(s.address||'—')+'</b></div></div>'+
-    '<div class="id-qr-wrap"><div id="studentQrCode" class="id-qr"></div><small>SCAN FOR ATTENDANCE</small></div></div>'+
-    '<div class="id-contact"><b>ঠিকানা:</b> '+schoolAddress+'<br><b>মোবাইল:</b> '+schoolPhones+'<br><b>ইমেইল:</b> —</div>'+
-    '<div class="id-bottom"><span>www.salsabil-global-academy.vercel.app</span><span>Faith · Knowledge · Character</span></div></div>'+
-    '<div class="id-actions"><button class="btn" id="printStudentQrCard">প্রিন্ট / PDF</button><button class="btn secondary" id="closeStudentQrCard">বন্ধ করুন</button></div>'+
-    '<p class="id-hint">QR Code দিয়ে শিক্ষার্থীর উপস্থিতি যাচাই করা যাবে।</p></div>';
-  const style=document.createElement('style');
-  style.id='studentIdCardStyles';
+  modal.innerHTML = '<div class="id-modal"><div class="id-preview-grid">'+
+    '<section id="studentIdFront" class="sga-id-card id-front"><div class="id-header"><img class="id-logo-img" src="'+logoUrl+'" alt="Salsabil Global Academy Logo"><div class="id-heading"><b>SALSABIL GLOBAL ACADEMY</b><strong>শিক্ষার্থী পরিচয়পত্র</strong><small>STUDENT IDENTITY CARD</small></div></div>'+
+    '<div class="id-front-body"><div class="id-person">'+safePhoto+'<b class="id-student-name">'+escapeHtml(s.full_name)+'</b><span class="id-code">ID: '+escapeHtml(s.student_code)+'</span></div>'+
+    '<div class="id-details"><div><small>শ্রেণি / CLASS</small><b>'+escapeHtml(className)+(s.section?' · '+escapeHtml(s.section):'')+'</b></div>'+
+    '<div><small>পিতার নাম / FATHER</small><b>'+escapeHtml(s.father_name||'—')+'</b></div>'+
+    '<div><small>শিক্ষার্থীর মোবাইল</small><b>'+escapeHtml(s.student_phone||'—')+'</b></div>'+
+    '<div><small>রক্তের গ্রুপ</small><b class="id-blood">'+escapeHtml(s.blood_group||'—')+'</b></div>'+
+    '<div class="id-address"><small>ঠিকানা / ADDRESS</small><b>'+escapeHtml(s.address||'—')+'</b></div></div>'+
+    '<div class="id-qr-side"><div id="studentQrCode" class="id-qr"></div><small>SCAN FOR ATTENDANCE</small></div></div>'+
+    '<div class="id-front-foot">শিক্ষা হোক আধুনিক, জীবন হোক ইসলামিক।</div></section>'+
+    '<section id="studentIdBack" class="sga-id-card id-back"><div class="id-back-logo"><img src="'+logoUrl+'" alt="Salsabil Global Academy Logo"></div>'+
+    '<div class="id-back-title">সালসাবিল গ্লোবাল একাডেমি</div><div class="id-back-subtitle">SALSABIL GLOBAL ACADEMY</div>'+
+    '<div class="id-back-rule"></div><div class="id-contact-title">প্রতিষ্ঠানের যোগাযোগ</div>'+
+    '<div class="id-contact-row"><span>ঠিকানা</span><b>'+schoolAddress+'</b></div>'+
+    '<div class="id-contact-row"><span>মোবাইল</span><b>'+schoolPhones+'</b></div>'+
+    '<div class="id-contact-row"><span>ইমেইল</span><b>sga.global26@gmail.com</b></div>'+
+    '<div class="id-back-note">এই পরিচয়পত্রটি সালসাবিল গ্লোবাল একাডেমির সম্পদ। প্রয়োজনে প্রতিষ্ঠানের সঙ্গে যোগাযোগ করুন।</div>'+
+    '<div class="id-back-footer">www.salsabil-global-academy.vercel.app</div></section></div>'+
+    '<div class="id-actions"><button class="btn" id="printStudentQrCard">দুই পাশ প্রিন্ট / PDF</button><button class="btn secondary" id="closeStudentQrCard">বন্ধ করুন</button></div>'+
+    '<p class="id-hint">সামনের পাশে শিক্ষার্থীর তথ্য ও QR Code, পেছনের পাশে প্রতিষ্ঠানের যোগাযোগের তথ্য। Duplex printing-এ দুই পাশ প্রিন্ট করুন।</p></div>';
+  const style=document.createElement('style'); style.id='studentIdCardStyles';
   style.textContent=`
-  .id-modal{width:min(720px,100%);max-height:95vh;overflow:auto;background:#fff;padding:18px;border-radius:18px;box-shadow:0 24px 80px #001a1255}
-  .sga-id-card{width:100%;max-width:650px;margin:auto;overflow:hidden;border:1px solid #c7d9d0;border-radius:16px;background:linear-gradient(145deg,#fff 0%,#f7fbf8 100%);color:#153c32;font-family:'Hind Siliguri',Arial,sans-serif;box-shadow:0 12px 34px #0a3c2b18}
-  .id-top{display:flex;align-items:center;gap:13px;padding:16px 20px;background:linear-gradient(110deg,#064b3b,#0c6b50);color:white}
-  .id-logo{width:58px;height:58px;flex:0 0 58px;border:2px solid #e8d39a;border-radius:50%;display:grid;place-items:center;color:#f2dca4;font-size:31px;font-weight:700;background:#ffffff12}
-  .id-school-en{font:800 17px Manrope,Arial,sans-serif;letter-spacing:1.2px;color:#f4dfaa}
-  .id-school-bn{font-size:20px;font-weight:800;line-height:1.35}.id-tagline{font-size:11px;color:#d8e9df}
-  .id-ribbon{text-align:center;background:#e9d59f;color:#193c31;padding:7px;font-size:12px;font-weight:800;letter-spacing:.5px}
-  .id-main{display:grid;grid-template-columns:145px 1fr 112px;gap:14px;align-items:center;padding:18px 18px 14px}
-  .id-person{text-align:center}.id-photo{width:112px;height:128px;object-fit:cover;border:3px solid #d7c17e;border-radius:10px;margin:0 auto 8px;display:grid;place-items:center}
-  .id-photo-empty{background:#eaf2ed;color:#648074;font-size:13px;font-weight:600}
-  .id-student-name{font-size:18px;font-weight:800;line-height:1.3}.id-student-code{font:700 11px Manrope;color:#087452;margin-top:4px}
-  .id-details{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;min-width:0}
-  .id-details>div{border-bottom:1px solid #e0eae3;padding-bottom:5px;min-width:0}
-  .id-details small{display:block;font:700 9px Manrope;color:#73877d;letter-spacing:.35px;margin-bottom:2px}
-  .id-details b{font-size:12px;overflow-wrap:anywhere}.id-details .id-address{grid-column:1/-1}
-  .id-blood{display:inline-block;background:#fff0e9;color:#a33b2e;padding:2px 8px;border-radius:20px}
-  .id-qr-wrap{text-align:center}.id-qr{display:flex;justify-content:center;align-items:center;min-height:100px}.id-qr img,.id-qr canvas{max-width:100%;height:auto!important}.id-qr-wrap small{display:block;font:700 8px Manrope;color:#658074;margin-top:4px}
-  .id-contact{background:#f0f6f1;border-top:1px solid #dce8df;padding:9px 18px;font-size:10px;line-height:1.65;color:#425d50}
-  .id-bottom{display:flex;justify-content:space-between;gap:8px;padding:8px 18px;background:#073f35;color:#e9d69e;font:700 9px Manrope;letter-spacing:.2px}
+  .id-modal{width:min(900px,100%);max-height:95vh;overflow:auto;background:#fff;padding:18px;border-radius:18px;box-shadow:0 24px 80px #001a1255}
+  .id-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+  .sga-id-card{width:100%;aspect-ratio:85.6/54;max-width:430px;margin:auto;overflow:hidden;position:relative;border:1px solid #c7d9d0;border-radius:12px;color:#153c32;font-family:'Hind Siliguri',Arial,sans-serif;box-shadow:0 8px 24px #0a3c2b18}
+  .id-front{background:linear-gradient(145deg,#fff 0%,#f2f8f4 100%)}
+  .id-header{height:25%;display:flex;align-items:center;gap:9px;padding:7px 11px;background:linear-gradient(110deg,#07513f,#087d5d);color:white}
+  .id-logo-img{width:53px;height:53px;object-fit:contain;border-radius:5px;background:#fff}
+  .id-heading{display:flex;flex-direction:column;gap:2px;min-width:0}.id-heading b{font:800 13px Manrope,Arial,sans-serif;color:#f1d994;letter-spacing:.35px}.id-heading strong{font-size:15px}.id-heading small{font:700 7px Manrope;color:#d9eadf;letter-spacing:1px}
+  .id-front-body{height:65%;display:grid;grid-template-columns:24% 1fr 20%;gap:8px;align-items:center;padding:7px 10px}
+  .id-person{text-align:center;min-width:0}.id-photo{width:70px;height:78px;object-fit:cover;border:2px solid #d6bd70;border-radius:6px;margin:0 auto 4px;display:block}
+  .id-photo-empty{background:#eaf2ed;color:#648074;font-size:9px;display:grid;place-items:center}
+  .id-student-name{display:block;font-size:12px;line-height:1.2;overflow-wrap:anywhere}.id-code{display:block;font:700 8px Manrope;color:#087452;margin-top:3px}
+  .id-details{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;min-width:0}.id-details>div{border-bottom:1px solid #dce8df;padding-bottom:3px;min-width:0}
+  .id-details small{display:block;font-size:7px;color:#73877d;font-weight:700}.id-details b{display:block;font-size:9px;line-height:1.25;overflow-wrap:anywhere}.id-details .id-address{grid-column:1/-1}
+  .id-blood{color:#a33b2e!important}.id-qr-side{text-align:center;min-width:0}.id-qr{display:flex;justify-content:center;align-items:center}.id-qr img,.id-qr canvas{width:66px!important;height:66px!important}.id-qr-side small{display:block;font:700 6px Manrope;color:#658074;margin-top:2px}
+  .id-front-foot{height:10%;display:grid;place-items:center;background:#e9d59f;color:#193c31;font-size:8px;font-weight:800}
+  .id-back{background:linear-gradient(145deg,#064b3b,#0b7053);color:white;text-align:center;padding:8px 15px;display:flex;flex-direction:column;align-items:center}
+  .id-back-logo{height:33%;width:100%;display:flex;justify-content:center}.id-back-logo img{height:100%;max-width:95px;object-fit:contain;background:white;border-radius:6px}
+  .id-back-title{font-size:16px;font-weight:800;color:#f3dca0;margin-top:3px}.id-back-subtitle{font:800 9px Manrope;letter-spacing:.7px;color:#e8d69e}
+  .id-back-rule{width:78%;height:1px;background:#d6c17e;margin:5px 0}.id-contact-title{font-size:11px;font-weight:800;color:#fff;margin-bottom:4px}
+  .id-contact-row{width:100%;display:grid;grid-template-columns:48px 1fr;gap:5px;text-align:left;font-size:8px;line-height:1.3;margin:2px 0}
+  .id-contact-row span{color:#e7d59f;font-weight:700}.id-contact-row b{overflow-wrap:anywhere}
+  .id-back-note{font-size:7px;color:#d7e9df;margin-top:auto;padding-top:4px}.id-back-footer{font:700 7px Manrope;color:#f1d994;margin-top:3px}
   .id-actions{display:flex;justify-content:center;gap:9px;margin-top:14px}.id-hint{text-align:center;color:#74847c;font-size:11px;margin:9px 0 0}
-  @media(max-width:560px){.id-modal{padding:10px}.id-main{grid-template-columns:95px 1fr;gap:9px;padding:12px 9px}.id-photo{width:82px;height:100px}.id-student-name{font-size:14px}.id-student-code{font-size:9px}.id-details{grid-column:1/-1;grid-row:2;gap:7px}.id-qr-wrap{grid-column:1/-1;grid-row:3}.id-qr{min-height:0}.id-qr img,.id-qr canvas{width:90px!important;height:90px!important}.id-top{padding:12px}.id-logo{width:48px;height:48px;flex-basis:48px}.id-school-en{font-size:13px}.id-school-bn{font-size:17px}.id-bottom{font-size:8px}}
-  `;
-  document.head.appendChild(style);
-  document.body.appendChild(modal);
-  new QRCode(document.getElementById('studentQrCode'), {text:'SGA-STUDENT:'+s.qr_token, width:104, height:104, correctLevel:QRCode.CorrectLevel.M});
+  @media(max-width:700px){.id-preview-grid{grid-template-columns:1fr}.sga-id-card{max-width:430px}.id-modal{padding:10px}}
+  @media print{
+    @page{size:CR80 landscape;margin:0}
+    body{margin:0!important;padding:0!important;background:#fff!important}
+    .id-modal{width:auto!important;max-height:none!important;overflow:visible!important;padding:0!important;box-shadow:none!important}
+    .id-preview-grid{display:block!important}
+    .sga-id-card{width:85.6mm!important;height:54mm!important;max-width:none!important;aspect-ratio:auto!important;border:0!important;border-radius:0!important;box-shadow:none!important;break-after:page;page-break-after:always}
+    .sga-id-card:last-child{break-after:auto;page-break-after:auto}
+    .id-actions,.id-hint{display:none!important}
+  }`;
+  document.head.appendChild(style); document.body.appendChild(modal);
+  new QRCode(document.getElementById('studentQrCode'), {text:'SGA-STUDENT:'+s.qr_token,width:100,height:100,correctLevel:QRCode.CorrectLevel.M});
   document.getElementById('closeStudentQrCard').onclick=()=>{modal.remove();style.remove();};
   document.getElementById('printStudentQrCard').onclick=()=>{
-    const card=document.getElementById('studentQrCardPrint').outerHTML;
+    const card=document.getElementById('studentQrCardPrint')?.outerHTML;
+    const front=document.getElementById('studentIdFront').outerHTML;
+    const back=document.getElementById('studentIdBack').outerHTML;
     const css=style.textContent;
-    const w=window.open('','_blank','width=850,height=700');
+    const w=window.open('','_blank','width=900,height=700');
     if(!w){alert('প্রিন্ট করার জন্য Pop-up অনুমতি দিন।');return;}
-    w.document.write('<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>Salsabil Student ID Card</title><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet"><style>body{font-family:Arial,sans-serif;background:#fff;padding:20px}.sga-id-card{max-width:650px;margin:0 auto;box-shadow:none}@page{size:A5 landscape;margin:8mm}@media print{body{padding:0}}</style><style>'+css+'</style></head><body>'+card+'<script>window.onload=()=>{setTimeout(()=>window.print(),500)};<\/script></body></html>');
+    w.document.write('<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>Salsabil Student ID Card - Front & Back</title><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet"><style>body{margin:0;padding:0;background:#fff}</style><style>'+css+'</style></head><body><div class="id-modal"><div class="id-preview-grid">'+front+back+'</div></div><script>window.onload=()=>setTimeout(()=>window.print(),700);<\/script></body></html>');
     w.document.close();
   };
 }
@@ -704,7 +721,23 @@ async function recordQrAttendance(decodedText) {
   }
   pendingQrTokens.delete(token);
   scannedQrTokens.add(token);
-  qrScannerStatus.textContent='সফলভাবে হাজিরা নেওয়া হয়েছে';
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      const audio = new AudioCtx();
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(880, audio.currentTime);
+      gain.gain.setValueAtTime(0.0001, audio.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.12, audio.currentTime + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + 0.22);
+      oscillator.connect(gain); gain.connect(audio.destination);
+      oscillator.start(); oscillator.stop(audio.currentTime + 0.23);
+      oscillator.onended = () => audio.close();
+    }
+  } catch (soundError) { console.warn('Success beep unavailable:', soundError); }
+  qrScannerStatus.textContent='✓ SUCCESS — হাজিরা সংরক্ষিত হয়েছে';
   setQrScanMessage('✓ '+student.full_name+' ('+student.student_code+') — উপস্থিত · '+time+' · '+(student.academic_classes?.name || '')+' সংরক্ষিত হয়েছে।');
   const existing = attendanceTable.querySelector('[data-attendance-status][data-student-id="'+student.id+'"]');
   if (existing) { existing.value='present'; updateAttendanceSummary(); }
