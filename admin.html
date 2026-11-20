@@ -219,12 +219,38 @@ function exportData(){const data={students:read('students'),teachers:read('teach
 function clearDemo(){if(confirm('এই ব্রাউজারের সব ডেমো ডেটা মুছে ফেলবেন?')){['students','teachers','notices'].forEach(k=>localStorage.removeItem('sga_'+k));renderDashboard();renderStudents();renderTeachers();toast('ডেমো ডেটা মুছে ফেলা হয়েছে')}}
 
 </script>
+<script>
+window.__sgaAdminModuleReady = false;
+window.addEventListener('error', function(event) {
+  var box = document.getElementById('authError');
+  if (box && !window.__sgaAdminModuleReady) {
+    box.textContent = 'Admin login script চালু হয়নি। পেজ Reload করুন; Console-এ error দেখুন।';
+    box.style.display = 'block';
+  }
+});
+window.addEventListener('unhandledrejection', function(event) {
+  var box = document.getElementById('authError');
+  if (box) {
+    box.textContent = 'লগইন সিস্টেমে অপ্রত্যাশিত সমস্যা: ' + (event.reason && event.reason.message ? event.reason.message : 'Unknown error');
+    box.style.display = 'block';
+  }
+});
+document.getElementById('loginForm')?.addEventListener('submit', function() {
+  if (!window.__sgaAdminModuleReady) {
+    var box = document.getElementById('authError');
+    if (box) {
+      box.textContent = 'Admin login script এখনো চালু হয়নি। ৫ সেকেন্ড অপেক্ষা করে Reload দিন।';
+      box.style.display = 'block';
+    }
+  }
+});
+</script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = 'https://qzblmxcbgmdwkdmfsvuj.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_H7aYU2ThzGoXQnSVZTPO2w_PL3WZWsF';
-const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);\nwindow.__sgaAdminModuleReady = true;
 
 const gate = document.getElementById('authGate');
 const form = document.getElementById('loginForm');
@@ -345,24 +371,20 @@ document.getElementById('refreshDashboardBtn').addEventListener('click', loadAdm
 
 async function verifyAdmin(session) {
   if (!session) { showLogin(); return; }
-  const { data, error } = await supabase
+  const { data: roles, error } = await supabase
     .from('user_roles')
     .select('role')
-    .eq('user_id', session.user.id)
-    .eq('role', 'admin')
-    .maybeSingle();
+    .eq('user_id', session.user.id);
 
   if (error) {
-    await supabase.auth.signOut();
     showLogin();
-    showAuthError('অ্যাডমিন অনুমতি যাচাই করা যায়নি। user_roles টেবিলের RLS SELECT policy পরীক্ষা করুন।');
+    showAuthError('অ্যাডমিন অনুমতি যাচাই ব্যর্থ: ' + (error.message || 'Supabase policy/connection পরীক্ষা করুন।'));
     console.error('Admin role check failed:', error);
     return;
   }
-  if (!data) {
-    await supabase.auth.signOut();
+  if (!(roles || []).some(item => String(item.role).toLowerCase() === 'admin')) {
     showLogin();
-    showAuthError('এই অ্যাকাউন্টে admin অনুমতি নেই। প্রতিষ্ঠানের সুপার অ্যাডমিনের সঙ্গে যোগাযোগ করুন।');
+    showAuthError('এই অ্যাকাউন্টে admin অনুমতি পাওয়া যায়নি। Supabase user_roles-এ role=admin যাচাই করুন।');
     return;
   }
   errorBox.style.display = 'none';
