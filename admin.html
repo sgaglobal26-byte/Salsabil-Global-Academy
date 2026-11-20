@@ -235,15 +235,17 @@ window.addEventListener('unhandledrejection', function(event) {
     box.style.display = 'block';
   }
 });
-document.getElementById('loginForm')?.addEventListener('submit', function() {
+document.getElementById('loginForm')?.addEventListener('submit', function(event) {
   if (!window.__sgaAdminModuleReady) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
     var box = document.getElementById('authError');
     if (box) {
-      box.textContent = 'Admin login script এখনো চালু হয়নি। ৫ সেকেন্ড অপেক্ষা করে Reload দিন।';
+      box.textContent = 'লগইন সিস্টেম চালু হয়নি। পেজ Refresh না করে এই বার্তাটি দেখুন; ব্রাউজারের JavaScript/module লোডিং সমস্যা পরীক্ষা প্রয়োজন।';
       box.style.display = 'block';
     }
   }
-});
+}, true);
 </script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
