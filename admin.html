@@ -220,7 +220,7 @@ function exportData(){const data={students:read('students'),teachers:read('teach
 function clearDemo(){if(confirm('এই ব্রাউজারের সব ডেমো ডেটা মুছে ফেলবেন?')){['students','teachers','notices'].forEach(k=>localStorage.removeItem('sga_'+k));renderDashboard();renderStudents();renderTeachers();toast('ডেমো ডেটা মুছে ফেলা হয়েছে')}}
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 window.__sgaAdminModuleReady = false;
 window.addEventListener('error', function(event) {
