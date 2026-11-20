@@ -34,6 +34,7 @@
     <label for="adminPassword">পাসওয়ার্ড</label><input id="adminPassword" name="password" type="password" autocomplete="current-password" required placeholder="পাসওয়ার্ড">
     <p class="auth-error" id="authError" role="alert"></p>
     <button class="btn" id="loginButton" type="submit">লগইন করুন</button>
+    <a href="#" id="forgotPasswordLink" style="display:block;text-align:center;margin-top:14px;color:#075b45;font-size:13px">পাসওয়ার্ড ভুলে গেছেন? Reset Email পাঠান</a>
     <p class="auth-help">শুধু Supabase-এ অনুমোদিত admin role থাকা অ্যাকাউন্ট প্রবেশ করতে পারবে।</p>
   </form>
 </section>
@@ -400,6 +401,24 @@ async function verifyAdmin(session) {
   const avatar = document.getElementById('adminAvatar');
   if (avatar) avatar.textContent = (session.user.email || 'A').slice(0,1).toUpperCase();
 }
+
+document.getElementById('forgotPasswordLink').addEventListener('click', async (event) => {
+  event.preventDefault();
+  const email = form.elements.email.value.trim();
+  if (!email) { showAuthError('আগে আপনার Admin ইমেইল লিখুন, তারপর Reset Email চাপুন।'); form.elements.email.focus(); return; }
+  errorBox.style.display = 'none';
+  const link = event.currentTarget;
+  link.textContent = 'Reset Email পাঠানো হচ্ছে...';
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/reset-password.html'
+  });
+  link.textContent = 'পাসওয়ার্ড ভুলে গেছেন? Reset Email পাঠান';
+  if (error) { showAuthError('Reset Email পাঠানো যায়নি: ' + error.message); return; }
+  showAuthError('Reset Email পাঠানো হয়েছে। Inbox থেকে নতুন ইমেইলের লিংকে ক্লিক করুন।');
+  errorBox.style.display = 'block';
+  errorBox.style.color = '#087443';
+  errorBox.style.background = '#eef8f0';
+});
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
