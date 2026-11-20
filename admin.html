@@ -250,7 +250,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = 'https://qzblmxcbgmdwkdmfsvuj.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_H7aYU2ThzGoXQnSVZTPO2w_PL3WZWsF';
-const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);\nwindow.__sgaAdminModuleReady = true;
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+window.__sgaAdminModuleReady = true;
 
 const gate = document.getElementById('authGate');
 const form = document.getElementById('loginForm');
