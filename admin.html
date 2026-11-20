@@ -220,9 +220,30 @@ function exportData(){const data={students:read('students'),teachers:read('teach
 function clearDemo(){if(confirm('এই ব্রাউজারের সব ডেমো ডেটা মুছে ফেলবেন?')){['students','teachers','notices'].forEach(k=>localStorage.removeItem('sga_'+k));renderDashboard();renderStudents();renderTeachers();toast('ডেমো ডেটা মুছে ফেলা হয়েছে')}}
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
 <script>
 window.__sgaAdminModuleReady = false;
+function loadSupabaseClient() {
+  if (window.supabase && typeof window.supabase.createClient === 'function') return Promise.resolve();
+  const sources = [
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',
+    'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'
+  ];
+  return new Promise((resolve, reject) => {
+    let index = 0;
+    function tryNext() {
+      if (window.supabase && typeof window.supabase.createClient === 'function') return resolve();
+      if (index >= sources.length) return reject(new Error('Supabase browser library could not load from the available CDNs.'));
+      const script = document.createElement('script');
+      script.src = sources[index++];
+      script.async = true;
+      script.onload = () => window.supabase && typeof window.supabase.createClient === 'function' ? resolve() : tryNext();
+      script.onerror = tryNext;
+      document.head.appendChild(script);
+    }
+    tryNext();
+  });
+}
 window.addEventListener('error', function(event) {
   var box = document.getElementById('authError');
   if (box && !window.__sgaAdminModuleReady) {
@@ -250,7 +271,7 @@ document.getElementById('loginForm')?.addEventListener('submit', function(event)
 }, true);
 </script>
 <script>
-(async function () {
+loadSupabaseClient().then(async function () {
 const createClient = window.supabase && window.supabase.createClient;
 if (!createClient) throw new Error("Supabase browser library load failed.");
 
@@ -1416,6 +1437,13 @@ if (sessionError) {
   showLogin();
 }
 
-})();
+}).catch(function (error) {
+  console.error('Admin login bootstrap failed:', error);
+  const box = document.getElementById('authError');
+  if (box) {
+    box.textContent = 'লগইন সিস্টেম চালু হয়নি: ' + (error && error.message ? error.message : 'Supabase script লোড করা যায়নি।');
+    box.style.display = 'block';
+  }
+});
 </script></body></html>
 <!-- Trigger Vercel Git deployment after repository connection -->
