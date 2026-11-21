@@ -138,7 +138,8 @@ Deno.serve(async (req) => {
   return json(req, {
     success: true,
     user_id: userId,
-    email,
+    email: role === "teacher" ? null : email,
+    phone: role === "teacher" ? phone : null,
     role,
     message: "লগইন অ্যাকাউন্ট তৈরি ও সংযুক্ত হয়েছে।",
   });
