@@ -71,19 +71,19 @@
 <p class="muted field full" id="studentFormMessage">তথ্য Supabase ডেটাবেজে সংরক্ষিত হবে।</p>
 </form></div><div class="panel" style="margin-top:16px"><div class="panelhead"><h3>শিক্ষার্থীর তালিকা</h3><span class="muted" id="studentTotal">লোড হচ্ছে...</span></div><div class="toolbar"><input id="studentSearch" type="search" placeholder="নাম, আইডি বা মোবাইল দিয়ে খুঁজুন"></div><div class="tablewrap" id="studentTable"><div class="empty">Supabase থেকে তথ্য আনা হচ্ছে...</div></div></div></section>
 <section class="page" id="teachers"><div class="welcome"><div><h2>শিক্ষক ব্যবস্থাপনা</h2><p>ডেমো হিসেবে শিক্ষক তালিকা তৈরি করুন।</p></div></div><div class="panel"><h3>নতুন শিক্ষক</h3><form id="teacherForm" class="formrow" style="margin-top:15px"><div class="field"><label>শিক্ষকের নাম *</label><input name="name" required></div><div class="field"><label>বিষয় / দায়িত্ব</label><input name="subject" placeholder="যেমন: বাংলা"></div><div class="field"><label>মোবাইল</label><input name="phone"></div><div class="field full"><button class="btn">শিক্ষক সংরক্ষণ (এই ব্রাউজারে)</button></div></form></div><div class="panel" style="margin-top:16px"><h3>শিক্ষক তালিকা</h3><div class="tablewrap" id="teacherTable"></div></div></section><section class="page" id="accounts">
-<div class="welcome"><div><h2>শিক্ষক ও শিক্ষার্থীর লগইন আইডি তৈরি</h2><p>এখান থেকে শিক্ষক বা অভিভাবকের জন্য ইমেইল ও পাসওয়ার্ড অ্যাকাউন্ট তৈরি করুন।</p></div></div>
+<div class="welcome"><div><h2>শিক্ষক ও শিক্ষার্থীর লগইন আইডি তৈরি</h2><p>এখান থেকে শিক্ষক বা শিক্ষার্থী/অভিভাবকের জন্য ইমেইল অথবা মোবাইল নম্বর দিয়ে অ্যাকাউন্ট তৈরি করুন।</p></div></div>
 <div class="notice"><b>নিরাপত্তা:</b> শুধু Admin লগইন করা অবস্থায় অ্যাকাউন্ট তৈরি করা যাবে। পাসওয়ার্ড নিরাপদভাবে Supabase Auth-এ সংরক্ষিত হবে। অভিভাবকের অ্যাকাউন্ট শিক্ষার্থীর সঙ্গে, শিক্ষকের অ্যাকাউন্ট নির্বাচিত শ্রেণির সঙ্গে যুক্ত হবে।</div>
 <div class="panel">
 <form id="accountCreateForm" class="formrow">
 <div class="field"><label>অ্যাকাউন্টের ধরন *</label><select name="role" id="accountRole" required><option value="teacher">শিক্ষক</option><option value="parent">শিক্ষার্থী / অভিভাবক</option></select></div>
 <div class="field"><label>নাম *</label><input name="full_name" required maxlength="120" placeholder="পূর্ণ নাম"></div>
-<div class="field" id="accountEmailField" style="display:none"><label>লগইন ইমেইল *</label><input name="email" id="accountEmail" type="email" autocomplete="off" placeholder="name@example.com"></div>
+<div class="field" id="accountEmailField"><label>লগইন ইমেইল (ঐচ্ছিক)</label><input name="email" id="accountEmail" type="email" autocomplete="off" placeholder="name@example.com"></div>
 <div class="field"><label>প্রাথমিক পাসওয়ার্ড *</label><input name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="কমপক্ষে ৮ অক্ষর"></div>
-<div class="field"><label>মোবাইল নম্বর *</label><input name="phone" id="accountPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" required></div>
+<div class="field"><label>মোবাইল নম্বর (ঐচ্ছিক)</label><input name="phone" id="accountPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX"></div>
 <div class="field" id="accountClassField"><label>শিক্ষকের দায়িত্বপ্রাপ্ত শ্রেণি *</label><select name="class_id" id="accountClass"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
 <div class="field" id="accountSectionField" style="display:none"><label>শিক্ষকের সেকশন (ফাঁকা রাখলে সব সেকশন)</label><input name="section" id="accountSection" maxlength="80" placeholder="যেমন: A / B"></div>
 <div class="field" id="accountStudentField" style="display:none"><label>যে শিক্ষার্থীর অভিভাবক *</label><select name="student_id" id="accountStudent"><option value="">শিক্ষার্থী নির্বাচন করুন</option></select></div>
-<div class="field full"><button class="btn" id="accountCreateBtn" type="submit">লগইন আইডি তৈরি করুন</button><span class="muted" id="accountCreateMessage" style="display:block;margin-top:9px">শিক্ষক মোবাইল নম্বর ও পাসওয়ার্ড দিয়ে, অভিভাবক ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করবেন।</span></div>
+<div class="field full"><button class="btn" id="accountCreateBtn" type="submit">লগইন আইডি তৈরি করুন</button><span class="muted" id="accountCreateMessage" style="display:block;margin-top:9px">শিক্ষক ও শিক্ষার্থী/অভিভাবক ইমেইল অথবা মোবাইল নম্বর—যেকোনো একটি দিয়ে লগইন করবেন।</span></div>
 </form>
 </div>
 </section>
@@ -1432,10 +1432,11 @@ function toggleAccountRoleFields(){
  accountClass.required=teacher;
  accountSection.disabled=!teacher;
  accountStudent.required=!teacher;
- accountEmailField.style.display=teacher?'none':'block';
- accountEmail.required=!teacher;
- accountEmail.disabled=teacher;
- accountPhone.required=teacher;
+ accountEmailField.style.display='block';
+ accountEmail.required=false;
+ accountEmail.disabled=false;
+ accountPhone.required=false;
+ accountPhone.disabled=false;
 }
 accountRole.addEventListener('change',toggleAccountRoleFields);
 accountCreateForm.addEventListener('submit',async event=>{
@@ -1454,6 +1455,13 @@ accountCreateForm.addEventListener('submit',async event=>{
   section:String(fd.get('section')||'').trim()||null,
   student_id:fd.get('student_id')||null
  };
+ if(!payload.email&&!payload.phone){
+  accountCreateMessage.textContent='ইমেইল অথবা মোবাইল নম্বর—অন্তত একটি লিখুন।';
+  accountCreateMessage.style.color='#a32929';
+  accountCreateBtn.disabled=false;
+  accountCreateBtn.textContent='লগইন আইডি তৈরি করুন';
+  return;
+ }
  const {data,error}=await supabase.functions.invoke('admin-create-user',{body:payload});
  accountCreateBtn.disabled=false;
  accountCreateBtn.textContent='লগইন আইডি তৈরি করুন';
@@ -1464,7 +1472,7 @@ accountCreateForm.addEventListener('submit',async event=>{
   accountCreateMessage.style.color='#a32929';
   return;
  }
- accountCreateMessage.textContent='সফল! '+payload.full_name+'-এর '+(payload.role==='teacher'?'শিক্ষক':'অভিভাবক')+' লগইন আইডি তৈরি হয়েছে। '+(payload.role==='teacher'?'লগইন মোবাইল: '+payload.phone:'লগইন ইমেইল: '+payload.email);
+ accountCreateMessage.textContent='সফল! '+payload.full_name+'-এর '+(payload.role==='teacher'?'শিক্ষক':'অভিভাবক')+' লগইন আইডি তৈরি হয়েছে। '+('লগইন: '+(payload.email||payload.phone));
  accountCreateMessage.style.color='#087443';
  accountCreateForm.reset();
  toggleAccountRoleFields();
