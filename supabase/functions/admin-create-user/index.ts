@@ -4,6 +4,7 @@ const allowedOrigins = new Set([
   "https://salsabil-global-academy.vercel.app",
   "https://salsabil-global-academy-sgaglobal26-2083.vercel.app",
   "https://salsabil-global-academy-git-main-sgaglobal26-2083.vercel.app",
+  "https://salsabil-global-academy-5d5vtgrw9-sgaglobal26-2083.vercel.app",
 ]);
 
 function corsHeaders(req: Request) {
@@ -70,16 +71,21 @@ Deno.serve(async (req) => {
   const fullName = String(input.full_name || "").trim();
   const email = String(input.email || "").trim().toLowerCase();
   const password = String(input.password || "");
-  const phone = String(input.phone || "").trim() || null;
+  const rawPhone = String(input.phone || "").trim();
+  let phoneDigits = rawPhone.replace(/\D/g, "");
+  if (phoneDigits.startsWith("00880")) phoneDigits = phoneDigits.slice(2);
+  if (phoneDigits.startsWith("0")) phoneDigits = "88" + phoneDigits;
+  const phone = phoneDigits ? "+" + phoneDigits : null;
   const classId = String(input.class_id || "");
   const section = String(input.section || "").trim() || null;
   const studentId = String(input.student_id || "");
 
   if (!["teacher", "parent"].includes(role)) return json(req, { error: "শুধু শিক্ষক বা অভিভাবক অ্যাকাউন্ট তৈরি করা যাবে।" }, 400);
   if (!fullName || fullName.length > 120) return json(req, { error: "নাম লিখুন (সর্বোচ্চ ১২০ অক্ষর)।" }, 400);
-  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json(req, { error: "সঠিক ইমেইল ঠিকানা লিখুন।" }, 400);
+  if (role === "parent" && (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) return json(req, { error: "সঠিক ইমেইল ঠিকানা লিখুন।" }, 400);
   if (password.length < 8 || password.length > 72) return json(req, { error: "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।" }, 400);
-  if (phone && phone.length > 32) return json(req, { error: "মোবাইল নম্বরের দৈর্ঘ্য সঠিক নয়।" }, 400);
+  if (role === "teacher" && (!phone || !/^\+[1-9]\d{7,14}$/.test(phone))) return json(req, { error: "সঠিক মোবাইল নম্বর লিখুন। বাংলাদেশি নম্বর 01XXXXXXXXX আকারে দিন।" }, 400);
+  if (role === "parent" && phone && phone.length > 32) return json(req, { error: "মোবাইল নম্বরের দৈর্ঘ্য সঠিক নয়।" }, 400);
   if (role === "teacher" && (!uuidPattern.test(classId) || (section && section.length > 80))) return json(req, { error: "শ্রেণি বা সেকশনের তথ্য সঠিক নয়।" }, 400);
   if (role === "parent" && !uuidPattern.test(studentId)) return json(req, { error: "শিক্ষার্থীর তথ্য সঠিক নয়।" }, 400);
 
@@ -95,12 +101,10 @@ Deno.serve(async (req) => {
     if (error || !student) return json(req, { error: "নির্বাচিত শিক্ষার্থী পাওয়া যায়নি।" }, 400);
   }
 
-  const { data: created, error: createError } = await adminClient.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true,
-    user_metadata: { full_name: fullName, phone: phone || "" },
-  });
+  const authInput = role === "teacher"
+    ? { phone: phone!, password, phone_confirm: true, user_metadata: { full_name: fullName, phone } }
+    : { email, password, email_confirm: true, user_metadata: { full_name: fullName, phone: phone || "" } };
+  const { data: created, error: createError } = await adminClient.auth.admin.createUser(authInput);
   if (createError || !created.user) {
     return json(req, { error: createError?.message || "নতুন Auth user তৈরি করা যায়নি।" }, 400);
   }
