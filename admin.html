@@ -1343,8 +1343,15 @@ async function loadIncome(){
  document.getElementById('feeIncomeTotal').textContent=financeMoney(feeTotal);
  document.getElementById('shareholderIncomeTotal').textContent=financeMoney(shareTotal);
  document.getElementById('incomeTotal').textContent=financeMoney(feeTotal+shareTotal);
- box.innerHTML=feeResult.error?'':(rows.length?'<table><thead><tr><th>তারিখ</th><th>শিক্ষার্থী</th><th>আইডি</th><th>ফি / বিবরণ</th><th>ইনভয়েস</th><th>জমা</th><th>পদ্ধতি</th><th>রসিদ</th></tr></thead><tbody>'+rows.map(row=>{const inv=row.fee_invoices||{};const st=inv.students||{};return '<tr><td>'+financeDate(row.paid_at)+'</td><td>'+escapeHtml(st.full_name||'—')+'</td><td>'+escapeHtml(st.student_code||'—')+'</td><td>'+escapeHtml(inv.description||'—')+'</td><td>'+escapeHtml(inv.invoice_number||'—')+'</td><td>'+financeMoney(row.amount)+'</td><td>'+escapeHtml(({cash:'নগদ',bank:'ব্যাংক',mobile_banking:'মোবাইল ব্যাংকিং'})[row.payment_method]||row.payment_method||'—')+'</td><td>'+escapeHtml(row.receipt_number||'—')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এখনো কোনো শিক্ষার্থী পেমেন্ট জমা হয়নি।</div>');
- shareBox.innerHTML=shareResult.error?'':(shares.length?'<table><thead><tr><th>তারিখ</th><th>শেয়ারহোল্ডার</th><th>জমা</th><th>পদ্ধতি</th><th>রসিদ / ট্রানজেকশন</th><th>বিবরণ</th></tr></thead><tbody>'+shares.map(row=>'<tr><td>'+financeDate(row.received_on)+'</td><td>'+escapeHtml(row.shareholder_name)+'</td><td>'+financeMoney(row.amount)+'</td><td>'+escapeHtml(({cash:'নগদ',bank:'ব্যাংক',mobile_banking:'মোবাইল ব্যাংকিং'})[row.payment_method]||row.payment_method||'—')+'</td><td>'+escapeHtml(row.receipt_number||'—')+'</td><td>'+escapeHtml(row.notes||'—')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এখনো কোনো শেয়ারহোল্ডার জমা নেই।</div>');
+  const methodLabel = value => ({cash:'নগদ',bank:'ব্যাংক',mobile_banking:'মোবাইল ব্যাংকিং'}[value] || value || '—');
+  const feeRowsHtml = rows.map(row => {
+   const inv = row.fee_invoices || {};
+   const st = inv.students || {};
+   return '<tr><td>'+financeDate(row.paid_at)+'</td><td>'+escapeHtml(st.full_name || '—')+'</td><td>'+escapeHtml(st.student_code || '—')+'</td><td>'+escapeHtml(inv.description || '—')+'</td><td>'+escapeHtml(inv.invoice_number || '—')+'</td><td>'+financeMoney(row.amount)+'</td><td>'+escapeHtml(methodLabel(row.payment_method))+'</td><td>'+escapeHtml(row.receipt_number || '—')+'</td></tr>';
+  }).join('');
+  box.innerHTML = feeResult.error ? '' : (rows.length ? '<table><thead><tr><th>তারিখ</th><th>শিক্ষার্থী</th><th>আইডি</th><th>ফি / বিবরণ</th><th>ইনভয়েস</th><th>জমা</th><th>পদ্ধতি</th><th>রসিদ</th></tr></thead><tbody>'+feeRowsHtml+'</tbody></table>' : '<div class="empty">এখনো কোনো শিক্ষার্থী পেমেন্ট জমা হয়নি।</div>');
+  const shareRowsHtml = shares.map(row => '<tr><td>'+financeDate(row.received_on)+'</td><td>'+escapeHtml(row.shareholder_name)+'</td><td>'+financeMoney(row.amount)+'</td><td>'+escapeHtml(methodLabel(row.payment_method))+'</td><td>'+escapeHtml(row.receipt_number || '—')+'</td><td>'+escapeHtml(row.notes || '—')+'</td></tr>').join('');
+  shareBox.innerHTML = shareResult.error ? '' : (shares.length ? '<table><thead><tr><th>তারিখ</th><th>শেয়ারহোল্ডার</th><th>জমা</th><th>পদ্ধতি</th><th>রসিদ / ট্রানজেকশন</th><th>বিবরণ</th></tr></thead><tbody>'+shareRowsHtml+'</tbody></table>' : '<div class="empty">এখনো কোনো শেয়ারহোল্ডার জমা নেই।</div>');
 }
 const shareholderIncomeForm=document.getElementById('shareholderIncomeForm');
 shareholderIncomeForm.addEventListener('submit',async e=>{
