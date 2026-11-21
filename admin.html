@@ -42,7 +42,7 @@
 <aside class="side" id="side"><div class="brand"><div class="logo">س</div><div><b>সালসাবিল গ্লোবাল</b><small>ADMIN CONSOLE</small></div></div>
 <div class="navlabel">MAIN MENU</div><nav class="nav" id="nav">
 <button class="active" data-page="dashboard"><span>▦</span> ড্যাশবোর্ড</button>
-<button data-page="students"><span>♙</span> শিক্ষার্থী</button><button data-page="teachers"><span>♧</span> শিক্ষক</button><button data-page="accounts"><span>🔑</span> লগইন আইডি তৈরি</button><button data-page="admissions"><span>▤</span> ভর্তি আবেদন</button><button data-page="attendance"><span>◷</span> উপস্থিতি</button><button data-page="attendanceReports"><span>▤</span> উপস্থিতি রিপোর্ট</button><button data-page="exams"><span>✎</span> পরীক্ষা ও ফলাফল</button><button data-page="fees"><span>▤</span> ফি ইনভয়েস</button><button data-page="dues"><span>৳</span> বকেয়া আদায়</button><button data-page="income"><span>↙</span> আয় হিসাব</button><button data-page="expenses"><span>↗</span> ব্যয় হিসাব</button><button data-page="notices"><span>▧</span> নোটিশ</button>
+<button data-page="students"><span>♙</span> শিক্ষার্থী</button><button data-page="teachers"><span>♧</span> শিক্ষক</button><button data-page="accounts"><span>🔑</span> লগইন আইডি তৈরি</button><button data-page="accountList"><span>☷</span> তৈরি করা অ্যাকাউন্ট</button><button data-page="admissions"><span>▤</span> ভর্তি আবেদন</button><button data-page="attendance"><span>◷</span> উপস্থিতি</button><button data-page="attendanceReports"><span>▤</span> উপস্থিতি রিপোর্ট</button><button data-page="exams"><span>✎</span> পরীক্ষা ও ফলাফল</button><button data-page="fees"><span>▤</span> ফি ইনভয়েস</button><button data-page="dues"><span>৳</span> বকেয়া আদায়</button><button data-page="income"><span>↙</span> আয় হিসাব</button><button data-page="expenses"><span>↗</span> ব্যয় হিসাব</button><button data-page="notices"><span>▧</span> নোটিশ</button>
 </nav><div class="navlabel">SYSTEM</div><nav class="nav"><button data-page="settings"><span>⚙</span> সেটিংস</button><a href="/leadership-admin.html" style="display:block;text-decoration:none;color:#f1d58c;padding:11px 12px;font-size:14px">♙ চেয়ারম্যান, শিক্ষক ও প্রশাসনিক পরিচিতি</a><a href="/content-admin.html" style="display:block;text-decoration:none;color:#f1d58c;padding:11px 12px;font-size:14px">✎ Home Page তথ্য সম্পাদনা</a><a href="/teacher.html" style="display:block;text-decoration:none;color:#d7e7de;padding:11px 12px;font-size:14px">♧ শিক্ষক লগইন</a><a href="/student.html" style="display:block;text-decoration:none;color:#d7e7de;padding:11px 12px;font-size:14px">♙ শিক্ষার্থী লগইন</a><a href="/" style="display:block;text-decoration:none"><button><span>↗</span> ওয়েবসাইট দেখুন</button></a></nav><div class="sidefoot">Salsabil Global Academy<br>Mirzapur, Tangail<br><span style="color:#f0d48b">Faith · Knowledge · Character</span></div></aside>
 <main class="main"><header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="mobilemenu" id="mobilemenu">☰</button><h1 id="title">অ্যাডমিন ড্যাশবোর্ড</h1></div><div class="topright"><span class="status">নিরাপদ Admin Session</span><button class="logout-btn" id="logoutButton" type="button">লগআউট</button><div class="avatar" id="adminAvatar">A</div></div></header>
 <div class="content">
@@ -86,6 +86,11 @@
 <div class="field full"><button class="btn" id="accountCreateBtn" type="submit">লগইন আইডি তৈরি করুন</button><span class="muted" id="accountCreateMessage" style="display:block;margin-top:9px">শিক্ষক ও শিক্ষার্থী/অভিভাবক ইমেইল অথবা মোবাইল নম্বর—যেকোনো একটি দিয়ে লগইন করবেন।</span></div>
 </form>
 </div>
+</section>
+<section class="page" id="accountList">
+<div class="welcome"><div><h2>তৈরি করা অ্যাকাউন্টসমূহ</h2><p>শিক্ষক ও শিক্ষার্থী/অভিভাবকের লগইন আইডি এবং অ্যাকাউন্টের অবস্থা দেখুন।</p></div><button class="btn secondary" type="button" id="refreshAccountListBtn">↻ হালনাগাদ</button></div>
+<div class="notice"><b>পাসওয়ার্ড নিরাপত্তা:</b> নিরাপত্তার কারণে পুরোনো পাসওয়ার্ড এখানে দেখানো বা সংরক্ষণ করা হয় না। প্রয়োজন হলে Supabase-এর Password Reset ব্যবস্থা ব্যবহার করুন।</div>
+<div class="panel"><div class="toolbar"><input id="accountListSearch" type="search" placeholder="নাম, ইমেইল বা মোবাইল দিয়ে খুঁজুন"><select id="accountListRole" style="border:1px solid #dce5de;border-radius:8px;padding:10px"><option value="all">সব অ্যাকাউন্ট</option><option value="teacher">শিক্ষক</option><option value="parent">শিক্ষার্থী / অভিভাবক</option></select></div><div class="tablewrap" id="accountListTable"><div class="empty">অ্যাকাউন্টের তথ্য লোড করতে হালনাগাদ চাপুন।</div></div><p class="muted" id="accountListMessage" role="status" aria-live="polite">শুধু অনুমোদিত Admin এই তালিকা দেখতে পারবেন।</p></div>
 </section>
 <section class="page" id="admissions"><div class="welcome"><div><h2>ভর্তি আবেদন</h2><p>আবেদন এন্ট্রি, Application ID এবং অনুমোদন ব্যবস্থাপনা।</p></div></div><div class="panel"><form id="admissionForm" class="formrow"><div class="field"><label>শিক্ষার্থীর নাম *</label><input name="student_name" required></div><div class="field"><label>জন্মতারিখ</label><input name="date_of_birth" type="date"></div><div class="field"><label>ভর্তিচ্ছু শ্রেণি *</label><select name="applying_class_id" id="admissionClass" required></select></div><div class="field"><label>অভিভাবকের নাম *</label><input name="guardian_name" required></div><div class="field"><label>অভিভাবকের মোবাইল *</label><input name="guardian_phone" required></div><div class="field"><label>পূর্ববর্তী প্রতিষ্ঠান</label><input name="previous_institution"></div><div class="field full"><label>ঠিকানা</label><input name="address"></div><div class="field full"><button class="btn">আবেদন সংরক্ষণ</button><span class="muted" id="admissionMessage"></span></div></form></div><div class="panel" style="margin-top:16px"><h3>আবেদন তালিকা</h3><div id="admissionList" class="tablewrap"></div></div></section>
 <section class="page" id="attendance">
@@ -215,10 +220,10 @@
 <p class="footnote">© Salsabil Global Academy · Admin Console · Supabase-secured access</p>
 </div></main></div><div class="toast" id="toast"></div>
 <script>
-const titles={dashboard:'অ্যাডমিন ড্যাশবোর্ড',students:'শিক্ষার্থী ব্যবস্থাপনা',teachers:'শিক্ষক ব্যবস্থাপনা',accounts:'লগইন আইডি তৈরি',admissions:'ভর্তি আবেদন',attendance:'উপস্থিতি ব্যবস্থাপনা',attendanceReports:'উপস্থিতি রিপোর্ট',exams:'পরীক্ষা ও ফলাফল',fees:'ফি ইনভয়েস',dues:'বকেয়া আদায়',income:'আয়ের হিসাব',expenses:'ব্যয়ের হিসাব',notices:'নোটিশ ব্যবস্থাপনা',settings:'সিস্টেম সেটিংস'};
+const titles={dashboard:'অ্যাডমিন ড্যাশবোর্ড',students:'শিক্ষার্থী ব্যবস্থাপনা',teachers:'শিক্ষক ব্যবস্থাপনা',accounts:'লগইন আইডি তৈরি',accountList:'তৈরি করা অ্যাকাউন্ট',admissions:'ভর্তি আবেদন',attendance:'উপস্থিতি ব্যবস্থাপনা',attendanceReports:'উপস্থিতি রিপোর্ট',exams:'পরীক্ষা ও ফলাফল',fees:'ফি ইনভয়েস',dues:'বকেয়া আদায়',income:'আয়ের হিসাব',expenses:'ব্যয়ের হিসাব',notices:'নোটিশ ব্যবস্থাপনা',settings:'সিস্টেম সেটিংস'};
 const read=k=>JSON.parse(localStorage.getItem('sga_'+k)||'[]');const write=(k,v)=>localStorage.setItem('sga_'+k,JSON.stringify(v));
 function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2300)}
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='teachers')renderTeachers();if(id==='attendanceReports'){const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());document.getElementById('attReportTo').value ||= today;document.getElementById('attReportFrom').value ||= today;}if(id==='dues'&&typeof loadDues==='function')void loadDues();if(id==='income'&&typeof loadIncome==='function')void loadIncome();if(id==='expenses'&&typeof loadExpenses==='function')void loadExpenses();if(id==='dashboard'&&typeof window.sgaRefreshDashboard==='function')void window.sgaRefreshDashboard()}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('title').textContent=titles[id]||'Admin';document.getElementById('side').classList.remove('open');if(id==='teachers')renderTeachers();if(id==='accountList'&&typeof loadCreatedAccounts==='function')void loadCreatedAccounts();if(id==='attendanceReports'){const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());document.getElementById('attReportTo').value ||= today;document.getElementById('attReportFrom').value ||= today;}if(id==='dues'&&typeof loadDues==='function')void loadDues();if(id==='income'&&typeof loadIncome==='function')void loadIncome();if(id==='expenses'&&typeof loadExpenses==='function')void loadExpenses();if(id==='dashboard'&&typeof window.sgaRefreshDashboard==='function')void window.sgaRefreshDashboard()}
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 document.getElementById('mobilemenu').onclick=()=>document.getElementById('side').classList.toggle('open');
 
@@ -1406,6 +1411,45 @@ async function loadNotices(){
 }
 document.getElementById('noticeForm').addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.target),user=await supabase.auth.getUser(),pub=f.get('is_published')==='on';const {error}=await supabase.from('notices').insert({title_bn:f.get('title_bn'),title_en:f.get('title_en')||null,body_bn:f.get('body_bn'),audience:f.get('audience'),is_published:pub,published_at:pub?new Date().toISOString():null,created_by:user.data.user.id});document.getElementById('noticeMessage').textContent=error?'নোটিশ সংরক্ষণ হয়নি: '+error.message:'নোটিশ সংরক্ষিত হয়েছে।';if(!error){e.target.reset();await loadNotices()}});
 
+
+let createdAccountRows = [];
+async function loadCreatedAccounts(){
+ const box=document.getElementById('accountListTable');
+ const message=document.getElementById('accountListMessage');
+ if(!box||!message)return;
+ box.innerHTML='<div class="empty">অ্যাকাউন্ট লোড হচ্ছে...</div>';
+ message.textContent='নিরাপদ সার্ভার থেকে তথ্য আনা হচ্ছে...';
+ const {data,error}=await supabase.functions.invoke('admin-list-users',{body:{}});
+ if(error){
+  let detail=error.message||'তথ্য লোড হয়নি।';
+  try{const body=await error.context?.json?.();if(body?.error)detail=body.error;}catch(_){}
+  box.innerHTML='<div class="empty">অ্যাকাউন্ট লোড হয়নি: '+esc(detail)+'</div>';
+  message.textContent='Supabase-এ admin-list-users Edge Function deploy করা আছে কি না যাচাই করুন।';
+  return;
+ }
+ createdAccountRows=Array.isArray(data?.users)?data.users:[];
+ renderCreatedAccounts();
+ message.textContent='মোট '+createdAccountRows.length.toLocaleString('bn-BD')+'টি শিক্ষক ও শিক্ষার্থী/অভিভাবক অ্যাকাউন্ট পাওয়া গেছে।';
+}
+function renderCreatedAccounts(){
+ const box=document.getElementById('accountListTable');
+ if(!box)return;
+ const query=String(document.getElementById('accountListSearch')?.value||'').trim().toLowerCase();
+ const role=document.getElementById('accountListRole')?.value||'all';
+ const rows=createdAccountRows.filter(user=>{
+  const hay=[user.full_name,user.email,user.phone].join(' ').toLowerCase();
+  return (!query||hay.includes(query))&&(role==='all'||user.role===role);
+ });
+ box.innerHTML=rows.length?'<table><thead><tr><th>নাম</th><th>ধরন</th><th>লগইন আইডি</th><th>তৈরির তারিখ</th><th>অবস্থা</th></tr></thead><tbody>'+rows.map(user=>{
+  const identifier=user.email||user.phone||'—';
+  const status=user.banned_until&&new Date(user.banned_until)>new Date()?'সাময়িক বন্ধ':'সক্রিয়';
+  const created=user.created_at?new Intl.DateTimeFormat('bn-BD',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Dhaka'}).format(new Date(user.created_at)):'—';
+  return '<tr><td>'+esc(user.full_name||'নাম নেই')+'</td><td>'+ (user.role==='teacher'?'শিক্ষক':'শিক্ষার্থী / অভিভাবক')+'</td><td>'+esc(identifier)+'</td><td>'+esc(created)+'</td><td>'+status+'</td></tr>';
+ }).join('')+'</tbody></table>':'<div class="empty">কোনো অ্যাকাউন্ট পাওয়া যায়নি।</div>';
+}
+document.getElementById('refreshAccountListBtn')?.addEventListener('click',loadCreatedAccounts);
+document.getElementById('accountListSearch')?.addEventListener('input',renderCreatedAccounts);
+document.getElementById('accountListRole')?.addEventListener('change',renderCreatedAccounts);
 
 const accountRole=document.getElementById('accountRole');
 const accountClass=document.getElementById('accountClass');
