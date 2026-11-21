@@ -83,7 +83,7 @@
 <div class="field" id="accountClassField"><label>শিক্ষকের দায়িত্বপ্রাপ্ত শ্রেণি *</label><select name="class_id" id="accountClass"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
 <div class="field" id="accountSectionField" style="display:none"><label>শিক্ষকের সেকশন (ফাঁকা রাখলে সব সেকশন)</label><input name="section" id="accountSection" maxlength="80" placeholder="যেমন: A / B"></div>
 <div class="field" id="accountStudentField" style="display:none"><label>যে শিক্ষার্থীর অভিভাবক *</label><select name="student_id" id="accountStudent"><option value="">শিক্ষার্থী নির্বাচন করুন</option></select></div>
-<div class="field full"><button class="btn" id="accountCreateBtn" type="submit">লগইন আইডি তৈরি করুন</button><span class="muted" id="accountCreateMessage" style="display:block;margin-top:9px">অ্যাকাউন্ট তৈরি হলে এই ইমেইল ও পাসওয়ার্ড দিয়ে সংশ্লিষ্ট পোর্টালে লগইন করা যাবে।</span></div>
+<div class="field full"><button class="btn" id="accountCreateBtn" type="submit">লগইন আইডি তৈরি করুন</button><span class="muted" id="accountCreateMessage" style="display:block;margin-top:9px">শিক্ষক মোবাইল নম্বর ও পাসওয়ার্ড দিয়ে, অভিভাবক ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করবেন।</span></div>
 </form>
 </div>
 </section>
@@ -1464,7 +1464,7 @@ accountCreateForm.addEventListener('submit',async event=>{
   accountCreateMessage.style.color='#a32929';
   return;
  }
- accountCreateMessage.textContent='সফল! '+payload.full_name+'-এর '+(payload.role==='teacher'?'শিক্ষক':'অভিভাবক')+' লগইন আইডি তৈরি হয়েছে। লগইন ইমেইল: '+payload.email;
+ accountCreateMessage.textContent='সফল! '+payload.full_name+'-এর '+(payload.role==='teacher'?'শিক্ষক':'অভিভাবক')+' লগইন আইডি তৈরি হয়েছে। '+(payload.role==='teacher'?'লগইন মোবাইল: '+payload.phone:'লগইন ইমেইল: '+payload.email);
  accountCreateMessage.style.color='#087443';
  accountCreateForm.reset();
  toggleAccountRoleFields();
