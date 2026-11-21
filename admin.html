@@ -743,15 +743,15 @@ studentTable.addEventListener('click', async event => {
 // Attendance reports: student totals, QR scan audit and teacher attendance.
 const reportFrom = document.getElementById('attReportFrom');
 const reportTo = document.getElementById('attReportTo');
-const reportMessage = document.getElementById('attReportMessage');
+const attendanceReportMessage = document.getElementById('attReportMessage');
 let studentAttendanceReportRows = [];
 function reportStatus(status){return ({present:'উপস্থিত',absent:'অনুপস্থিত',late:'দেরিতে',excused:'ছুটি'})[status]||status||'—';}
 async function loadStudentAttendanceReport(){
   const from=reportFrom.value,to=reportTo.value;
-  if(!from||!to||from>to){reportMessage.textContent='সঠিক শুরুর ও শেষ তারিখ দিন।';return;}
-  reportMessage.textContent='শিক্ষার্থীদের উপস্থিতি লোড হচ্ছে...';
+  if(!from||!to||from>to){attendanceReportMessage.textContent='সঠিক শুরুর ও শেষ তারিখ দিন।';return;}
+  attendanceReportMessage.textContent='শিক্ষার্থীদের উপস্থিতি লোড হচ্ছে...';
   const {data,error}=await supabase.from('attendance').select('student_id,class_id,attendance_date,status,note,students(student_code,full_name,academic_classes(name))').gte('attendance_date',from).lte('attendance_date',to).order('attendance_date',{ascending:false}).limit(5000);
-  if(error){document.getElementById('studentAttReportTable').innerHTML='<div class="empty">রিপোর্ট লোড হয়নি: '+escapeHtml(error.message)+'</div>';reportMessage.textContent='ডেটাবেজের অনুমতি বা attendance সম্পর্ক যাচাই করুন।';return;}
+  if(error){document.getElementById('studentAttReportTable').innerHTML='<div class="empty">রিপোর্ট লোড হয়নি: '+escapeHtml(error.message)+'</div>';attendanceReportMessage.textContent='ডেটাবেজের অনুমতি বা attendance সম্পর্ক যাচাই করুন।';return;}
   studentAttendanceReportRows=data||[];
   const counts={present:0,absent:0,late:0,excused:0};studentAttendanceReportRows.forEach(r=>{if(counts[r.status]!==undefined)counts[r.status]++;});
   for(const [key,id] of Object.entries({present:'reportStudentPresent',absent:'reportStudentAbsent',late:'reportStudentLate',excused:'reportStudentExcused'}))document.getElementById(id).textContent=counts[key].toLocaleString('bn-BD');
@@ -759,7 +759,7 @@ async function loadStudentAttendanceReport(){
   document.getElementById('studentAttReportTable').innerHTML=rows.length?'<table><thead><tr><th>তারিখ</th><th>Student ID</th><th>শিক্ষার্থীর নাম</th><th>শ্রেণি</th><th>অবস্থা</th><th>রেকর্ড</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escapeHtml(r.attendance_date)+'</td><td>'+escapeHtml(r.students?.student_code||'—')+'</td><td>'+escapeHtml(r.students?.full_name||'—')+'</td><td>'+escapeHtml(r.students?.academic_classes?.name||'—')+'</td><td>'+escapeHtml(reportStatus(r.status))+'</td><td>'+escapeHtml(r.note||'Manual')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এই সময়সীমায় কোনো উপস্থিতি রেকর্ড পাওয়া যায়নি।</div>';
   const qr=rows.filter(r=>/QR Scan/i.test(r.note||''));
   document.getElementById('qrAttReportTable').innerHTML=qr.length?'<table><thead><tr><th>তারিখ</th><th>সময় / স্ক্যান নোট</th><th>Student ID</th><th>শিক্ষার্থীর নাম</th><th>শ্রেণি</th><th>ফলাফল</th></tr></thead><tbody>'+qr.map(r=>'<tr><td>'+escapeHtml(r.attendance_date)+'</td><td>'+escapeHtml(r.note||'—')+'</td><td>'+escapeHtml(r.students?.student_code||'—')+'</td><td>'+escapeHtml(r.students?.full_name||'—')+'</td><td>'+escapeHtml(r.students?.academic_classes?.name||'—')+'</td><td>'+escapeHtml(reportStatus(r.status))+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এই সময়সীমায় QR Scan-এর কোনো রেকর্ড পাওয়া যায়নি।</div>';
-  reportMessage.textContent=rows.length.toLocaleString('bn-BD')+'টি শিক্ষার্থী উপস্থিতি রেকর্ড · QR Scan '+qr.length.toLocaleString('bn-BD')+'টি।';
+  attendanceReportMessage.textContent=rows.length.toLocaleString('bn-BD')+'টি শিক্ষার্থী উপস্থিতি রেকর্ড · QR Scan '+qr.length.toLocaleString('bn-BD')+'টি।';
 }
 async function loadTeacherAttendanceReport(){
  const from=reportFrom.value,to=reportTo.value;
@@ -770,12 +770,12 @@ async function loadTeacherAttendanceReport(){
   if(teacherError){teacherEntryMessage.textContent='শিক্ষক তালিকা লোড হয়নি: '+teacherError.message;}
   else {teacherSelect.innerHTML='<option value="">শিক্ষক নির্বাচন করুন</option>'+(teachers||[]).map(t=>'<option value="'+escapeHtml(t.id)+'">'+escapeHtml(t.full_name||'নাম নেই')+'</option>').join('');teacherSelect.dataset.loaded='1';}
  }
- document.getElementById('teacherAttDate').value ||= reportTo.value || new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());if(!from||!to||from>to){reportMessage.textContent='সঠিক শুরুর ও শেষ তারিখ দিন।';return;}
+ document.getElementById('teacherAttDate').value ||= reportTo.value || new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());if(!from||!to||from>to){attendanceReportMessage.textContent='সঠিক শুরুর ও শেষ তারিখ দিন।';return;}
  const box=document.getElementById('teacherAttReportTable');box.innerHTML='<div class="empty">শিক্ষক রিপোর্ট লোড হচ্ছে...</div>';
  const {data,error}=await supabase.from('teacher_attendance').select('attendance_date,status,note,teacher_id,profiles(full_name)').gte('attendance_date',from).lte('attendance_date',to).order('attendance_date',{ascending:false}).limit(3000);
- if(error){box.innerHTML='<div class="empty">শিক্ষক রিপোর্ট লোড হয়নি: '+escapeHtml(error.message)+'। teacher_attendance Migration রান হয়েছে কি না দেখুন।</div>';reportMessage.textContent='শিক্ষক উপস্থিতি টেবিল প্রস্তুত নয় বা অনুমতি নেই।';return;}
+ if(error){box.innerHTML='<div class="empty">শিক্ষক রিপোর্ট লোড হয়নি: '+escapeHtml(error.message)+'। teacher_attendance Migration রান হয়েছে কি না দেখুন।</div>';attendanceReportMessage.textContent='শিক্ষক উপস্থিতি টেবিল প্রস্তুত নয় বা অনুমতি নেই।';return;}
  const rows=data||[];box.innerHTML=rows.length?'<table><thead><tr><th>তারিখ</th><th>শিক্ষকের নাম</th><th>অবস্থা</th><th>বিবরণ</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escapeHtml(r.attendance_date)+'</td><td>'+escapeHtml(r.profiles?.full_name||r.teacher_id)+'</td><td>'+escapeHtml(reportStatus(r.status))+'</td><td>'+escapeHtml(r.note||'—')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এই সময়সীমায় কোনো শিক্ষক উপস্থিতি রেকর্ড নেই।</div>';
- reportMessage.textContent=rows.length.toLocaleString('bn-BD')+'টি শিক্ষক উপস্থিতি রেকর্ড পাওয়া গেছে।';
+ attendanceReportMessage.textContent=rows.length.toLocaleString('bn-BD')+'টি শিক্ষক উপস্থিতি রেকর্ড পাওয়া গেছে।';
 }
 document.getElementById('saveTeacherAttendance').addEventListener('click',async()=>{
  const teacherId=document.getElementById('teacherAttSelect').value;
