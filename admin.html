@@ -77,9 +77,9 @@
 <form id="accountCreateForm" class="formrow">
 <div class="field"><label>অ্যাকাউন্টের ধরন *</label><select name="role" id="accountRole" required><option value="teacher">শিক্ষক</option><option value="parent">শিক্ষার্থী / অভিভাবক</option></select></div>
 <div class="field"><label>নাম *</label><input name="full_name" required maxlength="120" placeholder="পূর্ণ নাম"></div>
-<div class="field"><label>লগইন ইমেইল *</label><input name="email" type="email" required autocomplete="off" placeholder="name@example.com"></div>
+<div class="field" id="accountEmailField" style="display:none"><label>লগইন ইমেইল *</label><input name="email" id="accountEmail" type="email" autocomplete="off" placeholder="name@example.com"></div>
 <div class="field"><label>প্রাথমিক পাসওয়ার্ড *</label><input name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="কমপক্ষে ৮ অক্ষর"></div>
-<div class="field"><label>মোবাইল নম্বর</label><input name="phone" type="tel" placeholder="01XXXXXXXXX"></div>
+<div class="field"><label>মোবাইল নম্বর *</label><input name="phone" id="accountPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" required></div>
 <div class="field" id="accountClassField"><label>শিক্ষকের দায়িত্বপ্রাপ্ত শ্রেণি *</label><select name="class_id" id="accountClass"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
 <div class="field" id="accountSectionField" style="display:none"><label>শিক্ষকের সেকশন (ফাঁকা রাখলে সব সেকশন)</label><input name="section" id="accountSection" maxlength="80" placeholder="যেমন: A / B"></div>
 <div class="field" id="accountStudentField" style="display:none"><label>যে শিক্ষার্থীর অভিভাবক *</label><select name="student_id" id="accountStudent"><option value="">শিক্ষার্থী নির্বাচন করুন</option></select></div>
@@ -1410,6 +1410,9 @@ document.getElementById('noticeForm').addEventListener('submit',async e=>{e.prev
 const accountRole=document.getElementById('accountRole');
 const accountClass=document.getElementById('accountClass');
 const accountStudent=document.getElementById('accountStudent');
+const accountEmailField=document.getElementById('accountEmailField');
+const accountEmail=document.getElementById('accountEmail');
+const accountPhone=document.getElementById('accountPhone');
 const accountClassField=document.getElementById('accountClassField');
 const accountSection=document.getElementById('accountSection');
 const accountSectionField=document.getElementById('accountSectionField');
@@ -1429,6 +1432,10 @@ function toggleAccountRoleFields(){
  accountClass.required=teacher;
  accountSection.disabled=!teacher;
  accountStudent.required=!teacher;
+ accountEmailField.style.display=teacher?'none':'block';
+ accountEmail.required=!teacher;
+ accountEmail.disabled=teacher;
+ accountPhone.required=teacher;
 }
 accountRole.addEventListener('change',toggleAccountRoleFields);
 accountCreateForm.addEventListener('submit',async event=>{
