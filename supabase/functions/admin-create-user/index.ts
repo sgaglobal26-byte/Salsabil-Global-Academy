@@ -82,9 +82,10 @@ Deno.serve(async (req) => {
 
   if (!["teacher", "parent"].includes(role)) return json(req, { error: "শুধু শিক্ষক বা অভিভাবক অ্যাকাউন্ট তৈরি করা যাবে।" }, 400);
   if (!fullName || fullName.length > 120) return json(req, { error: "নাম লিখুন (সর্বোচ্চ ১২০ অক্ষর)।" }, 400);
-  if (role === "parent" && (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) return json(req, { error: "সঠিক ইমেইল ঠিকানা লিখুন।" }, 400);
+  if (email && (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) return json(req, { error: "সঠিক ইমেইল ঠিকানা লিখুন।" }, 400);
+  if (!email && !phone) return json(req, { error: "ইমেইল অথবা মোবাইল নম্বর—অন্তত একটি দিতে হবে।" }, 400);
   if (password.length < 8 || password.length > 72) return json(req, { error: "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।" }, 400);
-  if (role === "teacher" && (!phone || !/^\+[1-9]\d{7,14}$/.test(phone))) return json(req, { error: "সঠিক মোবাইল নম্বর লিখুন। বাংলাদেশি নম্বর 01XXXXXXXXX আকারে দিন।" }, 400);
+  if (phone && !/^\+[1-9]\d{7,14}$/.test(phone)) return json(req, { error: "সঠিক মোবাইল নম্বর লিখুন। বাংলাদেশি নম্বর 01XXXXXXXXX আকারে দিন।" }, 400);
   if (role === "parent" && phone && phone.length > 32) return json(req, { error: "মোবাইল নম্বরের দৈর্ঘ্য সঠিক নয়।" }, 400);
   if (role === "teacher" && (!uuidPattern.test(classId) || (section && section.length > 80))) return json(req, { error: "শ্রেণি বা সেকশনের তথ্য সঠিক নয়।" }, 400);
   if (role === "parent" && !uuidPattern.test(studentId)) return json(req, { error: "শিক্ষার্থীর তথ্য সঠিক নয়।" }, 400);
@@ -101,9 +102,12 @@ Deno.serve(async (req) => {
     if (error || !student) return json(req, { error: "নির্বাচিত শিক্ষার্থী পাওয়া যায়নি।" }, 400);
   }
 
-  const authInput = role === "teacher"
-    ? { phone: phone!, password, phone_confirm: true, user_metadata: { full_name: fullName, phone } }
-    : { email, password, email_confirm: true, user_metadata: { full_name: fullName, phone: phone || "" } };
+  const authInput = {
+    ...(email ? { email, email_confirm: true } : {}),
+    ...(phone ? { phone, phone_confirm: true } : {}),
+    password,
+    user_metadata: { full_name: fullName, phone: phone || "" },
+  };
   const { data: created, error: createError } = await adminClient.auth.admin.createUser(authInput);
   if (createError || !created.user) {
     return json(req, { error: createError?.message || "নতুন Auth user তৈরি করা যায়নি।" }, 400);
@@ -138,8 +142,8 @@ Deno.serve(async (req) => {
   return json(req, {
     success: true,
     user_id: userId,
-    email: role === "teacher" ? null : email,
-    phone: role === "teacher" ? phone : null,
+    email: email || null,
+    phone: phone || null,
     role,
     message: "লগইন অ্যাকাউন্ট তৈরি ও সংযুক্ত হয়েছে।",
   });
