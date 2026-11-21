@@ -172,12 +172,24 @@
 <p class="muted" id="duesMessage">বকেয়া পরিশোধ নিতে “পেমেন্ট নিন” চাপুন।</p></div>
 </section>
 <section class="page" id="income">
-<div class="welcome"><div><h2>আয় হিসাব</h2><p>শিক্ষার্থীদের কাছ থেকে বাস্তবে জমা হওয়া ফি ও অন্যান্য পেমেন্টের তালিকা।</p></div><button class="btn secondary" type="button" id="refreshIncomeBtn">↻ হালনাগাদ</button></div>
-<div class="stats" style="grid-template-columns:repeat(2,1fr);margin-bottom:16px">
-<div class="stat"><div class="stathead">সর্বমোট আদায়</div><strong id="incomeTotal">৳ ০</strong><small>সংরক্ষিত পেমেন্টের যোগফল</small></div>
-<div class="stat"><div class="stathead">মোট পেমেন্ট</div><strong id="incomeCount">০</strong><small>পেমেন্ট রেকর্ড</small></div>
+<div class="welcome"><div><h2>আয় হিসাব</h2><p>শিক্ষার্থীদের কাছ থেকে জমা হওয়া ফি এবং শেয়ারহোল্ডারদের কাছ থেকে পাওয়া অর্থ আলাদাভাবে দেখুন।</p></div><button class="btn secondary" type="button" id="refreshIncomeBtn">↻ হালনাগাদ</button></div>
+<div class="stats" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px">
+<div class="stat"><div class="stathead">মোট প্রাপ্ত অর্থ</div><strong id="incomeTotal">৳ ০</strong><small>ফি + শেয়ারহোল্ডার জমা</small></div>
+<div class="stat"><div class="stathead">শিক্ষার্থী ফি জমা</div><strong id="feeIncomeTotal">৳ ০</strong><small>বাস্তবে আদায়</small></div>
+<div class="stat"><div class="stathead">শেয়ারহোল্ডার জমা</div><strong id="shareholderIncomeTotal">৳ ০</strong><small>বাস্তবে প্রাপ্ত অর্থ</small></div>
 </div>
-<div class="panel"><div class="panelhead"><h3>শিক্ষার্থীভিত্তিক আয়</h3><span class="muted">Fee collections</span></div><div class="tablewrap" id="incomeList"><div class="empty">আয়ের তথ্য লোড হচ্ছে...</div></div></div>
+<div class="panel" style="margin-bottom:16px"><h3>শেয়ারহোল্ডার থেকে অর্থ গ্রহণ</h3>
+<form id="shareholderIncomeForm" class="formrow" style="margin-top:12px">
+<div class="field"><label>শেয়ারহোল্ডারের নাম *</label><input name="shareholder_name" required maxlength="150" placeholder="নাম লিখুন"></div>
+<div class="field"><label>জমার পরিমাণ (টাকা) *</label><input name="amount" type="number" min=".01" step=".01" required></div>
+<div class="field"><label>জমার তারিখ *</label><input name="received_on" id="shareholderReceivedOn" type="date" required></div>
+<div class="field"><label>পেমেন্ট পদ্ধতি</label><select name="payment_method"><option value="cash">নগদ</option><option value="bank">ব্যাংক</option><option value="mobile_banking">মোবাইল ব্যাংকিং</option></select></div>
+<div class="field"><label>রসিদ / ট্রানজেকশন নম্বর</label><input name="receipt_number" maxlength="100"></div>
+<div class="field"><label>বিবরণ</label><input name="notes" maxlength="500" placeholder="ঐচ্ছিক"></div>
+<div class="field full"><button class="btn" type="submit">শেয়ারহোল্ডার জমা সংরক্ষণ করুন</button><span class="muted" id="shareholderIncomeMessage"></span></div>
+</form></div>
+<div class="panel" style="margin-bottom:16px"><div class="panelhead"><h3>শেয়ারহোল্ডার থেকে প্রাপ্ত অর্থ</h3><span class="muted">Shareholder contributions</span></div><div class="tablewrap" id="shareholderIncomeList"><div class="empty">তথ্য লোড হচ্ছে...</div></div></div>
+<div class="panel"><div class="panelhead"><h3>শিক্ষার্থীভিত্তিক ফি আদায়</h3><span class="muted">Student fee collections</span></div><div class="tablewrap" id="incomeList"><div class="empty">আয়ের তথ্য লোড হচ্ছে...</div></div></div>
 </section>
 <section class="page" id="expenses">
 <div class="welcome"><div><h2>ব্যয় হিসাব</h2><p>প্রতিষ্ঠানের সব খরচ আলাদাভাবে সংরক্ষণ ও পর্যালোচনা করুন।</p></div><button class="btn secondary" type="button" id="refreshExpensesBtn">↻ হালনাগাদ</button></div>
@@ -1244,6 +1256,7 @@ async function loadBusinessModules(){
  const [classes,students]=await Promise.all([supabase.from('academic_classes').select('id,name').eq('is_active',true).order('sort_order'),supabase.from('students').select('id,student_code,full_name').order('full_name')]);
  if(classes.data){const opts=classes.data.map(x=>'<option value="'+x.id+'">'+escapeHtml(x.name)+'</option>').join('');admissionClass.innerHTML='<option value="">শ্রেণি নির্বাচন</option>'+opts}
  if(students.data){feeStudent.innerHTML='<option value="">শিক্ষার্থী নির্বাচন</option>'+students.data.map(x=>'<option value="'+x.id+'">'+escapeHtml(x.full_name)+' ('+escapeHtml(x.student_code)+')</option>').join('')}
+ document.getElementById('shareholderReceivedOn').value=getDhakaDate();
  await Promise.all([loadAdmissions(),loadFees(),loadIncome(),loadExpenses(),loadNotices()]);
 }
 async function loadAdmissions(){
@@ -1316,14 +1329,45 @@ document.getElementById('duesFilter').addEventListener('change',renderDues);
 document.getElementById('refreshDuesBtn').addEventListener('click',loadDues);
 
 async function loadIncome(){
- const box=document.getElementById('incomeList');box.innerHTML='<div class="empty">আয়ের তথ্য লোড হচ্ছে...</div>';
- const {data,error}=await supabase.from('fee_payments').select('id,amount,payment_method,receipt_number,paid_at,fee_invoices(invoice_number,description,students(full_name,student_code))').order('paid_at',{ascending:false});
- if(error){box.innerHTML='<div class="empty">আয়ের তথ্য লোড হয়নি: '+escapeHtml(error.message)+'</div>';document.getElementById('incomeTotal').textContent='—';document.getElementById('incomeCount').textContent='—';return;}
- const rows=data||[],total=rows.reduce((sum,row)=>sum+Number(row.amount||0),0);
- document.getElementById('incomeTotal').textContent=financeMoney(total);
- document.getElementById('incomeCount').textContent=rows.length.toLocaleString('bn-BD');
- box.innerHTML=rows.length?'<table><thead><tr><th>তারিখ</th><th>শিক্ষার্থী</th><th>আইডি</th><th>ফি / বিবরণ</th><th>ইনভয়েস</th><th>জমা</th><th>পদ্ধতি</th><th>রসিদ</th></tr></thead><tbody>'+rows.map(row=>{const inv=row.fee_invoices||{};const st=inv.students||{};return '<tr><td>'+financeDate(row.paid_at)+'</td><td>'+escapeHtml(st.full_name||'—')+'</td><td>'+escapeHtml(st.student_code||'—')+'</td><td>'+escapeHtml(inv.description||'—')+'</td><td>'+escapeHtml(inv.invoice_number||'—')+'</td><td>'+financeMoney(row.amount)+'</td><td>'+escapeHtml(({cash:'নগদ',bank:'ব্যাংক',mobile_banking:'মোবাইল ব্যাংকিং'})[row.payment_method]||row.payment_method||'—')+'</td><td>'+escapeHtml(row.receipt_number||'—')+'</td></tr>';}).join('')+'</tbody></table>':'<div class="empty">এখনো কোনো পেমেন্ট জমা হয়নি। পেমেন্ট গ্রহণ করলে এখানে দেখা যাবে।</div>';
+ const box=document.getElementById('incomeList'),shareBox=document.getElementById('shareholderIncomeList');
+ box.innerHTML='<div class="empty">আয়ের তথ্য লোড হচ্ছে...</div>';
+ shareBox.innerHTML='<div class="empty">তথ্য লোড হচ্ছে...</div>';
+ const [feeResult,shareResult]=await Promise.all([
+  supabase.from('fee_payments').select('id,amount,payment_method,receipt_number,paid_at,fee_invoices(invoice_number,description,students(full_name,student_code))').order('paid_at',{ascending:false}),
+  supabase.from('shareholder_income_entries').select('id,shareholder_name,amount,received_on,payment_method,receipt_number,notes,created_at').order('received_on',{ascending:false}).order('created_at',{ascending:false})
+ ]);
+ if(feeResult.error){box.innerHTML='<div class="empty">শিক্ষার্থী ফি লোড হয়নি: '+escapeHtml(feeResult.error.message)+'</div>';}
+ if(shareResult.error){shareBox.innerHTML='<div class="empty">শেয়ারহোল্ডার জমার তথ্য লোড হয়নি: '+escapeHtml(shareResult.error.message)+' — Supabase-এ shareholder income migration চালান।</div>';}
+ const rows=feeResult.data||[],shares=shareResult.data||[];
+ const feeTotal=rows.reduce((sum,row)=>sum+Number(row.amount||0),0),shareTotal=shares.reduce((sum,row)=>sum+Number(row.amount||0),0);
+ document.getElementById('feeIncomeTotal').textContent=financeMoney(feeTotal);
+ document.getElementById('shareholderIncomeTotal').textContent=financeMoney(shareTotal);
+ document.getElementById('incomeTotal').textContent=financeMoney(feeTotal+shareTotal);
+ box.innerHTML=feeResult.error?'':(rows.length?'<table><thead><tr><th>তারিখ</th><th>শিক্ষার্থী</th><th>আইডি</th><th>ফি / বিবরণ</th><th>ইনভয়েস</th><th>জমা</th><th>পদ্ধতি</th><th>রসিদ</th></tr></thead><tbody>'+rows.map(row=>{const inv=row.fee_invoices||{};const st=inv.students||{};return '<tr><td>'+financeDate(row.paid_at)+'</td><td>'+escapeHtml(st.full_name||'—')+'</td><td>'+escapeHtml(st.student_code||'—')+'</td><td>'+escapeHtml(inv.description||'—')+'</td><td>'+escapeHtml(inv.invoice_number||'—')+'</td><td>'+financeMoney(row.amount)+'</td><td>'+escapeHtml(({cash:'নগদ',bank:'ব্যাংক',mobile_banking:'মোবাইল ব্যাংকিং'})[row.payment_method]||row.payment_method||'—')+'</td><td>'+escapeHtml(row.receipt_number||'—')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এখনো কোনো শিক্ষার্থী পেমেন্ট জমা হয়নি।</div>');
+ shareBox.innerHTML=shareResult.error?'':(shares.length?'<table><thead><tr><th>তারিখ</th><th>শেয়ারহোল্ডার</th><th>জমা</th><th>পদ্ধতি</th><th>রসিদ / ট্রানজেকশন</th><th>বিবরণ</th></tr></thead><tbody>'+shares.map(row=>'<tr><td>'+financeDate(row.received_on)+'</td><td>'+escapeHtml(row.shareholder_name)+'</td><td>'+financeMoney(row.amount)+'</td><td>'+escapeHtml(({cash:'নগদ',bank:'ব্যাংক',mobile_banking:'মোবাইল ব্যাংকিং'})[row.payment_method]||row.payment_method||'—')+'</td><td>'+escapeHtml(row.receipt_number||'—')+'</td><td>'+escapeHtml(row.notes||'—')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">এখনো কোনো শেয়ারহোল্ডার জমা নেই।</div>');
 }
+const shareholderIncomeForm=document.getElementById('shareholderIncomeForm');
+shareholderIncomeForm.addEventListener('submit',async e=>{
+ e.preventDefault();
+ const f=new FormData(shareholderIncomeForm),user=await supabase.auth.getUser();
+ const msg=document.getElementById('shareholderIncomeMessage');
+ const amount=Number(f.get('amount'));
+ if(!Number.isFinite(amount)||amount<=0){msg.textContent='সঠিক জমার পরিমাণ লিখুন।';return;}
+ const {error}=await supabase.from('shareholder_income_entries').insert({
+  shareholder_name:String(f.get('shareholder_name')).trim(),
+  amount,
+  received_on:f.get('received_on'),
+  payment_method:f.get('payment_method'),
+  receipt_number:String(f.get('receipt_number')||'').trim()||null,
+  notes:String(f.get('notes')||'').trim()||null,
+  recorded_by:user.data?.user?.id||null
+ });
+ if(error){msg.textContent='শেয়ারহোল্ডার জমা সংরক্ষণ হয়নি: '+error.message;return;}
+ shareholderIncomeForm.reset();
+ document.getElementById('shareholderReceivedOn').value=getDhakaDate();
+ msg.textContent='শেয়ারহোল্ডারের জমা সংরক্ষিত হয়েছে।';
+ await loadIncome();
+});
 async function loadExpenses(){
  const box=document.getElementById('expenseList');box.innerHTML='<div class="empty">ব্যয়ের তথ্য লোড হচ্ছে...</div>';
  const {data,error}=await supabase.from('expense_entries').select('id,expense_date,category,description,amount,voucher_number,payment_method,notes,created_at').order('expense_date',{ascending:false}).order('created_at',{ascending:false});
