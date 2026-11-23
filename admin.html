@@ -69,7 +69,7 @@
 <div class="field"><label>অবস্থা</label><select name="status"><option value="active">সক্রিয়</option><option value="inactive">নিষ্ক্রিয়</option><option value="graduated">উত্তীর্ণ</option><option value="transferred">স্থানান্তরিত</option></select></div>
 <div class="field full" style="display:flex;gap:9px;align-items:center"><button class="btn" id="studentSaveBtn" type="submit">ডেটাবেজে সংরক্ষণ</button><button class="btn secondary" id="studentCancelBtn" type="button" style="display:none">সম্পাদনা বাতিল</button></div>
 <p class="muted field full" id="studentFormMessage">তথ্য Supabase ডেটাবেজে সংরক্ষিত হবে।</p>
-</form></div><div class="panel" style="margin-top:16px"><div class="panelhead"><h3>শিক্ষার্থীর তালিকা</h3><span class="muted" id="studentTotal">লোড হচ্ছে...</span></div><div class="toolbar"><input id="studentSearch" type="search" placeholder="নাম, আইডি বা মোবাইল দিয়ে খুঁজুন"></div><div class="tablewrap" id="studentTable"><div class="empty">Supabase থেকে তথ্য আনা হচ্ছে...</div></div></div></section>
+</form></div><div class="panel" style="margin-top:16px"><div class="panelhead"><h3>শিক্ষার্থীর তালিকা</h3><span class="muted" id="studentTotal">লোড হচ্ছে...</span></div><div class="toolbar" style="gap:8px;flex-wrap:wrap"><input id="studentSearch" type="search" placeholder="নাম, আইডি বা মোবাইল দিয়ে খুঁজুন" aria-label="শিক্ষার্থী খুঁজুন"><select id="studentFilterClass" aria-label="শ্রেণি অনুযায়ী ফিল্টার"><option value="">সব শ্রেণি</option></select><select id="studentFilterStatus" aria-label="অবস্থা অনুযায়ী ফিল্টার"><option value="">সব অবস্থা</option><option value="active">সক্রিয়</option><option value="inactive">নিষ্ক্রিয়</option><option value="graduated">উত্তীর্ণ</option><option value="transferred">স্থানান্তরিত</option></select><button class="btn secondary" id="studentExportBtn" type="button">⬇ CSV Export</button></div><p class="muted" style="font-size:12px;margin:6px 0">CSV-তে শিক্ষার্থী ও অভিভাবকের যোগাযোগের তথ্য থাকতে পারে। ফাইলটি নিরাপদে সংরক্ষণ করুন।</p><div class="tablewrap" id="studentTable"><div class="empty">Supabase থেকে তথ্য আনা হচ্ছে...</div></div></div></section>
 <section class="page" id="teachers"><div class="welcome"><div><h2>শিক্ষক ব্যবস্থাপনা</h2><p>ডেমো হিসেবে শিক্ষক তালিকা তৈরি করুন।</p></div></div><div class="panel"><h3>নতুন শিক্ষক</h3><form id="teacherForm" class="formrow" style="margin-top:15px"><div class="field"><label>শিক্ষকের নাম *</label><input name="name" required></div><div class="field"><label>বিষয় / দায়িত্ব</label><input name="subject" placeholder="যেমন: বাংলা"></div><div class="field"><label>মোবাইল</label><input name="phone"></div><div class="field full"><button class="btn">শিক্ষক সংরক্ষণ (এই ব্রাউজারে)</button></div></form></div><div class="panel" style="margin-top:16px"><h3>শিক্ষক তালিকা</h3><div class="tablewrap" id="teacherTable"></div></div></section><section class="page" id="accounts">
 <div class="welcome"><div><h2>শিক্ষক ও শিক্ষার্থীর লগইন আইডি তৈরি</h2><p>এখান থেকে শিক্ষক বা শিক্ষার্থী/অভিভাবকের জন্য ইমেইল অথবা মোবাইল নম্বর দিয়ে অ্যাকাউন্ট তৈরি করুন।</p></div></div>
 <div class="notice"><b>নিরাপত্তা:</b> শুধু Admin লগইন করা অবস্থায় অ্যাকাউন্ট তৈরি করা যাবে। পাসওয়ার্ড নিরাপদভাবে Supabase Auth-এ সংরক্ষিত হবে। অভিভাবকের অ্যাকাউন্ট শিক্ষার্থীর সঙ্গে, শিক্ষকের অ্যাকাউন্ট নির্বাচিত শ্রেণির সঙ্গে যুক্ত হবে।</div>
@@ -506,6 +506,9 @@ const studentClass = document.getElementById('studentClass');
 const studentTable = document.getElementById('studentTable');
 const studentTotal = document.getElementById('studentTotal');
 const studentSearch = document.getElementById('studentSearch');
+const studentFilterClass = document.getElementById('studentFilterClass');
+const studentFilterStatus = document.getElementById('studentFilterStatus');
+const studentExportBtn = document.getElementById('studentExportBtn');
 const studentSaveBtn = document.getElementById('studentSaveBtn');
 const studentCancelBtn = document.getElementById('studentCancelBtn');
 const studentFormMessage = document.getElementById('studentFormMessage');
@@ -535,7 +538,9 @@ async function loadStudentClasses() {
   }
   classRows = data || [];
   studentClass.innerHTML = '<option value="">শ্রেণি নির্বাচন করুন</option>' +
-    classRows.map(item => '<option value="' + item.id + '">' + escapeHtml(item.name) + '</option>').join('');
+    classRows.map(item => '<option value="' + escapeHtml(item.id) + '">' + escapeHtml(item.name) + '</option>').join('');
+  studentFilterClass.innerHTML = '<option value="">সব শ্রেণি</option>' +
+    classRows.map(item => '<option value="' + escapeHtml(item.id) + '">' + escapeHtml(item.name) + '</option>').join('');
   return true;
 }
 function escapeHtml(value) {
@@ -558,21 +563,63 @@ async function loadStudents() {
   studentRows = data || [];
   renderStudentTable();
 }
-function renderStudentTable() {
+function studentStatusLabel(status) {
+  return ({active:'সক্রিয়',inactive:'নিষ্ক্রিয়',graduated:'উত্তীর্ণ',transferred:'স্থানান্তরিত'})[status] || status || '—';
+}
+function getFilteredStudentRows() {
   const q = (studentSearch.value || '').trim().toLowerCase();
-  const filtered = studentRows.filter(s =>
-    [s.full_name,s.student_code,s.student_phone,s.guardian_phone,s.guardian_name].some(v => String(v || '').toLowerCase().includes(q))
-  );
-  studentTotal.textContent = studentRows.length + ' জন';
+  const classId = studentFilterClass.value;
+  const status = studentFilterStatus.value;
+  return studentRows.filter(s => {
+    const matchesSearch = !q || [s.full_name,s.student_code,s.student_phone,s.guardian_phone,s.guardian_name,s.section,s.academic_classes?.name]
+      .some(v => String(v || '').toLowerCase().includes(q));
+    return matchesSearch && (!classId || s.class_id === classId) && (!status || s.status === status);
+  });
+}
+function renderStudentTable() {
+  const filtered = getFilteredStudentRows();
+  studentTotal.textContent = filtered.length + ' / ' + studentRows.length + ' জন';
   if (!filtered.length) {
-    studentTable.innerHTML = '<div class="empty">' + (q ? 'আপনার খোঁজের সঙ্গে মেলে এমন শিক্ষার্থী পাওয়া যায়নি।' : 'এখনো কোনো শিক্ষার্থী যোগ করা হয়নি।') + '</div>';
+    const hasFilters = studentSearch.value.trim() || studentFilterClass.value || studentFilterStatus.value;
+    studentTable.innerHTML = '<div class="empty">' + (hasFilters ? 'আপনার ফিল্টারের সঙ্গে মেলে এমন শিক্ষার্থী পাওয়া যায়নি।' : 'এখনো কোনো শিক্ষার্থী যোগ করা হয়নি।') + '</div>';
     return;
   }
   studentTable.innerHTML = '<table><thead><tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>শিক্ষার্থীর মোবাইল</th><th>অভিভাবক</th><th>অভিভাবকের মোবাইল</th><th>অবস্থা</th><th>কাজ</th></tr></thead><tbody>' +
-    filtered.map(s => '<tr><td>' + escapeHtml(s.student_code) + '</td><td>' + escapeHtml(s.full_name) + '</td><td>' + escapeHtml(s.academic_classes?.name || '') + (s.section ? ' · ' + escapeHtml(s.section) : '') + '</td><td>' + escapeHtml(s.student_phone || '—') + '</td><td>' + escapeHtml(s.guardian_name || '—') + '</td><td>' + escapeHtml(s.guardian_phone || '—') + '</td><td>' + escapeHtml(({active:'সক্রিয়',inactive:'নিষ্ক্রিয়',graduated:'উত্তীর্ণ',transferred:'স্থানান্তরিত'})[s.status] || s.status) + '</td><td><button class="btn secondary" type="button" data-card-student="' + s.id + '">ID Card / QR</button> <button class="btn secondary" type="button" data-edit-student="' + s.id + '">সম্পাদনা</button> <button class="btn secondary" type="button" data-delete-student="' + s.id + '">মুছুন</button></td></tr>').join('') +
+    filtered.map(s => '<tr><td>' + escapeHtml(s.student_code) + '</td><td>' + escapeHtml(s.full_name) + '</td><td>' + escapeHtml(s.academic_classes?.name || '') + (s.section ? ' · ' + escapeHtml(s.section) : '') + '</td><td>' + escapeHtml(s.student_phone || '—') + '</td><td>' + escapeHtml(s.guardian_name || '—') + '</td><td>' + escapeHtml(s.guardian_phone || '—') + '</td><td>' + escapeHtml(studentStatusLabel(s.status)) + '</td><td><button class="btn secondary" type="button" data-card-student="' + s.id + '">ID Card / QR</button> <button class="btn secondary" type="button" data-edit-student="' + s.id + '">সম্পাদনা</button> <button class="btn secondary" type="button" data-delete-student="' + s.id + '">মুছুন</button></td></tr>').join('') +
     '</tbody></table>';
 }
+function csvCell(value) {
+  const text = String(value ?? '');
+  const safe = /^[\s]*[=+\-@]/.test(text) ? "'" + text : text;
+  return '"' + safe.replace(/"/g, '""') + '"';
+}
+studentExportBtn.addEventListener('click', () => {
+  const rows = getFilteredStudentRows();
+  if (!rows.length) {
+    studentMessage('CSV Export করার মতো শিক্ষার্থী নেই।', true);
+    return;
+  }
+  const headers = ['শিক্ষার্থী আইডি','শিক্ষার্থীর নাম','শ্রেণি','শাখা','অবস্থা','ভর্তির তারিখ','শিক্ষার্থীর মোবাইল','অভিভাবকের নাম','অভিভাবকের মোবাইল'];
+  const data = rows.map(s => [
+    s.student_code, s.full_name, s.academic_classes?.name || '', s.section || '',
+    studentStatusLabel(s.status), s.admission_date || '', s.student_phone || '',
+    s.guardian_name || '', s.guardian_phone || ''
+  ]);
+  const csv = '\uFEFF' + [headers, ...data].map(row => row.map(csvCell).join(',')).join('\r\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'sga-students-' + new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()) + '.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  studentMessage(rows.length + ' জন শিক্ষার্থীর CSV ফাইল তৈরি হয়েছে। ব্যক্তিগত তথ্য নিরাপদে রাখুন।');
+});
 studentSearch.addEventListener('input', renderStudentTable);
+studentFilterClass.addEventListener('change', renderStudentTable);
+studentFilterStatus.addEventListener('change', renderStudentTable);
 studentCancelBtn.addEventListener('click', resetStudentForm);
 studentForm.addEventListener('submit', async event => {
   event.preventDefault();
