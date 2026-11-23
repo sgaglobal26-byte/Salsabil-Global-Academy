@@ -406,3 +406,6 @@ The Edge Function source is `supabase/functions/admin-create-user/index.ts`; JWT
 
 ## Admin dashboard summary (16 November 2026)
 The admin dashboard reads eight headline metrics from `sga_admin_dashboard_summary()` and shows the five most recent students plus upcoming examinations. The PostgreSQL function checks `sga_is_admin()` on the database side and calculates attendance and fee collection using `Asia/Dhaka` date boundaries. Apply migration `202611160002_admin_dashboard_summary.sql` before expecting the summary values to appear. This code change does not prove that the migration has been applied to the connected Supabase project.
+
+## Student management filters and CSV export (23 November 2026)
+Admin student list now supports search plus class/status filters and CSV export of the currently filtered rows. Export includes contact details; protect downloaded files. See [Bengali admin guide](docs/admin-student-management-bn.md). The UI script passed a syntax compile check; live Supabase/browser behavior still requires manual verification.
